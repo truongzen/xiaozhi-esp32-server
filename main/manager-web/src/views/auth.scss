@@ -7,13 +7,13 @@
   justify-content: center;
   background: linear-gradient(145deg, #f5f8fd, #6baaff, #9ebbfc, #f5f8fd);
   background-size: cover;
-  /* 确保背景图像覆盖整个元素 */
+  /* Make the background image cover the whole element */
   background-position: center;
-  /* 从顶部中心对齐 */
+  /* Align from top center */
   -webkit-background-size: cover;
-  /* 兼容老版本WebKit浏览器 */
+  /* For older WebKit browsers */
   -o-background-size: cover;
-  /* 兼容老版本Opera浏览器 */
+  /* For older Opera browsers */
 }
 
 .login-text {

@@ -150,7 +150,7 @@ export default {
   },
   methods: {
     initLocalData() {
-      // 深拷贝并将 headers 对象转换为数组
+      // Deep copy and convert the headers object to an array
       this.localProviders = this.providers.map(p => {
         const headers = p.headers || {};
         return {
@@ -159,7 +159,7 @@ export default {
         };
       });
 
-      // 如果为空，添加一个默认块
+      // If empty, add a default block
       if (this.localProviders.length === 0) {
          this.localProviders.push({ url: '', headers: [{ key: '', value: '' }] });
       }

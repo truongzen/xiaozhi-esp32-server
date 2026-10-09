@@ -60,37 +60,44 @@ export default {
     };
   },
   created() {
-    // 挂载 store 状态
+    // Hydrate store state
     this.$store.commit('setUserInfo', JSON.parse(localStorage.getItem('userInfo') || '{}'));
     this.$store.commit('setPubConfig', JSON.parse(localStorage.getItem('pubConfig') || '{}'));
+    this.updateDocumentTitle();
+  },
+  watch: {
+    // Keep the browser tab title in the current UI language
+    '$i18n.locale'() {
+      this.updateDocumentTitle();
+    }
   },
   mounted() {
-    // 检测是否为移动设备且VUE_APP_H5_URL不为空，如果两个条件都满足则跳转到H5页面
+    // If this is a mobile device and VUE_APP_H5_URL is set, redirect to the H5 page
     if (this.isMobileDevice() && process.env.VUE_APP_H5_URL) {
       window.location.href = process.env.VUE_APP_H5_URL;
       return;
     }
     
-    // 只有在启用CDN时才添加相关事件和功能
+    // Only add these events and features when CDN is enabled
     if (this.isCDNEnabled) {
-      // 添加全局快捷键Alt+C用于显示缓存查看器
+      // Global shortcut Alt+C opens the cache viewer
       document.addEventListener('keydown', this.handleKeyDown);
 
-      // 在全局对象上添加缓存检查方法，便于调试
+      // Expose a cache check method on window for debugging
       window.checkCDNCacheStatus = () => {
         this.showCacheViewer = true;
       };
 
-      // 在控制台输出提示信息
+      // Print a hint to the console
       console.info(
         '%c[' + this.$t('system.name') + '] ' + this.$t('cache.cdnEnabled'),
         'color: #409EFF; font-weight: bold;'
       );
       console.info(
-        '按下 Alt+C 组合键或在控制台运行 checkCDNCacheStatus() 可以查看CDN缓存状态'
+        'Press Alt+C or run checkCDNCacheStatus() in the console to view the CDN cache status'
       );
 
-      // 检查Service Worker状态
+      // Check Service Worker status
       this.checkServiceWorkerStatus();
     } else {
       console.info(
@@ -100,25 +107,28 @@ export default {
     }
   },
   beforeDestroy() {
-    // 只有在启用CDN时才需要移除事件监听
+    // Only remove the listener when CDN is enabled
     if (this.isCDNEnabled) {
       document.removeEventListener('keydown', this.handleKeyDown);
     }
   },
   methods: {
+    updateDocumentTitle() {
+      document.title = this.$t('system.consoleTitle');
+    },
     handleKeyDown(e) {
-      // Alt+C 快捷键
+      // Alt+C shortcut
       if (e.altKey && e.key === 'c') {
         this.showCacheViewer = true;
       }
     },
     isMobileDevice() {
-      // 检测是否为移动设备的函数
+      // Detect a mobile device
       return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     },
     
     async checkServiceWorkerStatus() {
-      // 检查Service Worker是否已注册
+      // Check whether a Service Worker is registered
       if ('serviceWorker' in navigator) {
         try {
           const registrations = await navigator.serviceWorker.getRegistrations();
@@ -128,7 +138,7 @@ export default {
               'color: #67C23A; font-weight: bold;'
             );
 
-            // 输出缓存状态到控制台
+            // Print cache status to the console
             setTimeout(async () => {
               const hasCaches = await logCacheStatus();
               if (!hasCaches) {
@@ -137,7 +147,7 @@ export default {
                 'color: #E6A23C; font-weight: bold;'
               );
 
-              // 开发环境下提供额外提示
+              // Extra hints in development
               if (process.env.NODE_ENV === 'development') {
                 console.info(
                   '%c[' + this.$t('system.name') + '] ' + this.$t('cache.swDevEnvWarning'),
@@ -168,7 +178,7 @@ export default {
                 }
           }
         } catch (error) {
-          console.error('检查Service Worker状态失败:', error);
+          console.error('Failed to check Service Worker status:', error);
         }
       } else {
           console.warn(this.$t('cache.swNotSupported'));

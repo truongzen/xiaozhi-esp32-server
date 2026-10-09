@@ -11,7 +11,7 @@ import './styles/global.scss';
 import { register as registerServiceWorker } from './registerServiceWorker';
 import featureManager from './utils/featureManager';
 
-// 创建事件总线，用于组件间通信
+// Event bus for communication between components
 Vue.prototype.$eventBus = new Vue();
 
 Vue.use(ElementUI);
@@ -19,10 +19,10 @@ locale.i18n((key, value) => i18n.t(key, value))
 
 Vue.config.productionTip = false
 
-// 注册Service Worker
+// Register the Service Worker
 registerServiceWorker();
 
-// 创建Vue实例
+// Create the Vue instance
 new Vue({
   router,
   store,

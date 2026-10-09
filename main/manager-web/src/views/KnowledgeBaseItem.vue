@@ -2,7 +2,7 @@
   <div class="doc-section">
     <div class="doc-section-header">
       <div class="doc-section-left">
-        <div class="doc-section-title">{{`${$t('knowledgeBaseManagement.currentKnowledgeBaseDocuments')}（${kb?.name}）`}}</div>
+        <div class="doc-section-title">{{`${$t('knowledgeBaseManagement.currentKnowledgeBaseDocuments')} (${kb?.name})`}}</div>
         <div class="doc-section-count" v-if="kb">{{ $t('knowledgeBaseManagement.totalDocuments', { total }) }}</div>
       </div>
       <div class="doc-section-actions">
@@ -154,7 +154,7 @@ export default {
             this.total = data.data.total || 0;
             this.fetchSliceCountsForDocuments();
           } else {
-            this.$message.error(data?.msg || '获取文档列表失败');
+            this.$message.error(data?.msg || this.$t('knowledgeFileUpload.getListFailed'));
             this.documents = [];
             this.total = 0;
           }
@@ -162,9 +162,9 @@ export default {
         (err) => {
           this.docLoading = false;
           if (err && err.data) {
-            this.$message.error(err.data.msg || err.msg || '获取文档列表失败');
+            this.$message.error(err.data.msg || err.msg || this.$t('knowledgeFileUpload.getListFailed'));
           } else {
-            this.$message.error('获取文档列表失败');
+            this.$message.error(this.$t('knowledgeFileUpload.getListFailed'));
           }
           this.documents = [];
           this.total = 0;
@@ -272,10 +272,10 @@ export default {
                 if (updated.parseStatusCode !== 1) {
                   this.$set(doc, 'parsing', false);
                   if (updated.parseStatusCode === 3) {
-                    this.$message.success(`「${doc.name}」${this.$t('knowledgeFileUpload.parseSuccess')}`);
+                    this.$message.success(`"${doc.name}" ${this.$t('knowledgeFileUpload.parseSuccess')}`);
                     this.fetchSliceCountForSingleDocument(doc);
                   } else if (updated.parseStatusCode === 4) {
-                    this.$message.error(`「${doc.name}」${this.$t('knowledgeFileUpload.parseFailed')}`);
+                    this.$message.error(`"${doc.name}" ${this.$t('knowledgeFileUpload.parseFailed')}`);
                   }
                   return;
                 }

@@ -25,7 +25,7 @@
               </div>
             </div>
 
-            <!-- 一级分类 -->
+            <!-- Top-level categories -->
             <div class="group-tabs" v-loading="loading && !allParams.length">
               <button
                 v-for="tab in categoryTabs"
@@ -40,7 +40,7 @@
               </button>
             </div>
 
-            <!-- 二级子分类 -->
+            <!-- Subcategories -->
             <div class="sub-tabs" v-if="subCategoryTabs.length > 1">
               <button
                 v-for="tab in subCategoryTabs"
@@ -338,7 +338,7 @@ export default {
       const items = this.filteredParams;
       if (!items.length) return [];
 
-      // 选中一级且选中二级（非 all）时，单段展示
+      // When a category and a subcategory (not all) are selected, show a single section
       if (this.activeCategory !== 'all' && this.activeSubCategory !== 'all') {
         return [{
           key: `${this.activeCategory}.${this.activeSubCategory}`,
@@ -348,12 +348,12 @@ export default {
         }];
       }
 
-      // 选中某一一级分类：按二级聚合
+      // A top-level category is selected: group by subcategory
       if (this.activeCategory !== 'all') {
         return this.buildSections(items, true);
       }
 
-      // 全部：按一级 → 二级聚合为扁平段落（一级·二级）
+      // All: group by category then subcategory into flat sections (category · subcategory)
       return this.buildSections(items, false);
     }
   },
@@ -367,7 +367,7 @@ export default {
           this.isAllSelected = false;
           return;
         }
-        // 分组不多时全部展开；较多时默认展开前几组
+        // Expand all groups when there are few; otherwise expand the first few by default
         const preferOpen = keys.length <= 5 ? keys.slice() : keys.slice(0, 3);
         const stillValid = (this.activeCollapse || []).filter(k => keys.includes(k));
         this.activeCollapse = stillValid.length ? stillValid : preferOpen;
@@ -529,7 +529,7 @@ export default {
         const collected = [];
         let page = 1;
         let total = Infinity;
-        // 按 total 循环拉全部分页，避免超过 FETCH_LIMIT 时聚合视图缺数据
+        // Page through using total so the grouped view is complete when data exceeds FETCH_LIMIT
         while (collected.length < total) {
           const pageData = await this.fetchParamsPage(page);
           const list = pageData.list || [];
@@ -537,7 +537,7 @@ export default {
           collected.push(...list);
           if (!list.length) break;
           page += 1;
-          // 防御：异常 total / 接口异常时避免死循环
+          // Guard: avoid an infinite loop on a bad total or API error
           if (page > 200) break;
         }
 
@@ -549,7 +549,7 @@ export default {
         }));
         this.isAllSelected = false;
 
-        // 若当前分类已无数据，回退到全部
+        // If the current category has no data, fall back to all
         const exists = this.categoryTabs.some(t => t.key === this.activeCategory);
         if (!exists) {
           this.activeCategory = 'all';

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>离线模式 - 小智控制台</title>
+  <title>Offline - Xiaozhi Console</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -54,14 +54,61 @@
 <body>
   <div class="container">
     <div class="icon">📶</div>
-    <h1>您当前处于离线模式</h1>
-    <p>看起来您的网络连接有问题，无法连接到小智控制台服务器。</p>
-    <p>部分已缓存的内容和静态资源可能仍然可用，但功能可能受到限制。</p>
-    <button class="btn" onclick="window.location.reload()">重新尝试连接</button>
+    <h1 data-i18n="title">You are currently offline</h1>
+    <p data-i18n="desc1">There seems to be a problem with your network connection; the Xiaozhi Console server cannot be reached.</p>
+    <p data-i18n="desc2">Some cached content and static resources may still be available, but functionality may be limited.</p>
+    <button class="btn" data-i18n="retry" onclick="window.location.reload()">Try to reconnect</button>
   </div>
 
   <script>
-    // 检测网络状态变化
+    // Localize the page: English by default, Chinese when the console language (or browser language) is Chinese
+    (function () {
+      var messages = {
+        zh_CN: {
+          pageTitle: '离线模式 - 小智控制台',
+          title: '您当前处于离线模式',
+          desc1: '看起来您的网络连接有问题，无法连接到小智控制台服务器。',
+          desc2: '部分已缓存的内容和静态资源可能仍然可用，但功能可能受到限制。',
+          retry: '重新尝试连接'
+        },
+        zh_TW: {
+          pageTitle: '離線模式 - 小智控制台',
+          title: '您目前處於離線模式',
+          desc1: '看起來您的網路連線有問題，無法連接到小智控制台伺服器。',
+          desc2: '部分已快取的內容和靜態資源可能仍然可用，但功能可能受到限制。',
+          retry: '重新嘗試連線'
+        }
+      };
+      var lang = null;
+      try {
+        lang = localStorage.getItem('userLanguage');
+      } catch (e) {
+        lang = null;
+      }
+      if (!lang) {
+        var nav = navigator.language || '';
+        if (/^zh-(TW|HK|MO)/i.test(nav)) {
+          lang = 'zh_TW';
+        } else if (/^zh/i.test(nav)) {
+          lang = 'zh_CN';
+        }
+      }
+      var dict = messages[lang];
+      if (!dict) {
+        return;
+      }
+      document.documentElement.lang = lang.replace('_', '-');
+      document.title = dict.pageTitle;
+      var nodes = document.querySelectorAll('[data-i18n]');
+      for (var i = 0; i < nodes.length; i++) {
+        var key = nodes[i].getAttribute('data-i18n');
+        if (dict[key]) {
+          nodes[i].textContent = dict[key];
+        }
+      }
+    })();
+
+    // Reload when the network comes back
     window.addEventListener('online', () => {
       window.location.reload();
     });

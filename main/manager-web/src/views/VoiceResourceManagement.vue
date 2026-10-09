@@ -48,7 +48,7 @@
             </div>
         </div>
 
-        <!-- 新增音色资源对话框 -->
+        <!-- Add voice resource dialog -->
         <voice-clone-dialog :title="$t('voiceClone.addVoiceClone')" :visible.sync="dialogVisible" :form="voiceCloneForm"
             @submit="handleSubmit" @cancel="dialogVisible = false" />
 
@@ -293,7 +293,7 @@ export default {
 }
 
 .main-wrapper {
-    // 顶部 63px 底部 35px
+    // Top 63px, bottom 35px
     height: calc(100vh - 63px - 35px);
     padding: 20px 22px 0;
     position: relative;

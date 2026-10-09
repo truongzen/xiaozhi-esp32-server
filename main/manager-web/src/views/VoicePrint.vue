@@ -39,7 +39,7 @@
             </div>
         </div>
 
-        <!-- 新增/编辑参数对话框 -->
+        <!-- Add/edit parameter dialog -->
         <voice-print-dialog :title="dialogTitle" :visible.sync="dialogVisible" :agentId="agentId" :form="paramForm"
             @submit="handleSubmit" @cancel="dialogVisible = false" />
         <el-footer>

@@ -81,7 +81,7 @@
       </div>
     </div>
 
-    <!-- 新增/编辑供应器对话框 -->
+    <!-- Add/edit provider dialog -->
     <provider-dialog :title="dialogTitle" :visible.sync="dialogVisible" :form="providerForm" :model-types="modelTypes"
       @submit="handleSubmit" @cancel="dialogVisible = false" />
 
@@ -123,7 +123,7 @@ export default {
       pageSizeOptions: [10, 20, 50, 100],
       total: 0,
       dialogVisible: false,
-      dialogTitle: "新增供应器",
+      dialogTitle: this.$t("common.addProvider"),
       isAllSelected: false,
       DropdownVisible: false,
       sensitive_keys: ["api_key", "personal_access_token", "access_token", "token", "secret", "access_key_secret", "secret_key"],
@@ -150,9 +150,9 @@ export default {
       }));
     },
     selectedModelTypeLabel() {
-      if (!this.searchModelType) return `（${this.$t('providerManagement.all')}）`;
+      if (!this.searchModelType) return ` (${this.$t('providerManagement.all')})`;
       const selectedType = this.modelTypes.find(item => item.value === this.searchModelType);
-      return selectedType ? `（${this.$t(selectedType.labelKey)}）` : "";
+      return selectedType ? ` (${this.$t(selectedType.labelKey)})` : "";
     },
     filteredProvidersList() {
       return this.providersList;
@@ -214,7 +214,7 @@ export default {
             this.total = data.data.total;
           } else {
             this.$message.error({
-              message: data.msg || '获取参数列表失败'
+              message: data.msg || this.$t('paramManagement.getParamsListFailed')
             });
           }
         }
@@ -393,7 +393,7 @@ export default {
 }
 
 .main-wrapper {
-  // 顶部 63px 底部 35px
+  // Top 63px, bottom 35px
   height: calc(100vh - 63px - 35px);
   padding: 20px 22px 0;
   position: relative;

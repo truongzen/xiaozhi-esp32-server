@@ -82,7 +82,7 @@
         </el-table>
       </div>
 
-      <!-- 自定义滚动条 -->
+      <!-- Custom scrollbar -->
       <div class="custom-scrollbar" ref="scrollbar">
         <div class="custom-scrollbar-track" ref="scrollbarTrack" @click="handleTrackClick">
           <div class="custom-scrollbar-thumb" ref="scrollbarThumb" @mousedown="startDrag"></div>
@@ -141,7 +141,7 @@ export default {
       selectAll: false,
       selectedRows: [],
       loading: false,
-      showReferenceColumns: false, // 控制是否显示参考列
+      showReferenceColumns: false, // Controls whether reference columns are shown
     };
   },
   watch: {
@@ -149,8 +149,8 @@ export default {
       this.localVisible = newVal;
       if (newVal) {
         this.currentPage = 1;
-        this.updateShowReferenceColumns(); // 更新显示状态
-        this.loadData(); // 对话框显示时加载数据
+        this.updateShowReferenceColumns(); // Update display state
+        this.loadData(); // Load data when the dialog is shown
         this.$nextTick(() => {
           this.updateScrollbar();
         });
@@ -187,7 +187,7 @@ export default {
     window.removeEventListener('mousemove', this.handleDrag);
   },
   methods: {
-    // 更新是否显示参考列
+    // Update whether reference columns are shown
     updateShowReferenceColumns() {
       if (this.modelConfig && this.modelConfig.configJson) {
         const providerType = this.modelConfig.configJson.type;
@@ -225,15 +225,15 @@ export default {
           this.total = data.total;
         } else {
           this.$message.error({
-            message: data.msg || this.$t('ttsModel.getVoiceListFailed'),
+            message: data.msg || this.$t('ttsModel.fetchVoicesFailed'),
             showClose: true
           });
         }
         this.loading = false;
       }, (err) => {
-        console.error('加载失败:', err);
+        console.error('Load failed:', err);
         this.$message.error({
-          message: this.$t('ttsModel.loadVoiceDataFailed'),
+          message: this.$t('ttsModel.loadVoicesFailed'),
           showClose: true
         });
         this.loading = false;
@@ -241,7 +241,7 @@ export default {
     },
 
     handleClose() {
-      // 重置状态
+      // Reset state
       this.ttsModels = [];
       this.currentPage = 1;
       this.total = 0;
@@ -347,7 +347,7 @@ export default {
     },
 
     cancelEdit(row) {
-      // 通过新增创建的数据，取消编辑时，需要从数组中移除
+      // For rows created via add, remove them from the array when editing is cancelled
       if (!row.id) {
         this.ttsModels.shift(row);
       } else {
@@ -378,7 +378,7 @@ export default {
           sort: row.sort
         };
 
-        // 只有在显示参考列的情况下才添加参考字段
+        // Only add reference fields when reference columns are shown
         if (this.showReferenceColumns) {
           params.referenceAudio = row.referenceAudio;
           params.referenceText = row.referenceText;
@@ -386,21 +386,21 @@ export default {
 
         let res;
         if (row.id) {
-          // 已有ID，执行更新操作
+          // ID exists: perform update
           Api.timbre.updateVoice(params, (response) => {
             res = response;
             this.handleResponse(res, row);
           });
         } else {
-          // 没有ID，执行新增操作
+          // No ID: perform add
           Api.timbre.saveVoice(params, (response) => {
             res = response;
             this.handleResponse(res, row);
           });
         }
       } catch (error) {
-        console.error('操作失败:', error);
-        // 异常情况下也恢复原始数据
+        console.error('Operation failed:', error);
+        // Restore original data on exception as well
         if (row.originalData) {
           Object.assign(row, row.originalData);
           row.editing = false;
@@ -421,16 +421,16 @@ export default {
         });
         row.editing = false;
         delete row.originalData;
-        this.loadData(); // 刷新数据
+        this.loadData(); // Refresh data
       } else {
-        // 保存失败时恢复原始数据
+        // Restore original data when save fails
         if (row.originalData) {
           Object.assign(row, row.originalData);
           row.editing = false;
           delete row.originalData;
         }
         this.$message.error({
-            message: res.msg || (row.id ? this.$t('ttsModel.updateFailed') : this.$t('ttsModel.saveFailed')),
+            message: res.msg || (row.id ? this.$t('voiceClone.updateFailed') : this.$t('modelConfig.saveFailed')),
             showClose: true
           });
       }
@@ -464,14 +464,14 @@ export default {
         referenceText: '',
         selected: false,
         editing: true,
-        sort: 0 // 新增数据默认排序在顶部
+        sort: 0 // New rows are sorted at the top by default
       };
 
       this.ttsModels.unshift(newRow);
     },
 
     deleteRow(row) {
-      // 处理单个音色或音色数组
+      // Handle a single voice or an array of voices
       const voices = Array.isArray(row) ? row : [row];
 
       if (Array.isArray(row) && row.length === 0) {
@@ -499,7 +499,7 @@ export default {
               message: this.$t('ttsModel.deleteVoiceSuccess', {count: voiceCount}),
               showClose: true
             });
-            this.loadData(); // 刷新参数列表
+            this.loadData(); // Refresh the parameter list
           } else {
             this.$message.error({
               message: data.msg || this.$t('ttsModel.deleteFailed'),
@@ -532,7 +532,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/* 表格样式 */
+/* Table styles */
 ::v-deep .data-table .el-table__header th {
   color: black;
   padding: 6px 0 !important;
@@ -558,7 +558,7 @@ export default {
   border: none !important;
 }
 
-/* 备注文本 */
+/* Remark text */
 ::v-deep .remark-input .el-textarea__inner {
   border-radius: 4px;
   border: 1px solid #e6e6e6;
@@ -580,7 +580,7 @@ export default {
 }
 
 
-/* 滚动容器 */
+/* Scroll container */
 .scroll-wrapper {
   display: flex;
   max-height: 55vh;
@@ -599,7 +599,7 @@ export default {
   display: none;
 }
 
-/* 自定义滚动条 */
+/* Custom scrollbar */
 .custom-scrollbar {
   width: 8px;
   background: #f1f1f1;
@@ -646,7 +646,7 @@ export default {
   display: none;
 }
 
-/* 音频播放器容器样式 */
+/* Audio player container styles */
 .custom-audio-container {
   width: 90%;
   margin: 0 auto;
@@ -671,7 +671,7 @@ export default {
   color: #5cca8e !important;
 }
 
-/* 表格单元格自适应 */
+/* Adaptive table cells */
 ::v-deep .el-table__body-wrapper {
   overflow-x: hidden !important;
 }
@@ -681,25 +681,25 @@ export default {
   word-break: break-all !important;
 }
 
-/* 按钮组定位调整 */
+/* Button group positioning */
 .action-buttons {
   padding-top: 10px;
   text-align: left;
 }
 
-/* 输入框自适应 */
+/* Adaptive input */
 ::v-deep .el-input__inner,
 ::v-deep .el-textarea__inner {
   width: 100% !important;
   min-width: 120px;
 }
 
-/* 音频输入框特殊处理 */
+/* Special handling for the audio input */
 .audio-input ::v-deep .el-input__inner {
   min-width: 200px;
 }
 
-/* 操作按钮弹性布局 */
+/* Flexible layout for action buttons */
 ::v-deep .el-table__row .el-button {
   flex-shrink: 0;
   margin: 2px !important;

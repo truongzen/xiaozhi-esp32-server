@@ -23,11 +23,11 @@
     <slot></slot>
     <template slot="footer">
       <div v-if="footer" class="dialog-footer">
-        <CustomButton @click="handleCancel">{{ cancelText }}</CustomButton>
+        <CustomButton @click="handleCancel">{{ cancelText || $t('common.cancel') }}</CustomButton>
         <CustomButton :loading="confirmLoading" type="confirm" @click="handleConfirm">
           <span class="confirm-inner">
             <img src="@/assets/knowledge-base/star.png" class="confirm-icon" />
-            {{ confirmText }}
+            {{ confirmText || $t('customDialog.confirmSave') }}
           </span>
         </CustomButton>
       </div>
@@ -87,11 +87,11 @@ export default {
     },
     cancelText: {
       type: String,
-      default: "取消"
+      default: ""
     },
     confirmText: {
       type: String,
-      default: "确认保存"
+      default: ""
     }
   },
   data() {
@@ -138,7 +138,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/* 大档与小档通过 .custom-dialog--large 区分 */
+/* Large and small sizes are distinguished by .custom-dialog--large */
 ::v-deep .el-dialog.custom-dialog {
   border-radius: 10px;
   overflow: hidden;
@@ -155,7 +155,7 @@ export default {
   padding: 20px;
 }
 
-/* .v-modal 样式由 global.scss 全局定义 */
+/* .v-modal styles are defined globally in global.scss */
 ::v-deep .el-dialog__header {
   padding: 16px 20px 12px;
   background: linear-gradient(135deg, #e2eeff, #edeafe);
@@ -251,7 +251,7 @@ export default {
   }
 }
 
-/* 大档：上下各留 10px 让边框和圆角可见 */
+/* Large size: leave 10px top and bottom so the border and rounded corners are visible */
 ::v-deep .el-dialog.custom-dialog.custom-dialog--large {
   margin: 10px auto !important;
   height: calc(100vh - 20px);

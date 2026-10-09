@@ -2,23 +2,23 @@ import { getServiceUrl } from '../api';
 import RequestService from '../httpRequest';
 
 /**
- * 获取认证token
+ * Get the auth token
  */
 function getAuthToken() {
   return localStorage.getItem('token') || '';
 }
 
 /**
- * 通用API请求包装器
- * @param {Object} config - 请求配置
- * @param {string} config.url - 请求URL
- * @param {string} config.method - 请求方法
- * @param {Object} [config.data] - 请求数据
- * @param {Object} [config.headers] - 额外请求头
- * @param {Function} config.callback - 成功回调
- * @param {Function} [config.errorCallback] - 错误回调
- * @param {string} [config.errorMessage] - 错误消息
- * @param {Function} [config.retryFunction] - 重试函数
+ * Generic API request wrapper
+ * @param {Object} config - Request config
+ * @param {string} config.url - Request URL
+ * @param {string} config.method - Request method
+ * @param {Object} [config.data] - Request data
+ * @param {Object} [config.headers] - Extra request headers
+ * @param {Function} config.callback - Success callback
+ * @param {Function} [config.errorCallback] - Error callback
+ * @param {string} [config.errorMessage] - Error message (logged to the console)
+ * @param {Function} [config.retryFunction] - Retry function
  */
 function makeApiRequest(config) {
   const token = getAuthToken();
@@ -42,7 +42,7 @@ function makeApiRequest(config) {
       callback(res);
     })
     .fail((err) => {
-      console.error(errorMessage || '操作失败', err);
+      console.error(errorMessage || 'Operation failed', err);
       if (errorCallback) {
         errorCallback(err);
       }
@@ -57,14 +57,14 @@ function makeApiRequest(config) {
 }
 
 /**
- * 知识库管理相关API
+ * Knowledge base management APIs
  */
 export default {
   /**
-   * 获取知识库列表
-   * @param {Object} params - 查询参数
-   * @param {Function} callback - 回调函数
-   * @param {Function} errorCallback - 错误回调
+   * Get knowledge base list
+   * @param {Object} params - Query parameters
+   * @param {Function} callback - Callback function
+   * @param {Function} errorCallback - Error callback
    */
   getKnowledgeBaseList(params, callback, errorCallback) {
     const queryParams = new URLSearchParams({
@@ -78,16 +78,16 @@ export default {
       method: 'GET',
       callback: callback,
       errorCallback: errorCallback,
-      errorMessage: '获取知识库列表失败',
+      errorMessage: 'Failed to get knowledge base list',
       retryFunction: () => this.getKnowledgeBaseList(params, callback, errorCallback)
     });
   },
 
   /**
-   * 创建知识库
-   * @param {Object} data - 知识库数据
-   * @param {Function} callback - 回调函数
-   * @param {Function} errorCallback - 错误回调
+   * Create knowledge base
+   * @param {Object} data - Knowledge base data
+   * @param {Function} callback - Callback function
+   * @param {Function} errorCallback - Error callback
    */
   createKnowledgeBase(data, callback, errorCallback) {
     console.log('createKnowledgeBase called with data:', data);
@@ -103,7 +103,7 @@ export default {
         callback(res);
       },
       errorCallback: (err) => {
-        console.error('创建知识库失败:', err);
+        console.error('Failed to create knowledge base:', err);
         if (err.response) {
           console.error('Error response data:', err.response.data);
           console.error('Error response status:', err.response.status);
@@ -112,17 +112,17 @@ export default {
           errorCallback(err);
         }
       },
-      errorMessage: '创建知识库失败',
+      errorMessage: 'Failed to create knowledge base',
       retryFunction: () => this.createKnowledgeBase(data, callback, errorCallback)
     });
   },
 
   /**
-   * 更新知识库
-   * @param {string} datasetId - 知识库ID
-   * @param {Object} data - 更新数据
-   * @param {Function} callback - 回调函数
-   * @param {Function} errorCallback - 错误回调
+   * Update knowledge base
+   * @param {string} datasetId - Knowledge base ID
+   * @param {Object} data - Update data
+   * @param {Function} callback - Callback function
+   * @param {Function} errorCallback - Error callback
    */
   updateKnowledgeBase(datasetId, data, callback, errorCallback) {
     console.log('updateKnowledgeBase called with datasetId:', datasetId, 'data:', data);
@@ -135,16 +135,16 @@ export default {
       headers: { 'Content-Type': 'application/json' },
       callback: callback,
       errorCallback: errorCallback,
-      errorMessage: '更新知识库失败',
+      errorMessage: 'Failed to update knowledge base',
       retryFunction: () => this.updateKnowledgeBase(datasetId, data, callback, errorCallback)
     });
   },
 
   /**
-   * 删除单个知识库
-   * @param {string} datasetId - 知识库ID
-   * @param {Function} callback - 回调函数
-   * @param {Function} errorCallback - 错误回调
+   * Delete a single knowledge base
+   * @param {string} datasetId - Knowledge base ID
+   * @param {Function} callback - Callback function
+   * @param {Function} errorCallback - Error callback
    */
   deleteKnowledgeBase(datasetId, callback, errorCallback) {
     console.log('deleteKnowledgeBase called with datasetId:', datasetId);
@@ -155,19 +155,19 @@ export default {
       method: 'DELETE',
       callback: callback,
       errorCallback: errorCallback,
-      errorMessage: '删除知识库失败',
+      errorMessage: 'Failed to delete knowledge base',
       retryFunction: () => this.deleteKnowledgeBase(datasetId, callback, errorCallback)
     });
   },
 
   /**
-   * 批量删除知识库
-   * @param {string|Array} ids - 知识库ID字符串或数组
-   * @param {Function} callback - 回调函数
-   * @param {Function} errorCallback - 错误回调
+   * Batch delete knowledge bases
+   * @param {string|Array} ids - Knowledge base ID string or array
+   * @param {Function} callback - Callback function
+   * @param {Function} errorCallback - Error callback
    */
   deleteKnowledgeBases(ids, callback, errorCallback) {
-    // 确保ids是正确格式的字符串
+    // Make sure ids is a correctly formatted string
     const idsStr = Array.isArray(ids) ? ids.join(',') : ids;
 
     makeApiRequest({
@@ -175,17 +175,17 @@ export default {
       method: 'DELETE',
       callback: callback,
       errorCallback: errorCallback,
-      errorMessage: '批量删除知识库失败',
+      errorMessage: 'Failed to batch delete knowledge bases',
       retryFunction: () => this.deleteKnowledgeBases(ids, callback, errorCallback)
     });
   },
 
   /**
-   * 获取文档列表
-   * @param {string} datasetId - 知识库ID
-   * @param {Object} params - 查询参数
-   * @param {Function} callback - 回调函数
-   * @param {Function} errorCallback - 错误回调
+   * Get document list
+   * @param {string} datasetId - Knowledge base ID
+   * @param {Object} params - Query parameters
+   * @param {Function} callback - Callback function
+   * @param {Function} errorCallback - Error callback
    */
   getDocumentList(datasetId, params, callback, errorCallback) {
     const queryParams = new URLSearchParams({
@@ -199,17 +199,17 @@ export default {
       method: 'GET',
       callback: callback,
       errorCallback: errorCallback,
-      errorMessage: '获取文档列表失败',
+      errorMessage: 'Failed to get document list',
       retryFunction: () => this.getDocumentList(datasetId, params, callback, errorCallback)
     });
   },
 
   /**
-   * 上传文档
-   * @param {string} datasetId - 知识库ID
-   * @param {Object} formData - 表单数据
-   * @param {Function} callback - 回调函数
-   * @param {Function} errorCallback - 错误回调
+   * Upload document
+   * @param {string} datasetId - Knowledge base ID
+   * @param {Object} formData - Form data
+   * @param {Function} callback - Callback function
+   * @param {Function} errorCallback - Error callback
    */
   uploadDocument(datasetId, formData, callback, errorCallback) {
     makeApiRequest({
@@ -219,17 +219,17 @@ export default {
       headers: { 'Content-Type': 'multipart/form-data' },
       callback: callback,
       errorCallback: errorCallback,
-      errorMessage: '上传文档失败',
+      errorMessage: 'Failed to upload document',
       retryFunction: () => this.uploadDocument(datasetId, formData, callback, errorCallback)
     });
   },
 
   /**
-   * 解析文档
-   * @param {string} datasetId - 知识库ID
-   * @param {string} documentId - 文档ID
-   * @param {Function} callback - 回调函数
-   * @param {Function} errorCallback - 错误回调
+   * Parse document
+   * @param {string} datasetId - Knowledge base ID
+   * @param {string} documentId - Document ID
+   * @param {Function} callback - Callback function
+   * @param {Function} errorCallback - Error callback
    */
   parseDocument(datasetId, documentId, callback, errorCallback) {
     const requestBody = {
@@ -243,17 +243,17 @@ export default {
       headers: { 'Content-Type': 'application/json' },
       callback: callback,
       errorCallback: errorCallback,
-      errorMessage: '解析文档失败',
+      errorMessage: 'Failed to parse document',
       retryFunction: () => this.parseDocument(datasetId, documentId, callback, errorCallback)
     });
   },
 
   /**
-   * 删除文档
-   * @param {string} datasetId - 知识库ID
-   * @param {string} documentId - 文档ID
-   * @param {Function} callback - 回调函数
-   * @param {Function} errorCallback - 错误回调
+   * Delete document
+   * @param {string} datasetId - Knowledge base ID
+   * @param {string} documentId - Document ID
+   * @param {Function} callback - Callback function
+   * @param {Function} errorCallback - Error callback
    */
   deleteDocument(datasetId, documentId, callback, errorCallback) {
     makeApiRequest({
@@ -261,18 +261,18 @@ export default {
       method: 'DELETE',
       callback: callback,
       errorCallback: errorCallback,
-      errorMessage: '删除文档失败',
+      errorMessage: 'Failed to delete document',
       retryFunction: () => this.deleteDocument(datasetId, documentId, callback, errorCallback)
     });
   },
 
   /**
-   * 获取文档切片列表
-   * @param {string} datasetId - 知识库ID
-   * @param {string} documentId - 文档ID
-   * @param {Object} params - 查询参数
-   * @param {Function} callback - 回调函数
-   * @param {Function} errorCallback - 错误回调
+   * Get document chunk list
+   * @param {string} datasetId - Knowledge base ID
+   * @param {string} documentId - Document ID
+   * @param {Object} params - Query parameters
+   * @param {Function} callback - Callback function
+   * @param {Function} errorCallback - Error callback
    */
   listChunks(datasetId, documentId, params, callback, errorCallback) {
     let queryParams = new URLSearchParams({
@@ -280,7 +280,7 @@ export default {
       page_size: params.page_size || 10
     }).toString();
 
-    // 添加关键词搜索参数
+    // Add the keyword search parameter
     if (params.keywords) {
       queryParams += `&keywords=${encodeURIComponent(params.keywords)}`;
     }
@@ -290,17 +290,17 @@ export default {
       method: 'GET',
       callback: callback,
       errorCallback: errorCallback,
-      errorMessage: '获取切片列表失败',
+      errorMessage: 'Failed to get chunk list',
       retryFunction: () => this.listChunks(datasetId, documentId, params, callback, errorCallback)
     });
   },
 
   /**
-   * 召回测试
-   * @param {string} datasetId - 知识库ID
-   * @param {Object} data - 召回测试参数
-   * @param {Function} callback - 回调函数
-   * @param {Function} errorCallback - 错误回调
+   * Retrieval test
+   * @param {string} datasetId - Knowledge base ID
+   * @param {Object} data - Retrieval test parameters
+   * @param {Function} callback - Callback function
+   * @param {Function} errorCallback - Error callback
    */
   retrievalTest(datasetId, data, callback, errorCallback) {
     makeApiRequest({
@@ -310,7 +310,7 @@ export default {
       headers: { 'Content-Type': 'application/json' },
       callback: callback,
       errorCallback: errorCallback,
-      errorMessage: '召回测试失败',
+      errorMessage: 'Retrieval test failed',
       retryFunction: () => this.retrievalTest(datasetId, data, callback, errorCallback)
     });
   }

@@ -1,13 +1,13 @@
 <template>
   <CustomDialog
-    :title="title"
+    :title="title || $t('voicePrintDialog.addSpeaker')"
     :visible.sync="innerVisible"
     :confirm-loading="saving"
     width="600px"
     @confirm="submit"
     @cancel="cancel"
   >
-    <el-form :model="form" :rules="rules" ref="form" label-width="auto" label-position="left" class="param-form">
+    <el-form :model="form" :rules="formRules" ref="form" label-width="auto" label-position="left" class="param-form">
       <el-form-item :label="$t('voicePrintDialog.voicePrintVector')" prop="audioId" class="form-item">
         <el-select v-model="form.audioId" :placeholder="$t('voicePrintDialog.selectVoiceMessage')" class="custom-select" filterable>
           <el-option v-for="item in valueTypeOptions" :key="item.audioId" :label="item.content" :value="item.audioId">
@@ -41,7 +41,7 @@ export default {
   props: {
     title: {
       type: String,
-      default: '添加说话人'
+      default: ''
     },
     visible: {
       type: Boolean,
@@ -67,21 +67,24 @@ export default {
       audioElement: null,
       valueTypeOptions: [
         { audioId: '', content: '' }
-      ],
-      rules: {
-        introduce: [
-          { required: true, message: '请输入描述', trigger: "blur" }
-        ],
-        sourceName: [
-          { required: true, message: '请输入名称', trigger: "blur" }
-        ],
-        audioId: [
-          { required: true, message: '请选择音频向量', trigger: "change" }
-        ]
-      }
+      ]
     };
   },
   computed: {
+    // Computed so validation messages follow the current UI language
+    formRules() {
+      return {
+        introduce: [
+          { required: true, message: this.$t('voicePrintDialog.requiredDescription'), trigger: "blur" }
+        ],
+        sourceName: [
+          { required: true, message: this.$t('voicePrintDialog.requiredName'), trigger: "blur" }
+        ],
+        audioId: [
+          { required: true, message: this.$t('voicePrintDialog.requiredAudioVector'), trigger: "change" }
+        ]
+      };
+    },
     innerVisible: {
       get() {
         return this.visible;
@@ -100,7 +103,7 @@ export default {
     },
     playAudio(audioId) {
       if (this.playingAudioId === audioId) {
-        // 如果正在播放当前音频，则停止播放
+        // If the current audio is playing, stop it
         if (this.audioElement) {
           this.audioElement.pause();
           this.audioElement = null;
@@ -109,17 +112,17 @@ export default {
         return;
       }
 
-      // 停止当前正在播放的音频
+      // Stop the audio currently playing
       if (this.audioElement) {
         this.audioElement.pause();
         this.audioElement = null;
       }
 
-      // 先获取音频下载ID
+      // First get the audio download ID
       this.playingAudioId = audioId;
       api.agent.getAudioId(audioId, (res) => {
         if (res.data && res.data.data) {
-          // 使用获取到的下载ID播放音频
+          // Play audio using the obtained download ID
           this.audioElement = new Audio(api.getServiceUrl() + `/agent/play/${res.data.data}`);
 
           this.audioElement.onended = () => {

@@ -1,0 +1,392 @@
+# web-vocabulary.txt
+# Chinese phrases that were translated in main/manager-web, with the English used.
+# Format: Chinese <TAB> English <TAB> where it was changed (repo-relative path; several paths separated by ", ").
+# The backend translations (digital-human, manager-api, xiaozhi-server) use the same English for the same phrase.
+# Phrases that were already translated in manager-web/src/i18n/en.js before this change are not repeated here.
+
+智控台	XiaoZhi Control Panel	main/manager-web/env
+${s} 已清空	${s} cleared	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+BrowserFontConverter 初始化完成	BrowserFontConverter initialized	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+GIF 优化命令:	GIF optimize command:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+GIF 优化失败:	GIF optimization failed:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+GIF 优化失败: ${r.message}	GIF optimization failed: ${r.message}	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+GIF 缩放命令:	GIF resize command:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+GIF 缩放失败:	GIF resize failed:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+GIF 缩放失败: ${a.message}	GIF resize failed: ${a.message}	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+GIF 缩放完成	GIF resize complete	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+GIF 裁剪命令:	GIF crop command:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+GIF 裁剪失败:	GIF crop failed:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+GIF 裁剪失败: ${g.message}	GIF crop failed: ${g.message}	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+IndexedDB 初始化失败:	IndexedDB initialization failed:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+IndexedDB 初始化成功	IndexedDB initialized	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+IndexedDB 表结构创建完成	IndexedDB object stores created	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+IndexedDB 连接已关闭	IndexedDB connection closed	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+gifsicle 优化失败	gifsicle optimization failed	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+gifsicle 处理失败，未返回结果	gifsicle processing failed, no result returned	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+gifsicle 裁剪失败	gifsicle crop failed	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+reboot指令调用警告（设备可能已重启）:	reboot command warning (the device may have already rebooted):	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+{name}表情图片	{name} emoji image	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+{{ $t('backgroundConfig.darkModePreview') }}背景	Dark mode background	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+{{ $t('backgroundConfig.lightModePreview') }}背景	Light mode background	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+⏳ 等待设备连接...	⏳ Waiting for device connection...	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+⏳ 设备在线，等待设备信息加载...	⏳ Device online, waiting for device info...	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+⚠ 未检测到设备连接，使用手动配置模式	⚠ No device connection detected, using manual configuration mode	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+⚠ 等待设备连接超时	⚠ Timed out waiting for device connection	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+⚠ 设备配置加载超时:	⚠ Device configuration load timed out:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+⚠️ 检测到旧版本的表情数据结构（不兼容）	⚠️ Old (incompatible) emoji data structure detected	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+✅ 旧表情数据已完全清除	✅ Old emoji data fully cleared	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+✓ 检测到已缓存的设备信息，立即加载	✓ Cached device info detected, loading now	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+✓ 设备配置加载成功:	✓ Device configuration loaded:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+不支持的字体文件格式	Unsupported font file format	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+临时数据 ${e} 已保存	Temp data ${e} saved	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+从 IndexedDB 恢复配置成功	Config restored from IndexedDB	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+优化级别必须在 1-3 之间	Optimization level must be between 1 and 3	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+使用 crypto.subtle.digest 失败，回退到自定义哈希函数:	crypto.subtle.digest failed, falling back to custom hash function:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+保存临时数据失败:	Failed to save temp data:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+保存字体文件失败: ${e.name}	Failed to save font file: ${e.name}	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+保存文件失败:	Failed to save file:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+保存背景文件失败: ${e}	Failed to save background file: ${e}	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+保存表情文件失败: ${e}	Failed to save emoji file: ${e}	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+保存配置失败:	Failed to save config:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js, main/manager-web/src/apis/module/user.js
+共享表情图片 ({names})	Shared emoji image ({names})	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+删除字体文件失败:	Failed to delete font file:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+删除文件失败:	Failed to delete file:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+删除背景文件失败: ${e}	Failed to delete background file: ${e}	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+删除表情文件失败: ${e}	Failed to delete emoji file: ${e}	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+刷新表情配置引用失败:	Failed to refresh emoji config references:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+加载 FST 文件失败: ${n}	Failed to load FST file: ${n}	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+加载 FST 模型失败	Failed to load FST model	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+加载临时数据失败:	Failed to load temp data:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+加载文件失败:	Failed to load file:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+加载文件失败: ${n}	Failed to load file: ${n}	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+加载模型失败: ${e}	Failed to load model: ${e}	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+加载设备配置失败:	Failed to load device configuration:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+加载配置失败:	Failed to load config:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+压缩率: ${f}%	Compression ratio: ${f}%	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+在线烧录失败:	Online flashing failed:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+字体文件对象无效	Invalid font file object	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+字体文件已保存: ${e.name}	Font file saved: ${e.name}	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+字体文件已删除	Font file deleted	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+屏幕信息获取失败:	Failed to get screen info:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+已删除 ${DA.length} 个旧表情文件	Deleted ${DA.length} old emoji files	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+已重置表情类型，请重新选择	Emoji type reset, please select again	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+必须指定 maxWidth 或 maxHeight	maxWidth or maxHeight must be specified	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+恢复字体文件失败:	Failed to restore font file:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+恢复背景文件失败: ${e}	Failed to restore background file: ${e}	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+恢复表情文件失败: ${e}	Failed to restore emoji file: ${e}	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+所有存储数据已清空	All stored data cleared	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+所有存储文件已清理	All stored files cleared	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+批量缩放第 ${i+1} 个文件失败:	Batch resize failed for file #${i+1}:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+文件 ${e} 已删除	File ${e} deleted	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+文件 ${g.name} 从 IndexedDB 恢复成功	File ${g.name} restored from IndexedDB	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+文件 ${t.name} 已保存到 IndexedDB	File ${t.name} saved to IndexedDB	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+无法加载 FST 文件: ${n}, status: ${r.status}	Unable to load FST file: ${n}, status: ${r.status}	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+无法加载文件: ${n}, status: ${r.status}	Unable to load file: ${n}, status: ${r.status}	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+无法获取 GIF 信息	Unable to get GIF info	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+未知	unknown	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+检查存储配置时出错:	Error while checking stored config:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+检查设备状态失败:	Failed to check device status:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+正在清理旧数据...	Cleaning up old data...	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+没有模型数据可打包	No model data to package	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+浅色模式背景图片	Light mode background image	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+深色模式背景图片	Dark mode background image	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+清理存储文件失败:	Failed to clear stored files:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+清理旧表情数据时出错:	Error while cleaning up old emoji data:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+清理旧表情文件时出错:	Error while cleaning up old emoji files:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+清空 ${s} 失败:	Failed to clear ${s}:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+清空部分数据时出现错误	Error while clearing some data	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+生成 assets.bin 失败:	Failed to generate assets.bin:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+系统信息获取失败:	Failed to get system info:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+背景图片预览加载失败:	Failed to load background image preview:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+背景文件已保存: ${e} - ${t.name}	Background file saved: ${e} - ${t.name}	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+背景文件已删除: ${e}	Background file deleted: ${e}	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+自定义命令词模型	Custom command word model	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+自定义字体文件	Custom font file	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+自定义字体预览加载失败:	Failed to load custom font preview:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+获取 GIF 信息失败:	Failed to get GIF info:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+获取存储信息失败:	Failed to get storage info:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+获取文件列表失败:	Failed to get file list:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+获取设备信息时发生错误:	Error while getting device info:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+表情去重：${Object.keys($).length} 个表情使用了 ${NA.size} 个文件	Emoji deduplication: ${Object.keys($).length} emotions use ${NA.size} files	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+表情图片预览加载失败 (${R}):	Failed to load emoji image preview (${R}):	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+表情文件已保存: ${r} - ${t.name}	Emoji file saved: ${r} - ${t.name}	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+表情文件已删除: ${t}	Emoji file deleted: ${t}	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+解析 GIF 信息时出错:	Error while parsing GIF info:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+设备状态获取失败:	Failed to get device status:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+设置下载URL失败:	Failed to set download URL:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+请求超时，请检查设备烧录是否异常	Request timed out, please check whether flashing failed on the device	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+读取文件失败	Failed to read file	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+质量参数必须在 1-200 之间	Quality must be between 1 and 200	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+输入文件大小:	Input file size:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+输出文件大小:	Output file size:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+配置已保存到 IndexedDB	Config saved to IndexedDB	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+配置索引文件	Config index file	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+重置配置失败:	Failed to reset config:	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+预设唤醒词模型	Preset wake word model	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+预设字体文件	Preset font file	main/manager-web/public/generator/assets/index-Guo1hQ-y.js
+您当前处于离线模式	You are currently offline	main/manager-web/public/offline.html
+看起来您的网络连接有问题，无法连接到小智控制台服务器。	There seems to be a problem with your network connection; the Xiaozhi Console server cannot be reached.	main/manager-web/public/offline.html
+离线模式 - 小智控制台	Offline - Xiaozhi Console	main/manager-web/public/offline.html
+部分已缓存的内容和静态资源可能仍然可用，但功能可能受到限制。	Some cached content and static resources may still be available, but functionality may be limited.	main/manager-web/public/offline.html
+重新尝试连接	Try to reconnect	main/manager-web/public/offline.html
+按下 Alt+C 组合键或在控制台运行 checkCDNCacheStatus() 可以查看CDN缓存状态	Press Alt+C or run checkCDNCacheStatus() in the console to view the CDN cache status	main/manager-web/src/App.vue
+检查Service Worker状态失败:	Failed to check Service Worker status:	main/manager-web/src/App.vue
+似乎无法连接服务器	Unable to connect to the server	main/manager-web/src/apis/httpRequest.js, main/manager-web/src/i18n (key common.serverUnreachable)
+正在连接服务器(	Connecting to server ({count})	main/manager-web/src/apis/httpRequest.js
+网络请求出现了错误【${info.status}】	Network request error [{status}]	main/manager-web/src/apis/httpRequest.js
+删除参数失败:	Failed to delete parameter:	main/manager-web/src/apis/module/admin.js
+删除失败:	Delete failed:	main/manager-web/src/apis/module/admin.js
+更新参数失败:	Failed to update parameter:	main/manager-web/src/apis/module/admin.js, main/manager-web/src/utils/featureManager.js
+添加参数失败:	Failed to add parameter:	main/manager-web/src/apis/module/admin.js
+获取ws服务端列表失败:	Failed to get WebSocket server list:	main/manager-web/src/apis/module/admin.js
+获取参数列表失败:	Failed to get parameter list:	main/manager-web/src/apis/module/admin.js
+请求失败:	Request failed:	main/manager-web/src/apis/module/admin.js
+重置密码失败:	Failed to reset password:	main/manager-web/src/apis/module/admin.js
+获取单个模板失败:	Failed to get template:	main/manager-web/src/apis/module/agent.js
+获取模板分页列表失败:	Failed to get paged template list:	main/manager-web/src/apis/module/agent.js
+获取模板失败:	Failed to get templates:	main/manager-web/src/apis/module/agent.js
+获取配置失败:	Failed to get config:	main/manager-web/src/apis/module/agent.js
+删除替换词文件失败:	Failed to delete replacement word file:	main/manager-web/src/apis/module/correctWord.js
+批量删除替换词文件失败:	Failed to batch delete replacement word files:	main/manager-web/src/apis/module/correctWord.js
+获取所有替换词文件失败:	Failed to get all replacement word files:	main/manager-web/src/apis/module/correctWord.js
+获取替换词文件列表失败:	Failed to get replacement word file list:	main/manager-web/src/apis/module/correctWord.js
+手动添加设备失败:	Failed to add device manually:	main/manager-web/src/apis/module/device.js
+更新OTA状态失败	Failed to update OTA status	main/manager-web/src/apis/module/device.js, main/manager-web/src/i18n (key device.updateOtaStatusFailed)
+更新OTA状态失败:	Failed to update OTA status:	main/manager-web/src/apis/module/device.js
+绑定设备失败:	Failed to bind device:	main/manager-web/src/apis/module/device.js
+获取设备列表失败:	Failed to get device list:	main/manager-web/src/apis/module/device.js
+获取设备状态失败:	Failed to get device status:	main/manager-web/src/apis/module/device.js
+解绑设备失败:	Failed to unbind device:	main/manager-web/src/apis/module/device.js
+删除字典数据失败	Failed to delete dictionary data	main/manager-web/src/apis/module/dict.js, main/manager-web/src/i18n (key dictManagement.deleteDictDataFailed)
+删除字典数据失败:	Failed to delete dictionary data:	main/manager-web/src/apis/module/dict.js
+删除字典类型失败	Failed to delete dictionary type	main/manager-web/src/apis/module/dict.js, main/manager-web/src/i18n (key dictManagement.deleteDictTypeFailed)
+删除字典类型失败:	Failed to delete dictionary type:	main/manager-web/src/apis/module/dict.js
+新增字典数据失败	Failed to add dictionary data	main/manager-web/src/apis/module/dict.js, main/manager-web/src/i18n (key dictManagement.addDictDataFailed)
+新增字典数据失败:	Failed to add dictionary data:	main/manager-web/src/apis/module/dict.js
+新增字典类型失败	Failed to add dictionary type	main/manager-web/src/apis/module/dict.js, main/manager-web/src/i18n (key dictManagement.addDictTypeFailed)
+新增字典类型失败:	Failed to add dictionary type:	main/manager-web/src/apis/module/dict.js
+更新字典数据失败	Failed to update dictionary data	main/manager-web/src/apis/module/dict.js, main/manager-web/src/i18n (key dictManagement.updateDictDataFailed)
+更新字典数据失败:	Failed to update dictionary data:	main/manager-web/src/apis/module/dict.js
+更新字典类型失败	Failed to update dictionary type	main/manager-web/src/apis/module/dict.js, main/manager-web/src/i18n (key dictManagement.updateDictTypeFailed)
+更新字典类型失败:	Failed to update dictionary type:	main/manager-web/src/apis/module/dict.js
+获取字典数据列表失败	Failed to get dictionary data list	main/manager-web/src/apis/module/dict.js, main/manager-web/src/i18n (key dictManagement.getDictDataListFailed)
+获取字典数据列表失败:	Failed to get dictionary data list:	main/manager-web/src/apis/module/dict.js
+获取字典数据详情失败	Failed to get dictionary data details	main/manager-web/src/apis/module/dict.js, main/manager-web/src/i18n (key dictManagement.getDictDataDetailFailed)
+获取字典数据详情失败:	Failed to get dictionary data details:	main/manager-web/src/apis/module/dict.js
+获取字典类型列表失败	Failed to get dictionary type list	main/manager-web/src/apis/module/dict.js, main/manager-web/src/i18n (key dictManagement.getDictTypeListFailed)
+获取字典类型列表失败:	Failed to get dictionary type list:	main/manager-web/src/apis/module/dict.js
+获取字典类型详情失败	Failed to get dictionary type details	main/manager-web/src/apis/module/dict.js, main/manager-web/src/i18n (key dictManagement.getDictTypeDetailFailed)
+获取字典类型详情失败:	Failed to get dictionary type details:	main/manager-web/src/apis/module/dict.js
+上传文档失败	Failed to upload document	main/manager-web/src/apis/module/knowledgeBase.js
+创建知识库失败	Failed to create knowledge base	main/manager-web/src/apis/module/knowledgeBase.js
+创建知识库失败:	Failed to create knowledge base:	main/manager-web/src/apis/module/knowledgeBase.js
+删除文档失败	Failed to delete document	main/manager-web/src/apis/module/knowledgeBase.js
+删除知识库失败	Failed to delete knowledge base	main/manager-web/src/apis/module/knowledgeBase.js
+召回测试失败	Retrieval test failed	main/manager-web/src/apis/module/knowledgeBase.js, main/manager-web/src/views/KnowledgeBaseManagement.vue
+批量删除知识库失败	Failed to batch delete knowledge bases	main/manager-web/src/apis/module/knowledgeBase.js
+操作失败	Operation failed	main/manager-web/src/apis/module/knowledgeBase.js, main/manager-web/src/components/TtsModel.vue
+更新知识库失败	Failed to update knowledge base	main/manager-web/src/apis/module/knowledgeBase.js
+获取切片列表失败	Failed to get chunk list	main/manager-web/src/apis/module/knowledgeBase.js
+获取文档列表失败	Failed to get document list	main/manager-web/src/apis/module/knowledgeBase.js, main/manager-web/src/views/KnowledgeBaseItem.vue
+获取知识库列表失败	Failed to get knowledge base list	main/manager-web/src/apis/module/knowledgeBase.js
+解析文档失败	Failed to parse document	main/manager-web/src/apis/module/knowledgeBase.js
+删除模型供应器失败	Failed to delete model provider	main/manager-web/src/apis/module/model.js, main/manager-web/src/i18n (key providerManagement.deleteProviderFailed)
+删除模型失败	Failed to delete model	main/manager-web/src/apis/module/model.js, main/manager-web/src/i18n (key modelConfig.deleteModelFailed)
+删除模型失败:	Failed to delete model:	main/manager-web/src/apis/module/model.js
+新增模型供应器失败	Failed to add model provider	main/manager-web/src/apis/module/model.js, main/manager-web/src/i18n (key providerManagement.addProviderFailed)
+新增模型供应器失败:	Failed to add model provider:	main/manager-web/src/apis/module/model.js
+新增模型失败	Failed to add model	main/manager-web/src/apis/module/model.js, main/manager-web/src/i18n (key modelConfig.addModelFailed)
+新增模型失败:	Failed to add model:	main/manager-web/src/apis/module/model.js
+更新模型供应器失败	Failed to update model provider	main/manager-web/src/apis/module/model.js, main/manager-web/src/i18n (key providerManagement.updateProviderFailed)
+更新模型失败	Failed to update model	main/manager-web/src/apis/module/model.js, main/manager-web/src/i18n (key modelConfig.updateModelFailed)
+更新模型失败:	Failed to update model:	main/manager-web/src/apis/module/model.js
+更新模型状态失败	Failed to update model status	main/manager-web/src/apis/module/model.js, main/manager-web/src/i18n (key modelConfig.updateModelStatusFailed)
+更新模型状态失败:	Failed to update model status:	main/manager-web/src/apis/module/model.js
+获取RAG模型列表失败	Failed to load RAG models list	main/manager-web/src/apis/module/model.js
+获取RAG模型列表失败:	Failed to get RAG model list:	main/manager-web/src/apis/module/model.js
+获取供应器列表失败	Failed to fetch provider list	main/manager-web/src/apis/module/model.js, main/manager-web/src/i18n (key modelConfig.fetchProvidersFailed)
+获取供应器列表失败:	Failed to get provider list:	main/manager-web/src/apis/module/model.js
+获取插件列表失败	Failed to fetch plugin list	main/manager-web/src/apis/module/model.js
+获取模型列表失败:	Failed to get model list:	main/manager-web/src/apis/module/model.js
+获取模型配置失败	Failed to get model configuration	main/manager-web/src/apis/module/model.js, main/manager-web/src/i18n (key modelConfig.getModelConfigFailed)
+获取模型配置失败:	Failed to get model config:	main/manager-web/src/apis/module/model.js
+设置默认模型失败	Failed to set default model	main/manager-web/src/apis/module/model.js, main/manager-web/src/i18n (key modelConfig.setDefaultModelFailed)
+设置默认模型失败:	Failed to set default model:	main/manager-web/src/apis/module/model.js
+上传固件文件失败:	Failed to upload firmware file:	main/manager-web/src/apis/module/ota.js
+保存OTA固件信息失败:	Failed to save OTA firmware info:	main/manager-web/src/apis/module/ota.js
+删除OTA固件失败:	Failed to delete OTA firmware:	main/manager-web/src/apis/module/ota.js
+更新OTA固件信息失败:	Failed to update OTA firmware info:	main/manager-web/src/apis/module/ota.js
+获取OTA固件信息失败:	Failed to get OTA firmware info:	main/manager-web/src/apis/module/ota.js
+获取OTA固件列表失败:	Failed to get OTA firmware list:	main/manager-web/src/apis/module/ota.js
+获取下载链接失败:	Failed to get download link:	main/manager-web/src/apis/module/ota.js
+保存音色失败:	Failed to save voice:	main/manager-web/src/apis/module/timbre.js
+修改音色失败:	Failed to update voice:	main/manager-web/src/apis/module/timbre.js
+删除音色失败:	Failed to delete voice:	main/manager-web/src/apis/module/timbre.js
+获取音色列表失败:	Failed to get voice list:	main/manager-web/src/apis/module/timbre.js, main/manager-web/src/apis/module/voiceClone.js
+修改用户状态失败:	Failed to change user status:	main/manager-web/src/apis/module/user.js
+接口请求失败:	API request failed:	main/manager-web/src/apis/module/user.js
+获取公共配置失败:	Failed to get public config:	main/manager-web/src/apis/module/user.js
+上传失败:	Upload failed:	main/manager-web/src/apis/module/voiceClone.js
+上传音频失败:	Failed to upload audio:	main/manager-web/src/apis/module/voiceClone.js
+更新名称失败:	Failed to update name:	main/manager-web/src/apis/module/voiceClone.js
+获取音频ID失败:	Failed to get audio ID:	main/manager-web/src/apis/module/voiceClone.js, main/manager-web/src/views/roleConfig.vue
+保存音色资源失败:	Failed to save voice resource:	main/manager-web/src/apis/module/voiceResource.js
+删除音色资源失败:	Failed to delete voice resource:	main/manager-web/src/apis/module/voiceResource.js
+获取TTS平台列表失败:	Failed to get TTS platform list:	main/manager-web/src/apis/module/voiceResource.js
+获取用户音色资源列表失败:	Failed to get user voice resource list:	main/manager-web/src/apis/module/voiceResource.js
+获取音色资源信息失败:	Failed to get voice resource info:	main/manager-web/src/apis/module/voiceResource.js
+获取音色资源列表失败:	Failed to get voice resource list:	main/manager-web/src/apis/module/voiceResource.js
+请输入{0}	Please enter {0}	main/manager-web/src/components/AddModelDialog.vue, main/manager-web/src/components/ModelEditDialog.vue
+加载缓存数据失败	Failed to load cache data	main/manager-web/src/components/CacheViewer.vue, main/manager-web/src/i18n (key cache.loadFailed)
+已缓存	Cached	main/manager-web/src/components/CacheViewer.vue
+未缓存	Not Cached	main/manager-web/src/components/CacheViewer.vue
+清除缓存失败	Failed to clear cache	main/manager-web/src/components/CacheViewer.vue
+状态	Status	main/manager-web/src/components/CacheViewer.vue
+取消	Cancel	main/manager-web/src/components/CustomDialog.vue
+确认保存	Confirm and Save	main/manager-web/src/components/CustomDialog.vue, main/manager-web/src/i18n (key customDialog.confirmSave)
+操作	Action	main/manager-web/src/components/CustomTable.vue
+选择	Select	main/manager-web/src/components/CustomTable.vue
+复制失败	Copy failed	main/manager-web/src/components/FunctionDialog.vue
+复制失败，请手动复制	Copy failed, please copy manually	main/manager-web/src/components/FunctionDialog.vue
+获取MCP地址失败	Failed to get MCP address	main/manager-web/src/components/FunctionDialog.vue
+获取MCP工具列表失败	Failed to get MCP tool list	main/manager-web/src/components/FunctionDialog.vue
+请输入合法的 JSON	Please enter valid JSON	main/manager-web/src/components/FunctionDialog.vue, main/manager-web/src/i18n (key functionDialog.enterValidJson)
+加载中...	Loading...	main/manager-web/src/components/HeaderBar.vue
+清空选择值失败	Failed to clear selected value	main/manager-web/src/components/HeaderBar.vue
+退出登录失败	Logout failed	main/manager-web/src/components/HeaderBar.vue
+RAG模型列表加载成功，共{0}个模型	RAG model list loaded, {0} models in total	main/manager-web/src/components/KnowledgeBaseDialog.vue
+RAG模型列表响应	RAG model list response	main/manager-web/src/components/KnowledgeBaseDialog.vue
+已设置默认RAG模型	Default RAG model set	main/manager-web/src/components/KnowledgeBaseDialog.vue
+开始加载RAG模型列表	Start loading RAG model list	main/manager-web/src/components/KnowledgeBaseDialog.vue
+获取RAG模型列表失败	Failed to get RAG model list	main/manager-web/src/components/KnowledgeBaseDialog.vue
+获取固件类型失败	Failed to get firmware types	main/manager-web/src/components/ManualAddDeviceDialog.vue
+JSON格式错误（如 {"key":"value"}），保存则使用原数据	Invalid JSON format (e.g. {"key":"value"}); the original data will be used when saving	main/manager-web/src/components/ModelEditDialog.vue, main/manager-web/src/i18n (key modelConfigDialog.invalidJsonFormat)
+必须输入字典格式（如 {"key":"value"}），保存则使用原数据	Must be a dictionary (e.g. {"key":"value"}); the original data will be used when saving	main/manager-web/src/components/ModelEditDialog.vue, main/manager-web/src/i18n (key modelConfigDialog.mustBeDictFormat)
+数组格式错误，需要使用英文分号结尾	Invalid array format: each item must end with an English semicolon (;)	main/manager-web/src/components/ParamDialog.vue, main/manager-web/src/i18n (key paramDialog.arrayFormatError)
+新增参数	Add Parameter	main/manager-web/src/components/ParamDialog.vue
+已取消删除	Delete Cancelled	main/manager-web/src/components/ProviderDialog.vue
+新增替换词	Add Replacement Words	main/manager-web/src/components/ReplacementWordDialog.vue, main/manager-web/src/i18n (key replacementDialog.addTitle)
+加载失败	Load failed	main/manager-web/src/components/TtsModel.vue
+存在无效的音色ID	Invalid voice ID found	main/manager-web/src/components/TtsModel.vue, main/manager-web/src/i18n (key ttsModel.invalidVoiceId)
+备案图标	Registration icon	main/manager-web/src/components/VersionFooter.vue, main/manager-web/src/i18n (key versionFooter.beianIcon)
+关闭	Close	main/manager-web/src/components/ViewPasswordDialog.vue
+复制密码	Copy Password	main/manager-web/src/components/ViewPasswordDialog.vue, main/manager-web/src/i18n (key viewPasswordDialog.copyPassword)
+密码已复制	Password copied	main/manager-web/src/components/ViewPasswordDialog.vue, main/manager-web/src/i18n (key viewPasswordDialog.passwordCopied)
+用户新密码	User's New Password	main/manager-web/src/components/ViewPasswordDialog.vue, main/manager-web/src/i18n (key viewPasswordDialog.title)
+用户新密码：	User's new password:	main/manager-web/src/components/ViewPasswordDialog.vue, main/manager-web/src/i18n (key viewPasswordDialog.newPasswordLabel)
+Canvas元素不存在	Canvas element does not exist	main/manager-web/src/components/VoiceCloneDialog.vue
+上传音频失败	Failed to upload audio	main/manager-web/src/components/VoiceCloneDialog.vue
+加载音频失败	Failed to load audio	main/manager-web/src/components/VoiceCloneDialog.vue
+波形数据为空	Waveform data is empty	main/manager-web/src/components/VoiceCloneDialog.vue
+绘制波形时Canvas不存在	Canvas does not exist while drawing waveform	main/manager-web/src/components/VoiceCloneDialog.vue
+添加说话人	Add Speaker	main/manager-web/src/components/VoicePrintDialog.vue
+请输入名称	Please enter name	main/manager-web/src/components/VoicePrintDialog.vue
+请输入描述	Please enter description	main/manager-web/src/components/VoicePrintDialog.vue
+请选择音频向量	Please select audio vector	main/manager-web/src/components/VoicePrintDialog.vue
+发现新版本，点击刷新应用	New version available, click to refresh the app	main/manager-web/src/i18n (key cache.newVersionAvailable)
+正在连接服务器({count})	Connecting to server ({count})	main/manager-web/src/i18n (key common.connectingServer)
+网络请求出现了错误【{status}】	Network request error [{status}]	main/manager-web/src/i18n (key common.networkErrorWithStatus)
+系统功能菜单配置	System feature menu configuration	main/manager-web/src/i18n (key feature.systemWebMenuRemark), main/manager-web/src/utils/featureManager.js
+中文简体	Chinese (Simplified)	main/manager-web/src/i18n/en.js
+中文繁體	Chinese (Traditional)	main/manager-web/src/i18n/en.js
+Service Worker 注册失败:	Service Worker registration failed:	main/manager-web/src/registerServiceWorker.js
+[小智服务] Service Worker注册成功	[Xiaozhi] Service Worker registered successfully	main/manager-web/src/registerServiceWorker.js
+[小智服务] 内容已缓存供离线使用	[Xiaozhi] Content has been cached for offline use	main/manager-web/src/registerServiceWorker.js
+[小智服务] 发现已有Service Worker注册，正在检查更新	[Xiaozhi] Existing Service Worker registration found, checking for updates	main/manager-web/src/registerServiceWorker.js
+[小智服务] 新内容可用，请刷新页面	[Xiaozhi] New content is available, please refresh the page	main/manager-web/src/registerServiceWorker.js
+[小智服务] 正在尝试注册Service Worker，URL: ${swUrl}	[Xiaozhi] Trying to register the Service Worker, URL: ${swUrl}	main/manager-web/src/registerServiceWorker.js
+[小智服务] 注册Service Worker时出现网络错误，CDN资源可能无法缓存	[Xiaozhi] Network error while registering the Service Worker, CDN resources may not be cached	main/manager-web/src/registerServiceWorker.js
+可能原因：1. 服务器未配置正确的MIME类型 2. 服务器SSL证书问题 3. 服务器未返回service-worker.js文件	Possible causes: 1. the server is not configured with the correct MIME type 2. server SSL certificate problem 3. the server did not return the service-worker.js file	main/manager-web/src/registerServiceWorker.js
+预热缓存 ${url} 失败	Failed to warm up cache for ${url}	main/manager-web/src/registerServiceWorker.js
+OTA管理	OTA Management	main/manager-web/src/router/index.js
+功能配置	Feature Configuration	main/manager-web/src/router/index.js
+参数管理	Parameter Management	main/manager-web/src/router/index.js
+替换词管理	Replacement Word Management	main/manager-web/src/router/index.js
+服务端管理	Server Management	main/manager-web/src/router/index.js
+知识库管理	Knowledge Base Management	main/manager-web/src/router/index.js
+通讯录管理	Address Book Management	main/manager-web/src/router/index.js
+音色克隆管理	Voice Clone Management	main/manager-web/src/router/index.js
+音色资源开通	Voice Resource Activation	main/manager-web/src/router/index.js
+Service Worker 已初始化, CDN模式: ${isCDNEnabled ? '启用' : '禁用'}	Service Worker initialized, CDN mode: ${isCDNEnabled ? 'enabled' : 'disabled'}	main/manager-web/src/service-worker.js
+Service Worker 已安装，CDN模式禁用，仅缓存本地资源	Service Worker installed, CDN mode disabled, caching local resources only	main/manager-web/src/service-worker.js
+Service Worker 已安装，开始缓存CDN资源	Service Worker installed, starting to cache CDN resources	main/manager-web/src/service-worker.js
+Service Worker 已激活，现在控制着页面	Service Worker activated and now controls the page	main/manager-web/src/service-worker.js
+请求CDN资源: ${url.href}	Requesting CDN resource: ${url.href}	main/manager-web/src/service-worker.js
+Service Worker 缓存状态	Service Worker cache status	main/manager-web/src/utils/cacheViewer.js
+已发现的缓存:	Caches found:	main/manager-web/src/utils/cacheViewer.js
+检查URL ${url} 是否缓存失败:	Failed to check whether URL ${url} is cached:	main/manager-web/src/utils/cacheViewer.js
+清除所有缓存失败:	Failed to clear all caches:	main/manager-web/src/utils/cacheViewer.js
+缓存: ${cacheName} (${urls.length} 项)	Cache: ${cacheName} (${urls.length} items)	main/manager-web/src/utils/cacheViewer.js
+获取 ${cacheName} 缓存信息失败:	Failed to get info for cache ${cacheName}:	main/manager-web/src/utils/cacheViewer.js
+获取缓存 ${cacheName} 的URL失败:	Failed to get URLs of cache ${cacheName}:	main/manager-web/src/utils/cacheViewer.js
+获取缓存名称失败:	Failed to get cache names:	main/manager-web/src/utils/cacheViewer.js
+暂无	No data	main/manager-web/src/utils/constant.js
+pub-config接口调用失败，使用默认配置	pub-config API call failed, using default config	main/manager-web/src/utils/featureManager.js
+从pub-config接口获取配置失败:	Failed to get config from the pub-config API:	main/manager-web/src/utils/featureManager.js
+保存功能配置失败:	Failed to save feature config:	main/manager-web/src/utils/featureManager.js
+保存配置到API失败:	Failed to save config to API:	main/manager-web/src/utils/featureManager.js
+处理systemWebMenu配置失败:	Failed to process systemWebMenu config:	main/manager-web/src/utils/featureManager.js
+接口返回code不为0或缺少必要数据，使用默认配置	API returned a non-zero code or is missing required data, using default config	main/manager-web/src/utils/featureManager.js
+接口返回数据中缺少data字段，使用默认配置	API response is missing the data field, using default config	main/manager-web/src/utils/featureManager.js
+接口返回缺少systemWebMenu数据，使用默认配置	API response is missing systemWebMenu data, using default config	main/manager-web/src/utils/featureManager.js
+配置中缺少features对象，使用默认配置	features object missing from config, using default config	main/manager-web/src/utils/featureManager.js
+配置中缺少knowledgeBase功能，合并默认配置	knowledgeBase feature missing from config, merging with default config	main/manager-web/src/utils/featureManager.js
+公钥不能为null或undefined	Public key cannot be null or undefined	main/manager-web/src/utils/index.js
+明文不能为空	Plain text cannot be empty	main/manager-web/src/utils/index.js
+获取模板失败	Failed to get template	main/manager-web/src/views/AgentTemplateManagement.vue
+请输入助手昵称	Please enter nickname	main/manager-web/src/views/AgentTemplateManagement.vue
+请输入角色介绍	Please enter introduction	main/manager-web/src/views/AgentTemplateManagement.vue
+新增字典数据	Add Dict Data	main/manager-web/src/views/DictManagement.vue
+新增字典类型	Add Dict Type	main/manager-web/src/views/DictManagement.vue
+保存配置失败	Failed to save configuration	main/manager-web/src/views/FeatureManagement.vue
+保存配置失败:	Failed to save configuration:	main/manager-web/src/views/FeatureManagement.vue
+功能配置管理器初始化等待失败:	Waiting for feature config manager initialization failed:	main/manager-web/src/views/FeatureManagement.vue
+获取功能配置失败:	Failed to get feature configuration:	main/manager-web/src/views/FeatureManagement.vue
+上传文档失败:	Failed to upload document:	main/manager-web/src/views/KnowledgeBaseManagement.vue
+文档	Documents	main/manager-web/src/views/KnowledgeBaseManagement.vue
+存在无效的固件ID	Invalid firmware ID	main/manager-web/src/views/OtaManagement.vue
+新增固件	Add Firmware	main/manager-web/src/views/OtaManagement.vue
+获取固件类型失败:	Failed to get firmware types:	main/manager-web/src/views/OtaManagement.vue
+新增供应器	Add Provider	main/manager-web/src/views/ProviderManagement.vue
+新增失败	Add failed	main/manager-web/src/views/ProviderManagement.vue
+更新失败	Update failed	main/manager-web/src/views/ProviderManagement.vue
+获取参数列表失败	Failed to get parameter list	main/manager-web/src/views/ProviderManagement.vue
+暂无数据	No data	main/manager-web/src/views/ServerSideManager.vue
+API调用失败:	API call failed:	main/manager-web/src/views/VoiceCloneManagement.vue
+名称更新失败	Failed to update name	main/manager-web/src/views/VoiceCloneManagement.vue
+名称更新成功	Name updated successfully	main/manager-web/src/views/VoiceCloneManagement.vue
+处理响应时出错	Error processing response	main/manager-web/src/views/VoiceCloneManagement.vue
+处理响应时出错:	Error while handling response:	main/manager-web/src/views/VoiceCloneManagement.vue
+播放失败	Play failed	main/manager-web/src/views/VoiceCloneManagement.vue
+播放失败:	Playback failed:	main/manager-web/src/views/VoiceCloneManagement.vue
+查看详情:	View details:	main/manager-web/src/views/VoiceCloneManagement.vue
+调用API时出错:	Error calling API:	main/manager-web/src/views/VoiceCloneManagement.vue
+音频不存在	Audio does not exist	main/manager-web/src/views/VoiceCloneManagement.vue
+保存搜索历史失败:	Failed to save search history:	main/manager-web/src/views/home.vue
+加载搜索历史失败:	Failed to load search history:	main/manager-web/src/views/home.vue
+搜索失败	Search failed	main/manager-web/src/views/home.vue
+搜索智能体失败:	Agent search failed:	main/manager-web/src/views/home.vue
+更新搜索历史失败:	Failed to update search history:	main/manager-web/src/views/home.vue
+清空搜索历史失败:	Failed to clear search history:	main/manager-web/src/views/home.vue
+用户信息获取失败	Failed to get user info	main/manager-web/src/views/login.vue
+登录失败	Login failed	main/manager-web/src/views/login.vue
+验证码	Verification Code	main/manager-web/src/views/login.vue
+验证码加载失败，点击刷新	Failed to load captcha	main/manager-web/src/views/login.vue
+密码加密失败:	Password encryption failed:	main/manager-web/src/views/register.vue
+验证码加载异常:	Captcha load error:	main/manager-web/src/views/register.vue
+克隆音频判断结果:	Cloned voice check result:	main/manager-web/src/views/roleConfig.vue
+克隆音频播放错误	Cloned voice playback error	main/manager-web/src/views/roleConfig.vue
+加载功能状态失败:	Failed to load feature status:	main/manager-web/src/views/roleConfig.vue
+发现可能的音频URL在字段 '{0}':	Possible audio URL found in field '{0}':	main/manager-web/src/views/roleConfig.vue
+应用模板失败:	Failed to apply template:	main/manager-web/src/views/roleConfig.vue
+当前选择的音色ID:	Selected voice ID:	main/manager-web/src/views/roleConfig.vue
+恢复播放失败:	Failed to resume playback:	main/manager-web/src/views/roleConfig.vue
+播放克隆音频失败:	Failed to play cloned voice:	main/manager-web/src/views/roleConfig.vue
+播放音频过程出错:	Error while playing audio:	main/manager-web/src/views/roleConfig.vue
+构建克隆音频播放URL:	Built cloned voice playback URL:	main/manager-web/src/views/roleConfig.vue
+检测到克隆音频，准备获取音频URL:	Cloned voice detected, fetching audio URL:	main/manager-web/src/views/roleConfig.vue
+获取到的音频ID:	Received audio ID:	main/manager-web/src/views/roleConfig.vue
+训练状态:	Training status:	main/manager-web/src/views/roleConfig.vue
+请求音频ID接口失败:	Audio ID request failed:	main/manager-web/src/views/roleConfig.vue
+音色详情:	Voice details:	main/manager-web/src/views/roleConfig.vue
+音频播放错误	Audio playback error	main/manager-web/src/views/roleConfig.vue

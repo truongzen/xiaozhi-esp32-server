@@ -148,7 +148,7 @@ export default {
           mobile: this.searchPhone,
         },
         ({ data }) => {
-          this.loading = false; // 结束加载
+          this.loading = false; // Finish loading
           if (data.code === 0) {
             this.userList = data.data.list.map(item => ({
               ...item,
@@ -258,7 +258,7 @@ export default {
       }).then(() => {
         Api.admin.resetUserPassword(row.userid, ({ data }) => {
           if (data.code === 0) {
-            // 显示生成的默认密码
+            // Show the generated default password
             this.$alert(this.$t('user.resetPasswordSuccess') + '\n\n' + this.$t('user.generatedPassword') + ': ' + data.data, this.$t('common.success'), {
               confirmButtonText: this.$t('common.confirm'),
               dangerouslyUseHTMLString: true
@@ -280,7 +280,7 @@ export default {
       }).then(() => {
         Api.admin.deleteUser(row.userid, ({ data }) => {
           if (data.code === 0) {
-            // 删除后检查是否需要调整页码
+            // After deletion, check whether the page number needs adjusting
             const newTotal = this.total - 1;
             const maxPage = Math.max(1, Math.ceil(newTotal / this.pageSize));
             if (this.currentPage > maxPage) {
@@ -303,7 +303,7 @@ export default {
       }
     },
     handleChangeStatus(row, status) {
-      // 处理单个用户或用户数组
+      // Handle a single user or an array of users
       const users = Array.isArray(row) ? row : [row];
       const actionText = status === 0 ? this.$t('user.disable') : this.$t('user.enable');
       const userCount = users.length;
@@ -325,7 +325,7 @@ export default {
               message: this.$t('user.statusChangeSuccess', { action: actionText, count: userCount }),
               showClose: true
             });
-            this.fetchUsers(); // 刷新用户列表
+            this.fetchUsers(); // Refresh the user list
           } else {
             this.$message.error({
               message: this.$t('user.operationFailed'),
@@ -334,10 +334,10 @@ export default {
           }
         });
       }).catch(() => {
-        // 用户取消操作
+        // User cancelled
       });
     },
-    // 这个方法已被batchDelete替代，保留用于向后兼容
+    // Superseded by batchDelete; kept for backward compatibility
     handleBatchDelete() {
       this.batchDelete();
     },
@@ -372,7 +372,7 @@ export default {
 }
 
 .main-wrapper {
-  // 顶部 63px 底部 35px
+  // Top 63px, bottom 35px
   height: calc(100vh - 63px - 35px);
   padding: 20px 22px 0;
   position: relative;

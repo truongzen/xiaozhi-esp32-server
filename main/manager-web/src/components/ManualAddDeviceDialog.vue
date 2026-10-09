@@ -80,7 +80,7 @@ export default {
         const res = await Api.dict.getDictDataByType('FIRMWARE_TYPE');
         this.firmwareTypes = res.data;
       } catch (error) {
-        console.error('获取固件类型失败:', error);
+        console.error('Failed to get firmware types:', error);
         this.$message.error(error.message || this.$t('manualAddDeviceDialog.getFirmwareTypeFailed'));
       }
     },

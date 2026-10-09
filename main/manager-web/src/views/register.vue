@@ -1,7 +1,7 @@
 <template>
   <div class="welcome" @keyup.enter="register">
     <el-container style="height: 100%;">
-      <!-- 保持相同的头部 -->
+      <!-- Same header -->
       <el-header>
         <div style="display: flex;align-items: center;margin-top: 15px;margin-left: 10px;gap: 10px;">
           <img loading="lazy" alt="" src="@/assets/xiaozhi-logo.png" style="width: 45px;height: 45px;" />
@@ -13,7 +13,7 @@
       </div>
       <el-main style="position: relative;">
         <div class="login-box">
-          <!-- 修改标题部分 -->
+          <!-- Title section -->
           <div style="display: flex;align-items: center;gap: 20px;margin-bottom: 39px;padding: 0 30px;">
             <img loading="lazy" alt="" src="@/assets/login/hi.png" style="width: 34px;height: 34px;" />
             <div class="login-text">{{ $t('register.title') }}</div>
@@ -24,13 +24,13 @@
 
           <div style="padding: 0 30px;">
             <form @submit.prevent="register">
-              <!-- 用户名/手机号输入框 -->
+              <!-- Username/mobile input -->
               <div class="input-box" v-if="!enableMobileRegister">
                 <img loading="lazy" alt="" class="input-icon" src="@/assets/login/username.png" />
                 <el-input v-model="form.username" :placeholder="$t('register.usernamePlaceholder')" />
               </div>
 
-              <!-- 手机号注册部分 -->
+              <!-- Mobile registration section -->
               <template v-if="enableMobileRegister">
                 <div class="input-box">
                   <div style="display: flex; align-items: center; width: 100%;">
@@ -48,11 +48,11 @@
                     <el-input v-model="form.captcha" :placeholder="$t('register.captchaPlaceholder')"
                       style="flex: 1;" />
                   </div>
-                  <img loading="lazy" v-if="captchaUrl" :src="captchaUrl" alt="验证码"
+                  <img loading="lazy" v-if="captchaUrl" :src="captchaUrl" :alt="$t('retrievePassword.captcha')"
                     style="width: 150px; height: 40px; cursor: pointer;" @click="fetchCaptcha" />
                 </div>
 
-                <!-- 手机验证码 -->
+                <!-- SMS verification code -->
 
                 <div style="display: flex; align-items: center; margin-top: 20px; width: 100%; gap: 10px;">
                   <div class="input-box" style="width: calc(100% - 130px); margin-top: 0;">
@@ -69,42 +69,42 @@
                 </div>
               </template>
 
-              <!-- 密码输入框 -->
+              <!-- Password input -->
               <div class="input-box">
                 <img loading="lazy" alt="" class="input-icon" src="@/assets/login/password.png" />
                 <el-input v-model="form.password" :placeholder="$t('register.passwordPlaceholder')" type="password"
                   show-password />
               </div>
 
-              <!-- 新增确认密码 -->
+              <!-- Confirm password -->
               <div class="input-box">
                 <img loading="lazy" alt="" class="input-icon" src="@/assets/login/password.png" />
                 <el-input v-model="form.confirmPassword" :placeholder="$t('register.confirmPasswordPlaceholder')"
                   type="password" show-password />
               </div>
 
-              <!-- 验证码部分保持相同 -->
+              <!-- Captcha section -->
               <div v-if="!enableMobileRegister"
                 style="display: flex; align-items: center; margin-top: 20px; width: 100%; gap: 10px;">
                 <div class="input-box" style="width: calc(100% - 130px); margin-top: 0;">
                   <img loading="lazy" alt="" class="input-icon" src="@/assets/login/shield.png" />
                   <el-input v-model="form.captcha" :placeholder="$t('register.captchaPlaceholder')" style="flex: 1;" />
                 </div>
-                <img loading="lazy" v-if="captchaUrl" :src="captchaUrl" alt="验证码"
+                <img loading="lazy" v-if="captchaUrl" :src="captchaUrl" :alt="$t('retrievePassword.captcha')"
                   style="width: 150px; height: 40px; cursor: pointer;" @click="fetchCaptcha" />
               </div>
 
-              <!-- 修改底部链接 -->
+              <!-- Footer links -->
               <div style="font-weight: 400;font-size: 14px;text-align: left;color: #5778ff;margin-top: 20px;">
                 <div style="cursor: pointer;" @click="goToLogin">{{ $t('register.goToLogin') }}</div>
               </div>
             </form>
           </div>
 
-          <!-- 修改按钮文本 -->
+          <!-- Submit button -->
           <div class="login-btn" @click="register">{{ $t('register.registerButton') }}</div>
 
-          <!-- 保持相同的协议声明 -->
+          <!-- Same agreement notice -->
           <div style="font-size: 14px;color: #979db1;">
             {{ $t('register.agreeTo') }}
             <div style="display: inline-block;color: #5778FF;cursor: pointer;" @click="openPage('/user-agreement.html')">{{ $t('register.userAgreement') }}</div>
@@ -114,7 +114,7 @@
         </div>
       </el-main>
 
-      <!-- 保持相同的页脚 -->
+      <!-- Same footer -->
       <el-footer>
         <version-footer />
       </el-footer>
@@ -129,7 +129,7 @@ import { getUUID, goToPage, showDanger, showSuccess, sm2Encrypt, validateMobile 
 import { mapState } from 'vuex';
 import i18n from '@/i18n';
 
-// 导入语言切换功能
+// Import language switching
 
 export default {
   name: 'register',
@@ -143,11 +143,11 @@ export default {
       mobileAreaList: state => state.pubConfig.mobileAreaList,
       sm2PublicKey: state => state.pubConfig.sm2PublicKey,
     }),
-    // 获取当前语言
+    // Get the current language
     currentLanguage() {
       return i18n.locale || "zh_CN";
     },
-    // 根据当前语言获取对应的xiaozhi-ai图标
+    // Get the xiaozhi-ai logo for the current language
     xiaozhiAiIcon() {
       const currentLang = this.currentLanguage;
       switch (currentLang) {
@@ -205,7 +205,7 @@ export default {
       }
       window.open(url, '_blank');
     },
-    // 复用验证码获取方法
+    // Reuse the captcha fetch method
     fetchCaptcha() {
       this.form.captchaId = getUUID();
       Api.user.getCaptcha(this.form.captchaId, (res) => {
@@ -214,13 +214,13 @@ export default {
           this.captchaUrl = URL.createObjectURL(blob);
 
         } else {
-          console.error('验证码加载异常:', error);
+          console.error('Captcha load error:', error);
           showDanger(this.$t('register.captchaLoadFailed'));
         }
       });
     },
 
-    // 封装输入验证逻辑
+    // Input validation helper
     validateInput(input, message) {
       if (!input.trim()) {
         showDanger(message);
@@ -229,26 +229,26 @@ export default {
       return true;
     },
 
-    // 发送手机验证码
+    // Send SMS verification code
     sendMobileCaptcha() {
       if (!validateMobile(this.form.mobile, this.form.areaCode)) {
         showDanger(this.$t('register.inputCorrectMobile'));
         return;
       }
 
-      // 验证图形验证码
+      // Validate the image captcha
       if (!this.validateInput(this.form.captcha, this.$t('register.inputCaptcha'))) {
         this.fetchCaptcha();
         return;
       }
 
-      // 清除可能存在的旧定时器
+      // Clear any existing timer
       if (this.timer) {
         clearInterval(this.timer);
         this.timer = null;
       }
 
-      // 开始倒计时
+      // Start the countdown
       this.countdown = 60;
       this.timer = setInterval(() => {
         if (this.countdown > 0) {
@@ -259,7 +259,7 @@ export default {
         }
       }, 1000);
 
-      // 调用发送验证码接口
+      // Call the send verification code API
       Api.user.sendSmsVerification({
         phone: this.form.areaCode + this.form.mobile,
         captcha: this.form.captcha,
@@ -273,10 +273,10 @@ export default {
       });
     },
 
-    // 注册逻辑
+    // Registration logic
     async register() {
       if (this.enableMobileRegister) {
-        // 手机号注册验证
+        // Mobile registration validation
         if (!validateMobile(this.form.mobile, this.form.areaCode)) {
           showDanger(this.$t('register.inputCorrectMobile'));
           return;
@@ -286,13 +286,13 @@ export default {
           return;
         }
       } else {
-        // 用户名注册验证
+        // Username registration validation
         if (!this.validateInput(this.form.username, this.$t('register.requiredUsername'))) {
           return;
         }
       }
 
-      // 验证密码
+      // Validate password
       if (!this.validateInput(this.form.password, this.$t('register.requiredPassword'))) {
         return;
       }
@@ -300,18 +300,18 @@ export default {
         showDanger(this.$t('register.passwordsNotMatch'))
         return
       }
-      // 验证验证码
+      // Validate captcha
       if (!this.validateInput(this.form.captcha, this.$t('register.requiredCaptcha'))) {
         return;
       }
-      // 加密
+      // Encrypt
       let encryptedPassword;
       try {
-        // 拼接验证码和密码
+        // Concatenate captcha and password
         const captchaAndPassword = this.form.captcha + this.form.password;
         encryptedPassword = sm2Encrypt(this.sm2PublicKey, captchaAndPassword);
       } catch (error) {
-        console.error("密码加密失败:", error);
+        console.error("Password encryption failed:", error);
         showDanger(this.$t('sm2.encryptionFailed'));
         return;
       }
@@ -323,7 +323,7 @@ export default {
         plainUsername = this.form.username;
       }
 
-      // 准备注册数据
+      // Prepare registration data
       const registerData = {
         username: plainUsername,
         password: encryptedPassword,
@@ -336,7 +336,7 @@ export default {
         goToPage('/login')
       }, (err) => {
         showDanger(err.data.msg || this.$t('register.registerFailed'))
-        if (err.data != null && err.data.msg != null && err.data.msg.indexOf('图形验证码') > -1) {
+        if (err.data != null && err.data.msg != null && (err.data.msg.indexOf('图形验证码') > -1 || err.data.msg.indexOf('Captcha') > -1)) {
           this.fetchCaptcha()
         }
       })

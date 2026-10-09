@@ -1,8 +1,9 @@
 import { getServiceUrl } from '../api';
 import RequestService from '../httpRequest';
+import i18n from '../../i18n/index';
 
 export default {
-    // 获取字典类型列表
+    // Get dictionary type list
     getDictTypeList(params, callback) {
         const queryParams = new URLSearchParams({
             dictType: params.dictType || '',
@@ -19,15 +20,15 @@ export default {
                 callback(res)
             })
             .networkFail((err) => {
-                console.error('获取字典类型列表失败:', err)
-                this.$message.error(err.msg || '获取字典类型列表失败')
+                console.error('Failed to get dictionary type list:', err)
+                this.$message.error(err.msg || i18n.t('dictManagement.getDictTypeListFailed'))
                 RequestService.reAjaxFun(() => {
                     this.getDictTypeList(params, callback)
                 })
             }).send()
     },
 
-    // 获取字典类型详情
+    // Get dictionary type details
     getDictTypeDetail(id, callback) {
         RequestService.sendRequest()
             .url(`${getServiceUrl()}/admin/dict/type/${id}`)
@@ -37,15 +38,15 @@ export default {
                 callback(res)
             })
             .networkFail((err) => {
-                console.error('获取字典类型详情失败:', err)
-                this.$message.error(err.msg || '获取字典类型详情失败')
+                console.error('Failed to get dictionary type details:', err)
+                this.$message.error(err.msg || i18n.t('dictManagement.getDictTypeDetailFailed'))
                 RequestService.reAjaxFun(() => {
                     this.getDictTypeDetail(id, callback)
                 })
             }).send()
     },
 
-    // 新增字典类型
+    // Add dictionary type
     addDictType(data, callback) {
         RequestService.sendRequest()
             .url(`${getServiceUrl()}/admin/dict/type/save`)
@@ -56,15 +57,15 @@ export default {
                 callback(res)
             })
             .networkFail((err) => {
-                console.error('新增字典类型失败:', err)
-                this.$message.error(err.msg || '新增字典类型失败')
+                console.error('Failed to add dictionary type:', err)
+                this.$message.error(err.msg || i18n.t('dictManagement.addDictTypeFailed'))
                 RequestService.reAjaxFun(() => {
                     this.addDictType(data, callback)
                 })
             }).send()
     },
 
-    // 更新字典类型
+    // Update dictionary type
     updateDictType(data, callback) {
         RequestService.sendRequest()
             .url(`${getServiceUrl()}/admin/dict/type/update`)
@@ -75,15 +76,15 @@ export default {
                 callback(res)
             })
             .networkFail((err) => {
-                console.error('更新字典类型失败:', err)
-                this.$message.error(err.msg || '更新字典类型失败')
+                console.error('Failed to update dictionary type:', err)
+                this.$message.error(err.msg || i18n.t('dictManagement.updateDictTypeFailed'))
                 RequestService.reAjaxFun(() => {
                     this.updateDictType(data, callback)
                 })
             }).send()
     },
 
-    // 删除字典类型
+    // Delete dictionary type
     deleteDictType(ids, callback) {
         RequestService.sendRequest()
             .url(`${getServiceUrl()}/admin/dict/type/delete`)
@@ -94,15 +95,15 @@ export default {
                 callback(res)
             })
             .networkFail((err) => {
-                console.error('删除字典类型失败:', err)
-                this.$message.error(err.msg || '删除字典类型失败')
+                console.error('Failed to delete dictionary type:', err)
+                this.$message.error(err.msg || i18n.t('dictManagement.deleteDictTypeFailed'))
                 RequestService.reAjaxFun(() => {
                     this.deleteDictType(ids, callback)
                 })
             }).send()
     },
 
-    // 获取字典数据列表
+    // Get dictionary data list
     getDictDataList(params, callback) {
         const queryParams = new URLSearchParams({
             dictTypeId: params.dictTypeId,
@@ -120,15 +121,15 @@ export default {
                 callback(res)
             })
             .networkFail((err) => {
-                console.error('获取字典数据列表失败:', err)
-                this.$message.error(err.msg || '获取字典数据列表失败')
+                console.error('Failed to get dictionary data list:', err)
+                this.$message.error(err.msg || i18n.t('dictManagement.getDictDataListFailed'))
                 RequestService.reAjaxFun(() => {
                     this.getDictDataList(params, callback)
                 })
             }).send()
     },
 
-    // 获取字典数据详情
+    // Get dictionary data details
     getDictDataDetail(id, callback) {
         RequestService.sendRequest()
             .url(`${getServiceUrl()}/admin/dict/data/${id}`)
@@ -138,15 +139,15 @@ export default {
                 callback(res)
             })
             .networkFail((err) => {
-                console.error('获取字典数据详情失败:', err)
-                this.$message.error(err.msg || '获取字典数据详情失败')
+                console.error('Failed to get dictionary data details:', err)
+                this.$message.error(err.msg || i18n.t('dictManagement.getDictDataDetailFailed'))
                 RequestService.reAjaxFun(() => {
                     this.getDictDataDetail(id, callback)
                 })
             }).send()
     },
 
-    // 新增字典数据
+    // Add dictionary data
     addDictData(data, callback) {
         RequestService.sendRequest()
             .url(`${getServiceUrl()}/admin/dict/data/save`)
@@ -157,15 +158,15 @@ export default {
                 callback(res)
             })
             .networkFail((err) => {
-                console.error('新增字典数据失败:', err)
-                this.$message.error(err.msg || '新增字典数据失败')
+                console.error('Failed to add dictionary data:', err)
+                this.$message.error(err.msg || i18n.t('dictManagement.addDictDataFailed'))
                 RequestService.reAjaxFun(() => {
                     this.addDictData(data, callback)
                 })
             }).send()
     },
 
-    // 更新字典数据
+    // Update dictionary data
     updateDictData(data, callback) {
         RequestService.sendRequest()
             .url(`${getServiceUrl()}/admin/dict/data/update`)
@@ -176,15 +177,15 @@ export default {
                 callback(res)
             })
             .networkFail((err) => {
-                console.error('更新字典数据失败:', err)
-                this.$message.error(err.msg || '更新字典数据失败')
+                console.error('Failed to update dictionary data:', err)
+                this.$message.error(err.msg || i18n.t('dictManagement.updateDictDataFailed'))
                 RequestService.reAjaxFun(() => {
                     this.updateDictData(data, callback)
                 })
             }).send()
     },
 
-    // 删除字典数据
+    // Delete dictionary data
     deleteDictData(ids, callback) {
         RequestService.sendRequest()
             .url(`${getServiceUrl()}/admin/dict/data/delete`)
@@ -195,15 +196,15 @@ export default {
                 callback(res)
             })
             .networkFail((err) => {
-                console.error('删除字典数据失败:', err)
-                this.$message.error(err.msg || '删除字典数据失败')
+                console.error('Failed to delete dictionary data:', err)
+                this.$message.error(err.msg || i18n.t('dictManagement.deleteDictDataFailed'))
                 RequestService.reAjaxFun(() => {
                     this.deleteDictData(ids, callback)
                 })
             }).send()
     },
 
-    // 获取字典数据列表
+    // Get dictionary data list
     getDictDataByType(dictType) {
         return new Promise((resolve, reject) => {
             RequestService.sendRequest()
@@ -214,11 +215,11 @@ export default {
                     if (res.data && res.data.code === 0) {
                         resolve(res.data)
                     } else {
-                        reject(new Error(res.data?.msg || '获取字典数据列表失败'))
+                        reject(new Error(res.data?.msg || i18n.t('dictManagement.getDictDataListFailed')))
                     }
                 })
                 .networkFail((err) => {
-                    console.error('获取字典数据列表失败:', err)
+                    console.error('Failed to get dictionary data list:', err)
                     reject(err)
                 }).send()
         })

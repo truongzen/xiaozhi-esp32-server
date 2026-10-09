@@ -68,7 +68,7 @@
       </div>
     </div>
 
-    <!-- 新增/编辑模板弹窗 -->
+    <!-- Add/edit template dialog -->
     <CustomDialog
       :title="dialogTitle"
       :visible.sync="dialogVisible"
@@ -156,25 +156,27 @@ export default {
         sort: 0,
         model: { ...DEFAULT_MODEL_CONFIG }
       },
-      formRules: {
-        agentName: [
-          { required: true, message: "请输入助手昵称", trigger: "blur" }
-        ],
-        systemPrompt: [
-          { required: true, message: "请输入角色介绍", trigger: "blur" }
-        ]
-      },
       originalForm: null
     };
+  },
+  computed: {
+    formRules() {
+      return {
+        agentName: [
+          { required: true, message: this.$t("templateQuickConfig.agentSettings.agentNamePlaceholder"), trigger: "blur" }
+        ],
+        systemPrompt: [
+          { required: true, message: this.$t("templateQuickConfig.agentSettings.systemPromptPlaceholder"), trigger: "blur" }
+        ]
+      };
+    },
+    hasSelected() {
+      return this.selectedTemplates.length > 0;
+    }
   },
   created() {
     this.initTableColumns();
     this.loadTemplateList();
-  },
-  computed: {
-    hasSelected() {
-      return this.selectedTemplates.length > 0;
-    }
   },
   methods: {
     initTableColumns() {

@@ -1,8 +1,9 @@
 import { getServiceUrl } from '../api';
 import RequestService from '../httpRequest';
+import i18n from '../../i18n/index';
 
 export default {
-    // 已绑设备
+    // Bound devices
     getAgentBindDevices(agentId, callback, failCallback) {
         RequestService.sendRequest()
             .url(`${getServiceUrl()}/device/bind/${agentId}`)
@@ -18,13 +19,13 @@ export default {
                 }
             })
             .networkFail((err) => {
-                console.error('获取设备列表失败:', err);
+                console.error('Failed to get device list:', err);
                 RequestService.reAjaxFun(() => {
                     this.getAgentBindDevices(agentId, callback, failCallback);
                 });
             }).send();
     },
-    // 解绑设备
+    // Unbind device
     unbindDevice(device_id, callback, failCallback) {
         RequestService.sendRequest()
             .url(`${getServiceUrl()}/device/unbind`)
@@ -41,13 +42,13 @@ export default {
                 }
             })
             .networkFail((err) => {
-                console.error('解绑设备失败:', err);
+                console.error('Failed to unbind device:', err);
                 RequestService.reAjaxFun(() => {
                     this.unbindDevice(device_id, callback, failCallback);
                 });
             }).send();
     },
-    // 绑定设备
+    // Bind device
     bindDevice(agentId, deviceCode, callback, failCallback) {
         RequestService.sendRequest()
             .url(`${getServiceUrl()}/device/bind/${agentId}/${deviceCode}`)
@@ -63,7 +64,7 @@ export default {
                 }
             })
             .networkFail((err) => {
-                console.error('绑定设备失败:', err);
+                console.error('Failed to bind device:', err);
                 RequestService.reAjaxFun(() => {
                     this.bindDevice(agentId, deviceCode, callback, failCallback);
                 });
@@ -85,14 +86,14 @@ export default {
                 }
             })
             .networkFail((err) => {
-                console.error('更新OTA状态失败:', err)
-                this.$message.error(err.msg || '更新OTA状态失败')
+                console.error('Failed to update OTA status:', err)
+                this.$message.error(err.msg || i18n.t('device.updateOtaStatusFailed'))
                 RequestService.reAjaxFun(() => {
                     this.updateDeviceInfo(id, payload, callback, failCallback)
                 })
             }).send()
     },
-    // 手动添加设备
+    // Add device manually
     manualAddDevice(params, callback, failCallback) {
         RequestService.sendRequest()
             .url(`${getServiceUrl()}/device/manual-add`)
@@ -109,18 +110,18 @@ export default {
                 }
             })
             .networkFail((err) => {
-                console.error('手动添加设备失败:', err);
+                console.error('Failed to add device manually:', err);
                 RequestService.reAjaxFun(() => {
                     this.manualAddDevice(params, callback, failCallback);
                 });
             }).send();
     },
-    // 获取设备状态
+    // Get device status
     getDeviceStatus(agentId, callback, failCallback) {
         RequestService.sendRequest()
             .url(`${getServiceUrl()}/device/bind/${agentId}`)
             .method('POST')
-            .data({}) // 发送空对象作为请求体
+            .data({}) // Send an empty object as the request body
             .success((res) => {
                 RequestService.clearRequestTime();
                 callback(res);
@@ -132,7 +133,7 @@ export default {
                 }
             })
             .networkFail((err) => {
-                console.error('获取设备状态失败:', err);
+                console.error('Failed to get device status:', err);
                 RequestService.reAjaxFun(() => {
                     this.getDeviceStatus(agentId, callback, failCallback);
                 });

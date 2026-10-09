@@ -1,6 +1,6 @@
 <template>
   <CustomDialog
-    :title="title"
+    :title="title || $t('replacementDialog.addTitle')"
     :visible.sync="visible"
     width="700px"
     class="param-dialog-wrapper"
@@ -65,7 +65,7 @@ export default {
   props: {
     title: {
       type: String,
-      default: '新增替换词'
+      default: ''
     },
     visible: {
       type: Boolean,

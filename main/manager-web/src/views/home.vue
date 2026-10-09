@@ -1,10 +1,10 @@
 <template>
   <div class="welcome">
-    <!-- 公共头部 -->
+    <!-- Shared header -->
     <HeaderBar :devices="devices" />
     <el-main style="padding: 20px;display: flex;flex-direction: column;">
       <div>
-        <!-- 首页内容 -->
+        <!-- Home page content -->
         <div class="add-device">
           <div class="add-device-bg">
             <div class="hellow-text" style="padding-top: 30px;">
@@ -32,7 +32,7 @@
                   >
                     <i slot="suffix" class="el-icon-search search-icon" @click="handleSearch"></i>
                   </el-input>
-                  <!-- 搜索历史下拉框 -->
+                  <!-- Search history dropdown -->
                   <div v-if="showHistory && searchHistory.length > 0" class="search-history-dropdown">
                     <div class="search-history-header">
                       <span>{{ $t("header.searchHistory") }}</span>
@@ -161,7 +161,7 @@ export default {
       showChatHistory: false,
       currentAgentId: '',
       currentAgentName: '',
-      // 功能状态
+      // Feature status
       featureStatus: {
         voiceprintRecognition: false,
         voiceClone: false,
@@ -190,12 +190,12 @@ export default {
   async mounted() {
     this.fetchAgentList();
     await this.loadFeatureStatus();
-    // 从localStorage加载搜索历史
+    // Load search history from localStorage
     this.loadSearchHistory();
   },
 
   methods: {
-    // 加载功能状态
+    // Load feature status
     async loadFeatureStatus() {
       await featureManager.waitForInitialization();
       const config = featureManager.getConfig();
@@ -210,7 +210,7 @@ export default {
       this.addDeviceDialogVisible = true
     },
     goToRoleConfig() {
-      // 点击配置角色后跳转到角色配置页
+      // Navigate to the role configuration page after clicking configure role
       this.$router.push('/role-config')
     },
     handleWisdomBodyAdded(res) {
@@ -222,15 +222,15 @@ export default {
     },
     handleSearchReset() {
       this.isSearching = false;
-      // 直接将原始设备列表赋值给显示设备列表，避免重新加载数据
+      // Assign the original device list to the displayed list directly to avoid reloading
       this.devices = [...this.originalDevices];
     },
 
-    // 搜索更新智能体列表
+    // Update the agent list from search
     handleSearchResult(filteredList) {
-      this.devices = filteredList; // 更新设备列表
+      this.devices = filteredList; // Update the device list
     },
-    // 获取智能体列表
+    // Fetch the agent list
     fetchAgentList() {
       this.isLoading = true;
       Api.agent.getAgentList(({ data }) => {
@@ -240,10 +240,10 @@ export default {
             agentId: item.id
           }));
 
-          // 动态设置骨架屏数量（可选）
+          // Dynamically set the skeleton count (optional)
           this.skeletonCount = Math.min(
-            Math.max(this.originalDevices.length, 3), // 最少3个
-            10 // 最多10个
+            Math.max(this.originalDevices.length, 3), // At least 3
+            10 // At most 10
           );
 
           this.handleSearchReset();
@@ -254,7 +254,7 @@ export default {
         this.isLoading = false;
       });
     },
-    // 删除智能体
+    // Delete agent
     handleDeleteAgent(device) {
       const targetAgent = typeof device === 'object'
         ? device
@@ -302,7 +302,7 @@ export default {
             showClose: true
           });
           this.deleteAgentDialogVisible = false;
-          this.fetchAgentList(); // 刷新列表
+          this.fetchAgentList(); // Refresh the list
         } else {
           this.$message.error({
             message: res.data.msg || this.$t('home.deleteFailed'),
@@ -316,27 +316,27 @@ export default {
       this.currentAgentName = agentName;
       this.showChatHistory = true;
     },
-    // 处理搜索
+    // Handle search
     handleSearch() {
       const searchValue = this.search.trim();
 
-      // 如果搜索内容为空，触发重置事件
+      // If the search text is empty, trigger a reset
       if (!searchValue) {
         this.handleSearchReset();
         return;
       }
 
-      // 保存搜索历史
+      // Save search history
       this.saveSearchHistory(searchValue);
 
-      // 搜索完成后让输入框失去焦点，从而触发blur事件隐藏搜索历史
+      // Blur the input after searching so the blur handler hides the search history
       if (this.$refs.searchInput) {
         this.$refs.searchInput.blur();
       }
 
       this.isSearching = true;
       this.isLoading = true;
-      // 检测MAC地址格式：包含4个冒号
+      // Detect MAC address format: contains 4 colons
       const isMac = /^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$/.test(searchValue)
       const searchType = isMac ? 'mac' : 'name';
       Api.agent.searchAgent(searchValue, searchType, ({ data }) => {
@@ -348,26 +348,26 @@ export default {
         }
         this.isLoading = false;
       }, (error) => {
-        console.error('搜索智能体失败:', error);
+        console.error('Agent search failed:', error);
         this.isLoading = false;
         this.$message.error(this.$t('message.searchFailed'));
       });
     },
 
-    // 显示搜索历史
+    // Show search history
     showSearchHistory() {
       this.showHistory = true;
     },
 
-    // 隐藏搜索历史
+    // Hide search history
     hideSearchHistory() {
-      // 延迟隐藏，以便点击事件能够执行
+      // Hide with a delay so click handlers can run
       setTimeout(() => {
         this.showHistory = false;
       }, 200);
     },
 
-    // 加载搜索历史
+    // Load search history
     loadSearchHistory() {
       try {
         const history = localStorage.getItem(this.SEARCH_HISTORY_KEY);
@@ -375,56 +375,56 @@ export default {
           this.searchHistory = JSON.parse(history);
         }
       } catch (error) {
-        console.error("加载搜索历史失败:", error);
+        console.error("Failed to load search history:", error);
         this.searchHistory = [];
       }
     },
 
-    // 保存搜索历史
+    // Save search history
     saveSearchHistory(keyword) {
       if (!keyword || this.searchHistory.includes(keyword)) {
         return;
       }
 
-      // 添加到历史记录开头
+      // Add to the start of the history
       this.searchHistory.unshift(keyword);
 
-      // 限制历史记录数量
+      // Limit the number of history entries
       if (this.searchHistory.length > this.MAX_HISTORY_COUNT) {
         this.searchHistory = this.searchHistory.slice(0, this.MAX_HISTORY_COUNT);
       }
 
-      // 保存到localStorage
+      // Save to localStorage
       try {
         localStorage.setItem(this.SEARCH_HISTORY_KEY, JSON.stringify(this.searchHistory));
       } catch (error) {
-        console.error("保存搜索历史失败:", error);
+        console.error("Failed to save search history:", error);
       }
     },
 
-    // 选择搜索历史项
+    // Select a search history item
     selectSearchHistory(keyword) {
       this.search = keyword;
       this.handleSearch();
     },
 
-    // 移除单个搜索历史项
+    // Remove a single search history item
     removeSearchHistory(index) {
       this.searchHistory.splice(index, 1);
       try {
         localStorage.setItem(this.SEARCH_HISTORY_KEY, JSON.stringify(this.searchHistory));
       } catch (error) {
-        console.error("更新搜索历史失败:", error);
+        console.error("Failed to update search history:", error);
       }
     },
 
-    // 清空所有搜索历史
+    // Clear all search history
     clearSearchHistory() {
       this.searchHistory = [];
       try {
         localStorage.removeItem(this.SEARCH_HISTORY_KEY);
       } catch (error) {
-        console.error("清空搜索历史失败:", error);
+        console.error("Failed to clear search history:", error);
       }
     },
   }
@@ -440,13 +440,13 @@ export default {
   flex-direction: column;
   background: #eff4ff;
   background-size: cover;
-  /* 确保背景图像覆盖整个元素 */
+  /* Make the background image cover the whole element */
   background-position: center;
-  /* 从顶部中心对齐 */
+  /* Align from top center */
   -webkit-background-size: cover;
-  /* 兼容老版本WebKit浏览器 */
+  /* For older WebKit browsers */
   -o-background-size: cover;
-  /* 兼容老版本Opera浏览器 */
+  /* For older Opera browsers */
 }
 
 .add-device {
@@ -465,15 +465,15 @@ export default {
   text-align: left;
   background-image: url("@/assets/home/main-top-bg.png");
   background-size: cover;
-  /* 确保背景图像覆盖整个元素 */
+  /* Make the background image cover the whole element */
   background-position: center;
-  /* 从顶部中心对齐 */
+  /* Align from top center */
   -webkit-background-size: cover;
-  /* 兼容老版本WebKit浏览器 */
+  /* For older WebKit browsers */
   -o-background-size: cover;
   box-sizing: border-box;
 
-  /* 兼容老版本Opera浏览器 */
+  /* For older Opera browsers */
   .hellow-text {
     margin-left: 75px;
     color: #3d4566;
@@ -659,10 +659,10 @@ export default {
   padding: 30px 0;
 }
 
-/* 在 DeviceItem.vue 的样式中 */
+/* In the DeviceItem.vue styles */
 .device-item {
   margin: 0 !important;
-  /* 避免冲突 */
+  /* Avoid conflicts */
   width: auto !important;
 }
 
@@ -673,10 +673,10 @@ export default {
   padding-top: 30px;
   color: #979db1;
   text-align: center;
-  /* 居中显示 */
+  /* Center */
 }
 
-/* 骨架屏动画 */
+/* Skeleton animation */
 @keyframes shimmer {
   100% {
     transform: translateX(100%);

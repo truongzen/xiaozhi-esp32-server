@@ -1,12 +1,12 @@
 export default {
-  // 登录页面相关提示文本
+  // Login page messages
   'login.requiredUsername': '用户名不能为空',
   'login.requiredPassword': '密码不能为空',
   'login.requiredCaptcha': '验证码不能为空',
   'login.requiredMobile': '请输入正确的手机号码',
   'login.loginSuccess': '登录成功！',
 
-  // HeaderBar组件文本
+  // HeaderBar component text
   'header.smartManagement': '智能体管理',
   'header.voiceCloneManagement': '音色克隆',
   'header.voiceResourceManagement': '音色资源',
@@ -28,7 +28,7 @@ export default {
   'header.logout': '退出登录',
   'header.searchPlaceholder': '名称、标签或mac搜索',
 
-  // McpToolCallDialog组件文本
+  // McpToolCallDialog component text
   'mcpToolCall.title': '工具调用',
   'mcpToolCall.execute': '执行',
   'mcpToolCall.chooseFunction': '1、选择功能',
@@ -51,7 +51,7 @@ export default {
   'mcpToolCall.noResultYet': '暂无执行结果',
   'mcpToolCall.loadingToolList': '正在获取工具列表...',
 
-  // 工具名称
+  // Tool names
   'mcpToolCall.toolName.getDeviceStatus': '查看设备状态',
   'mcpToolCall.toolName.setVolume': '设置音量',
   'mcpToolCall.toolName.setBrightness': '设置亮度',
@@ -65,7 +65,7 @@ export default {
   'mcpToolCall.toolName.previewImage': '预览图片',
   'mcpToolCall.toolName.setDownloadUrl': '设置下载地址',
 
-  // 工具分类
+  // Tool categories
   'mcpToolCall.category.audio': '音频',
   'mcpToolCall.category.display': '显示',
   'mcpToolCall.category.camera': '拍摄',
@@ -73,7 +73,7 @@ export default {
   'mcpToolCall.category.assets': '资源',
   'mcpToolCall.category.deviceInfo': '设备信息',
 
-  // 表格分类和属性
+  // Table categories and properties
   'mcpToolCall.table.audioSpeaker': '音频扬声器',
   'mcpToolCall.table.screen': '屏幕',
   'mcpToolCall.table.network': '网络',
@@ -88,7 +88,7 @@ export default {
   'mcpToolCall.table.displayInfo': '显示信息',
   'mcpToolCall.table.deviceInfo': '设备信息',
   'mcpToolCall.table.systemInfo': '系统信息',
-  // 表格列标题
+  // Table column headers
   'mcpToolCall.table.component': '组件',
   'mcpToolCall.table.property': '属性',
   'mcpToolCall.table.value': '值',
@@ -125,7 +125,7 @@ export default {
   'mcpToolCall.prop.quality': '质量',
   'mcpToolCall.prop.question': '问题',
 
-  // 工具帮助文本
+  // Tool help text
   'mcpToolCall.help.getDeviceStatus': '查看设备的当前运行状态，包括音量、屏幕、电池等信息。',
   'mcpToolCall.help.setVolume': '调整设备的音量大小，请输入0-100之间的数值。',
   'mcpToolCall.help.setBrightness': '调整设备屏幕的亮度，请输入0-100之间的数值。',
@@ -139,7 +139,7 @@ export default {
   'mcpToolCall.help.previewImage': '在设备屏幕上预览指定URL的图片。',
   'mcpToolCall.help.setDownloadUrl': '设置设备资源文件的下载地址。',
 
-  // 其他文本
+  // Other text
   'mcpToolCall.text.strong': '强',
   'mcpToolCall.text.medium': '中',
   'mcpToolCall.text.weak': '弱',
@@ -159,7 +159,7 @@ export default {
   'mcpToolCall.text.getFailed': '获取失败',
   'mcpToolCall.text.getSuccessFormatError': '获取成功，但数据格式异常',
 
-  // 字典数据对话框相关
+  // Dictionary data dialog
   'dictDataDialog.addDictData': '新增字典数据',
   'dictDataDialog.dictLabel': '字典标签',
   'dictDataDialog.dictLabelPlaceholder': '请输入字典标签',
@@ -169,7 +169,7 @@ export default {
   'dictDataDialog.requiredDictLabel': '请输入字典标签',
   'dictDataDialog.requiredDictValue': '请输入字典值',
 
-  // 字典类型对话框相关
+  // Dictionary type dialog
   'dictTypeDialog.addDictType': '新增字典类型',
   'dictTypeDialog.dictName': '字典类型名称',
   'dictTypeDialog.dictNamePlaceholder': '请输入字典类型名称',
@@ -178,7 +178,7 @@ export default {
   'dictTypeDialog.requiredDictName': '请输入字典类型名称',
   'dictTypeDialog.requiredDictType': '请输入字典类型编码',
 
-  // 音频编辑对话框相关
+  // Audio edit dialog
   'editVoiceDialog.voiceCode': '音色编码',
   'editVoiceDialog.voiceCodePlaceholder': '请输入音色编码',
   'editVoiceDialog.voiceName': '音色名称',
@@ -194,7 +194,7 @@ export default {
   'editVoiceDialog.requiredVoiceCode': '请输入音色编码',
   'editVoiceDialog.requiredVoiceName': '请输入音色名称',
 
-  // 固件对话框相关
+  // Firmware dialog
   'firmwareDialog.firmwareName': '固件名称',
   'firmwareDialog.firmwareNamePlaceholder': '请输入固件名称(板子+版本号)',
   'firmwareDialog.firmwareType': '固件类型',
@@ -217,7 +217,7 @@ export default {
   'firmwareDialog.uploadSuccess': '固件文件上传成功',
   'firmwareDialog.uploadFailed': '文件上传失败',
 
-  // 声纹对话框相关
+  // Voiceprint dialog
   'voicePrintDialog.addSpeaker': '添加说话人',
   'voicePrintDialog.voicePrintVector': '声纹向量',
   'voicePrintDialog.selectVoiceMessage': '请选择一条语言消息',
@@ -231,7 +231,7 @@ export default {
   'voicePrintDialog.requiredName': '请输入姓名',
   'voicePrintDialog.requiredAudioVector': '请选择音频向量',
 
-  // 上下文源对话框相关
+  // Context source dialog
   'contextProviderDialog.title': '编辑源',
   'contextProviderDialog.noContextApi': '暂无上下文API',
   'contextProviderDialog.add': '添加',
@@ -245,13 +245,13 @@ export default {
   'contextProviderDialog.cancel': '取消',
   'contextProviderDialog.confirm': '确定',
 
-  // 角色配置页面-上下文源相关
+  // Role configuration page - context sources
   'roleConfig.contextProvider': '上下文源',
   'roleConfig.contextProviderSuccess': '已成功添加 {count} 个源。',
   'roleConfig.contextProviderDocLink': '如何部署上下文源',
   'roleConfig.editContextProvider': '编辑源',
 
-  // 声纹页面相关
+  // Voiceprint page
   'voicePrint.pageTitle': '声纹识别',
   'voicePrint.name': '姓名',
   'voicePrint.description': '描述',
@@ -275,7 +275,7 @@ export default {
   'voicePrint.closeOperation': '操作已关闭',
   'voicePrint.loading': '拼命加载中',
 
-  // 手动添加设备对话框相关
+  // Manual add device dialog
   'manualAddDeviceDialog.title': '手动添加设备',
   'manualAddDeviceDialog.deviceType': '设备型号',
   'manualAddDeviceDialog.deviceTypePlaceholder': '请选择设备型号',
@@ -293,10 +293,10 @@ export default {
   'manualAddDeviceDialog.addSuccess': '设备添加成功',
   'manualAddDeviceDialog.addFailed': '添加失败',
 
-  // AddModelDialog组件相关
+  // AddModelDialog component
   'addModelDialog.requiredSupplier': '请选择供应器',
 
-  // 注册页面相关
+  // Register page
   'register.title': '创建账号',
   'register.welcome': '欢迎使用小智AI',
   'register.usernamePlaceholder': '请输入用户名',
@@ -330,7 +330,7 @@ export default {
   'register.sendCaptcha': '获取验证码',
   'register.secondsLater': '秒后',
 
-  // 参数对话框相关
+  // Parameter dialog
   'paramDialog.paramCode': '参数编码',
   'paramDialog.paramCodePlaceholder': '请输入参数编码',
   'paramDialog.paramValue': '参数值',
@@ -350,7 +350,7 @@ export default {
   'paramDialog.arrayType': '数组(array)',
   'paramDialog.jsonType': 'JSON对象(json)',
 
-  // 替换词对话框相关
+  // Replacement word dialog
   'replacementWordManagement.pageTitle': '替换词管理',
   'replacementWordManagement.searchPlaceholder': '请输入文件名称查询',
   'replacementWordManagement.search': '搜索',
@@ -365,7 +365,7 @@ export default {
   'replacementWordManagement.download': '下载',
   'replacementWordManagement.delete': '删除',
 
-  // 替换词对话框相关
+  // Replacement word dialog
   'replacementDialog.fileName': '文件名称',
   'replacementDialog.fileNamePlaceholder': '请输入文件名称',
   'replacementDialog.content': '替换词内容',
@@ -389,7 +389,7 @@ export default {
   'replacementDialog.readFileError': '读取文件失败',
   'replacementDialog.maxWordCountExceeded': '替换词数量不能超过 {max} 个',
 
-  // 替换词管理页面提示文本
+  // Replacement word management page messages
   'replacementWordManagement.getListFailed': '获取列表失败',
   'replacementWordManagement.confirmDelete': '确定要删除该文件吗？',
   'replacementWordManagement.deleteHint': '提示',
@@ -400,7 +400,7 @@ export default {
   'replacementWordManagement.confirmBatchDelete': '确定要删除选中的 {count} 个文件吗？',
   'replacementWordManagement.batchDeleteHint': '批量删除提示',
 
-  // 登录页面文本
+  // Login page text
   'login.title': '登录',
   'login.welcome': 'WELCOME TO LOGIN',
   'login.username': '用户名',
@@ -422,7 +422,7 @@ export default {
   'login.privacyPolicy': '《隐私政策》',
   'login.registerAccount': '注册账号',
 
-  // 忘记密码页面文本
+  // Forgot password page text
   'retrievePassword.title': '重置密码',
   'retrievePassword.welcome': '密码找回',
   'retrievePassword.subtitle': '找回密码',
@@ -452,7 +452,7 @@ export default {
   'retrievePassword.passwordUpdateSuccess': '密码修改成功',
   'retrievePassword.agreeTo': '重置即同意',
 
-  // 修改密码页面文本
+  // Change password page text
   'changePassword.title': '修改密码',
   'changePassword.oldPasswordLabel': '旧密码：',
   'changePassword.oldPasswordPlaceholder': '请输入旧密码',
@@ -468,7 +468,7 @@ export default {
   'changePassword.passwordChangedSuccessfully': '密码修改成功，请重新登录',
   'changePassword.changeFailed': '密码修改失败',
 
-  // 设备管理页面文本
+  // Device management page text
   'device.management': '设备管理',
   'device.add': '添加设备',
   'device.edit': '编辑设备',
@@ -519,16 +519,16 @@ export default {
   'device.online': '在线',
   'device.offline': '离线',
 
-  // 消息提示
+  // Messages
   'message.success': '操作成功',
   'message.error': '操作失败',
   'message.warning': '警告',
   'message.info': '提示',
 
-  // 缓存相关
+  // Cache
   'cache.viewer': '缓存查看器',
 
-  // 聊天历史对话框相关
+  // Chat history dialog
   'chatHistory.with': '与',
   'chatHistory.dialogTitle': '的聊天记录',
   'chatHistory.loading': '加载中...',
@@ -577,21 +577,21 @@ export default {
   'cache.clearFailed': '清除缓存失败',
   'cache.clearCanceled': '已取消清除',
 
-  // 通用按钮
+  // Common buttons
   'button.ok': '确定',
   'button.cancel': '取消',
   'button.save': '保存',
   'button.close': '关闭',
 
-  // 系统信息
+  // System info
   'system.name': '小智服务',
 
-  // 声纹相关
+  // Voiceprint
   'voiceprint.management': '声纹管理',
   'voiceprint.add': '添加声纹',
   'voiceprint.delete': '删除声纹',
 
-  // 字典管理页面文本
+  // Dictionary management page text
   'dictManagement.pageTitle': '字典管理',
   'dictManagement.dictTypeCategory': '字典分类',
   'dictManagement.searchPlaceholder': '请输入字典值标签查询',
@@ -628,7 +628,7 @@ export default {
   'dictManagement.confirmBatchDeleteDictData': '确定要删除选中的{count}个字典数据吗?',
   'dictManagement.getDictDataFailed': '获取字典数据失败',
 
-  // 用户信息
+  // User info
   'user.info': '用户信息',
   'user.username': '用户名',
   'user.mobile': '手机号',
@@ -669,7 +669,7 @@ export default {
   'user.searchPhone': '请输入手机号码查询',
   'user.search': '搜索',
 
-  // 字段管理页面文本
+  // Field management page text
   'providerManagement.categoryFilter': '类别筛选',
   'providerManagement.searchPlaceholder': '请输入供应器名称查询',
   'providerManagement.category': '类别',
@@ -679,7 +679,7 @@ export default {
   'providerManagement.confirmDelete': '确定要删除选中的{count}个供应器吗？',
   'providerManagement.viewFields': '查看字段',
 
-  // 公共文本
+  // Common text
   'common.all': '全部',
   'common.search': '搜索',
   'common.name': '名称',
@@ -713,7 +713,7 @@ export default {
   'common.copyFailed': '复制失败',
   'common.copyAddress': '复制地址',
 
-  // 语言切换
+  // Language switch
   'language.zhCN': '中文简体',
   'language.zhTW': '中文繁體',
   'language.en': 'English',
@@ -721,7 +721,7 @@ export default {
   'language.vi': 'Tiếng Việt',
   'language.ptBR': 'Português (Brasil)',
 
-  // 首页文本
+  // Home page text
   'home.addAgent': '添加智能体',
   'home.greeting': '你好小智',
   'home.wish': '让我们度过美好的一天！',
@@ -746,7 +746,7 @@ export default {
   'home.deleteFailed': '删除失败',
   'home.enableMemory': '请先在“配置角色”界面开启记忆',
 
-  // 参数管理页面文本
+  // Parameter management page text
   'paramManagement.pageTitle': '参数管理',
   'paramManagement.searchPlaceholder': '请输入参数编码或备注查询',
   'paramManagement.search': '搜索',
@@ -801,7 +801,7 @@ export default {
   'paramManagement.updateFailed': '更新失败',
   'paramManagement.addFailed': '新增失败',
 
-  // 服务端管理页面文本
+  // Server management page text
   'serverSideManager.pageTitle': '服务端管理',
   'serverSideManager.wsAddress': 'ws地址',
   'serverSideManager.operation': '操作',
@@ -817,7 +817,7 @@ export default {
   'serverSideManager.restartSuccess': '重启成功',
   'serverSideManager.updateConfigSuccess': '更新配置成功',
 
-  // 添加智能体对话框文本
+  // Add agent dialog text
   'addAgentDialog.title': '添加智能体',
   'addAgentDialog.agentName': '智能体名称',
   'addAgentDialog.placeholder': '请输入智能体名称…',
@@ -826,7 +826,7 @@ export default {
   'addAgentDialog.nameRequired': '请输入智能体名称',
   'addAgentDialog.addSuccess': '添加成功',
 
-  // 角色配置页面文本
+  // Role configuration page text
   'roleConfig.title': '角色配置',
   'roleConfig.addTag': '添加新标签',
   'roleConfig.restartNotice': '保存配置后，需要重启设备，新的配置才会生效。',
@@ -1005,7 +1005,7 @@ export default {
   'agentSnapshot.voice.TTS_EdgeTTS0005': 'EdgeTTS男声-云希',
   'agentSnapshot.voice.TTS_EdgeTTS0006': 'EdgeTTS男声-云夏',
 
-  // 表单字段 Tooltip 提示说明
+  // Form field tooltips
   'roleConfig.tooltip.agentName': '设置智能体的名称，用于标识和识别您的AI助手',
   'roleConfig.tooltip.roleTemplate': '从预设的角色模板中选择，快速配置智能体的基础设定',
   'roleConfig.tooltip.contextProvider': '在小智被唤醒时，获取外部系统的数据，并将其动态注入到大模型的系统提示词中',
@@ -1024,7 +1024,7 @@ export default {
   'roleConfig.tooltip.language': '选择音色所属的语言，系统将筛选出支持该语言的可用音色',
   'roleConfig.tooltip.voiceType': '选择AI助手说话的声音，不同音色具有不同的声音特点和风格，部分音色支持试听功能，点击播放按钮可预览效果',
 
-  // 功能管理对话框文本
+  // Feature management dialog text
   'functionDialog.title': '功能管理',
   'functionDialog.unselectedFunctions': '未选功能',
   'functionDialog.selectedFunctions': '已选功能',
@@ -1052,7 +1052,7 @@ export default {
   'functionDialog.jsonFormatError': '的字段格式错误：JSON格式有误',
   'functionDialog.defaultValue': '默认值',
 
-  // 模型配置页面文本
+  // Model configuration page text
   'modelConfig.searchPlaceholder': '请输入模型名称查询',
   'modelConfig.search': '搜索',
   'modelConfig.vad': '语言活动检测',
@@ -1105,7 +1105,7 @@ export default {
   'modelConfig.totalRecords': '共{total}条记录',
   'modelConfig.loading': '拼命加载中',
 
-  // 模型配置对话框文本
+  // Model configuration dialog text
   'modelConfigDialog.addModel': '添加模型',
   'modelConfigDialog.editModel': '修改模型',
   'modelConfigDialog.duplicateModel': '创建副本',
@@ -1132,7 +1132,7 @@ export default {
   'modelConfigDialog.enterJsonExample': '请输入JSON格式变量(示例:{"key":"value"})',
   'modelConfigDialog.save': '保存',
 
-  // TTS模型配置文本
+  // TTS model configuration text
   'ttsModel.select': '选择',
   'ttsModel.voiceCode': '音色编码',
   'ttsModel.voiceName': '音色名称',
@@ -1169,7 +1169,7 @@ export default {
   'ttsModel.updateSuccess': '更新成功',
   'ttsModel.saveSuccess': '保存成功',
 
-  // OTA管理页面文本
+  // OTA management page text
   'otaManagement.firmwareManagement': '固件管理',
   'otaManagement.searchPlaceholder': '请输入固件名称查询',
   'otaManagement.search': '搜索',
@@ -1209,7 +1209,7 @@ export default {
   'otaManagement.addFailed': '新增失败',
   'otaManagement.fetchFirmwareListFailed': '获取固件列表失败',
 
-  // 字段管理页面模型类型翻译
+  // Field management page model type translations
   'providerManagement.all': '全部',
   'providerManagement.modelType.ASR': '语音识别',
   'providerManagement.modelType.TTS': '语音合成',
@@ -1221,7 +1221,7 @@ export default {
   'providerManagement.modelType.Plugin': '插件工具',
   'providerManagement.modelType.RAG': '知识库',
 
-  // Provider Dialog 翻译
+  // Provider dialog translations
   'providerDialog.category': '类别',
   'providerDialog.selectCategory': '请选择类别',
   'providerDialog.code': '编码',
@@ -1260,7 +1260,7 @@ export default {
   'providerDialog.confirmBatchDeleteFields': '确定要删除选中的{count}个字段吗？',
   'providerDialog.batchDeleteFieldsSuccess': '成功删除{count}个字段',
 
-  // 默认角色模版页面文本
+  // Default role template page text
   'agentTemplateManagement.title': '默认角色管理',
   'agentTemplateManagement.templateName': '模板名称',
   'agentTemplateManagement.action': '操作',
@@ -1284,7 +1284,7 @@ export default {
   'agentTemplateManagement.batchDeleteFailed': '模板批量删除失败',
   'agentTemplateManagement.deleteBackendError': '删除失败，请检查后端服务是否正常',
 
-  // 模板快速配置页面文本
+  // Template quick configuration page text
   'templateQuickConfig.title': '模块快速配置',
   'templateQuickConfig.agentSettings.agentName': '助手昵称',
   'templateQuickConfig.agentSettings.agentNamePlaceholder': '请输入助手昵称',
@@ -1306,7 +1306,7 @@ export default {
   'info': '提示',
   'common.networkError': '网络请求失败',
 
-  // SM2加密相关错误消息
+  // SM2 encryption error messages
   'sm2.publicKeyNotConfigured': 'SM2公钥未配置，请联系管理员',
   'sm2.encryptionFailed': '密码加密失败',
   'sm2.keyGenerationFailed': '密钥对生成失败',
@@ -1315,7 +1315,7 @@ export default {
   'sm2.publicKeyRetry': '正在重试获取公钥...',
   'sm2.publicKeyRetryFailed': '公钥获取重试失败',
 
-  // 音色资源管理
+  // Voice resource management
   'voiceClone.title': '音色克隆',
   'voiceResource.title': '音色资源',
   'voiceClone.platformName': '平台名称',
@@ -1405,7 +1405,7 @@ export default {
   'voiceClone.playFailed': '播放失败',
   'voiceClone.Details': '错误详情',
 
-  // 知识库管理页面文本
+  // Knowledge base management page text
   'knowledgeBaseManagement.title': '知识库',
   'knowledgeBaseManagement.searchPlaceholder': '请输入知识库名称搜索',
   'knowledgeBaseManagement.search': '搜索',
@@ -1438,7 +1438,7 @@ export default {
   'knowledgeBaseManagement.selectAll': '全选',
   'knowledgeBaseManagement.cancelSelectAll': '取消全选',
 
-  // 知识库对话框文本
+  // Knowledge base dialog text
   'knowledgeBaseDialog.title': '知识库',
   'knowledgeBaseDialog.name': '知识库名称',
   'knowledgeBaseDialog.namePlaceholder': '请精确输入知识库名称，才能提高调用知识库的精准性',
@@ -1462,10 +1462,10 @@ export default {
   'knowledgeBaseDialog.nameLengthLimit': '知识库名称不能超过50个字符',
   'knowledgeBaseDialog.descriptionLengthLimit': '知识库描述不能超过200个字符',
 
-  // 知识库管理页面新增查看按钮文本
+  // Knowledge base management page view button text
   'knowledgeBaseManagement.view': '管理文件',
 
-  // 上传文件页面文本
+  // File upload page text
   'knowledgeFileUpload.back': '返回',
   'knowledgeFileUpload.searchPlaceholder': '请输入文档名称搜索',
   'knowledgeFileUpload.search': '搜索',
@@ -1537,7 +1537,7 @@ export default {
   'knowledgeBaseDialog.descriptionRequired': '请输入知识库描述',
   'knowledgeFileUpload.parsing': '正在解析中...',
 
-  // 知识库管理页面文本
+  // Knowledge base management page text
   'knowledgeBaseManagement.loading': '加载中...',
   'knowledgeBaseManagement.noData': '暂无数据',
   'knowledgeBaseManagement.switchKnowledgeBase': '切换知识库',
@@ -1547,7 +1547,7 @@ export default {
   'knowledgeBaseManagement.totalDocuments': '共 {total} 个文档',
   'knowledgeBaseManagement.getListFailed': '获取列表失败',
 
-  // 系统功能配置页面文本
+  // System feature configuration page text
   'featureManagement.selectAll': '全选',
   'featureManagement.deselectAll': '取消全选',
   'featureManagement.save': '保存配置',
@@ -1569,7 +1569,7 @@ export default {
   'featureManagement.groupDescription.voiceManagement': '配置哪些功能对智能体（AI助手）可见和可用',
   'featureManagement.moduleCount': '共 {count} 个模块',
 
-  // 功能名称和描述
+  // Feature names and descriptions
   'feature.voiceprintRecognition.name': '声纹识别',
   'feature.voiceprintRecognition.description': '通过声纹识别技术验证用户身份，提供安全的语音交互体验',
   'feature.voiceClone.name': '音色克隆',
@@ -1585,7 +1585,7 @@ export default {
   'feature.addressBook.name': '通讯录',
   'feature.addressBook.description': '管理和维护联系人通讯录，为AI助手提供联系人信息支持',
 
-  // 通讯录管理页面
+  // Address book management page
   'addressBookManagement.title': '通讯录管理',
   'addressBookManagement.searchPlaceholder': '搜索设备名称或MAC地址',
   'addressBookManagement.selectAgent': '请选择智能体',
@@ -1633,7 +1633,7 @@ export default {
   'addressBookManagement.addDeviceTip': '新增设备功能开发中',
   'addressBookManagement.selectAgentFirst': '请先选择智能体',
 
-  // 通讯录对话框
+  // Address book dialog
   'addressBookDialog.title': '通讯录',
   'addressBookDialog.name': '通讯录名称',
   'addressBookDialog.namePlaceholder': '请输入通讯录名称',
@@ -1649,10 +1649,10 @@ export default {
   'addressBookDialog.descriptionRequired': '请输入通讯录描述',
   'addressBookDialog.descriptionLength': '通讯录描述不能超过300个字符',
 
-  // 头部导航
+  // Header navigation
   'header.addressBook': '通讯录',
 
-  // 通讯录管理页面 - 设备列表
+  // Address book management page - device list
   'addressBookManagement.mainTitle': '通讯录管理',
   'addressBookManagement.subTitle': '管理设备通讯录，设置设备名称和呼叫权限',
   'addressBookManagement.online': '在线',
@@ -1667,7 +1667,7 @@ export default {
   'addressBookManagement.selectAll': '全选',
   'addressBookManagement.deselectAll': '全不选',
 
-  // 通讯录管理页面 - 操作消息
+  // Address book management page - action messages
   'addressBookManagement.aliasSaved': '别名已保存',
   'addressBookManagement.saveFailed': '保存失败',
   'addressBookManagement.noChanges': '没有变更',
@@ -1676,7 +1676,7 @@ export default {
   'addressBookManagement.agentNameUpdated': '智能体名称已更新',
   'addressBookManagement.updateFailed': '更新失败',
 
-  // 时间格式
+  // Time format
   'addressBookManagement.justNow': '刚刚',
   'addressBookManagement.minutesAgo': '{minutes}分钟前',
   'addressBookManagement.hoursAgo': '{hours}小时前',
@@ -1684,4 +1684,60 @@ export default {
   'addressBookManagement.monthsAgo': '{months}个月前',
   'addressBookManagement.yearsAgo': '{years}年前',
 
+  // Added for views i18n cleanup
+  'knowledgeBaseManagement.documentsLabel': '文档',
+  'knowledgeFileUpload.retrievalTestFailed': '召回测试失败',
+  'voiceClone.processResponseError': '处理响应时出错',
+  'voiceClone.audioNotExist': '音频不存在',
+  'login.getUserInfoFailed': '用户信息获取失败',
+  'login.loginFailed': '登录失败',
+  'system.consoleTitle': '智控台',
+  'agentTemplateManagement.fetchTemplateFailed': '获取模板失败',
+  'common.noData': '暂无数据',
+  'common.updateFailure': '更新失败',
+  'common.addFailure': '新增失败',
+  'otaManagement.invalidFirmwareId': '存在无效的固件ID',
+  'message.searchFailed': '搜索失败',
+  'featureManagement.saveError': '保存配置失败',
+
+  // Keys added for the English translation pass
+  'modelConfigDialog.mustBeDictFormat': '必须输入字典格式（如 {"key":"value"}），保存则使用原数据',
+  'modelConfigDialog.invalidJsonFormat': 'JSON格式错误（如 {"key":"value"}），保存则使用原数据',
+  'paramDialog.arrayFormatError': '数组格式错误，需要使用英文分号结尾',
+  'replacementDialog.addTitle': '新增替换词',
+  'versionFooter.beianIcon': '备案图标',
+  'viewPasswordDialog.title': '用户新密码',
+  'viewPasswordDialog.newPasswordLabel': '用户新密码：',
+  'viewPasswordDialog.copyPassword': '复制密码',
+  'viewPasswordDialog.passwordCopied': '密码已复制',
+  'cache.loadFailed': '加载缓存数据失败',
+  'functionDialog.enterValidJson': '请输入合法的 JSON',
+  'customDialog.confirmSave': '确认保存',
+  'ttsModel.invalidVoiceId': '存在无效的音色ID',
+  'common.networkErrorWithStatus': '网络请求出现了错误【{status}】',
+  'common.serverUnreachable': '似乎无法连接服务器',
+  'common.connectingServer': '正在连接服务器({count})',
+  'modelConfig.fetchProvidersFailed': '获取供应器列表失败',
+  'modelConfig.addModelFailed': '新增模型失败',
+  'modelConfig.deleteModelFailed': '删除模型失败',
+  'modelConfig.getModelConfigFailed': '获取模型配置失败',
+  'modelConfig.updateModelStatusFailed': '更新模型状态失败',
+  'modelConfig.updateModelFailed': '更新模型失败',
+  'modelConfig.setDefaultModelFailed': '设置默认模型失败',
+  'providerManagement.addProviderFailed': '新增模型供应器失败',
+  'providerManagement.updateProviderFailed': '更新模型供应器失败',
+  'providerManagement.deleteProviderFailed': '删除模型供应器失败',
+  'dictManagement.getDictTypeListFailed': '获取字典类型列表失败',
+  'dictManagement.getDictTypeDetailFailed': '获取字典类型详情失败',
+  'dictManagement.addDictTypeFailed': '新增字典类型失败',
+  'dictManagement.updateDictTypeFailed': '更新字典类型失败',
+  'dictManagement.deleteDictTypeFailed': '删除字典类型失败',
+  'dictManagement.getDictDataListFailed': '获取字典数据列表失败',
+  'dictManagement.getDictDataDetailFailed': '获取字典数据详情失败',
+  'dictManagement.addDictDataFailed': '新增字典数据失败',
+  'dictManagement.updateDictDataFailed': '更新字典数据失败',
+  'dictManagement.deleteDictDataFailed': '删除字典数据失败',
+  'device.updateOtaStatusFailed': '更新OTA状态失败',
+  'cache.newVersionAvailable': '发现新版本，点击刷新应用',
+  'feature.systemWebMenuRemark': '系统功能菜单配置',
 }

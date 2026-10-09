@@ -1,6 +1,11 @@
-const HAVE_NO_RESULT = '暂无'
+import i18n from '../i18n/index'
+
+// Placeholder shown when there is no value (localized at call time)
+const HAVE_NO_RESULT = () => i18n.t('common.noData')
 export default {
-    HAVE_NO_RESULT, // 项目的配置信息
+    get HAVE_NO_RESULT() {
+        return HAVE_NO_RESULT()
+    }, // Project configuration
     PAGE: {
         LOGIN: '/login',
     },
@@ -15,8 +20,8 @@ export default {
     FONT_SIZE: {
         'big': 'big',
         'normal': 'normal',
-    }, // 获取map中的某key
+    }, // Get a key from a map
     get(map, key) {
-        return map[key] || HAVE_NO_RESULT
+        return map[key] || HAVE_NO_RESULT()
     }
 }
