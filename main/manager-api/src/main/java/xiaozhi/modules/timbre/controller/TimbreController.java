@@ -27,7 +27,7 @@ import xiaozhi.modules.timbre.service.TimbreService;
 import xiaozhi.modules.timbre.vo.TimbreDetailsVO;
 
 /**
- * 音色控制层
+ * Voice controller
  *
  * @author zjy
  * @since 2025-3-21
@@ -35,18 +35,18 @@ import xiaozhi.modules.timbre.vo.TimbreDetailsVO;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/ttsVoice")
-@Tag(name = "音色管理")
+@Tag(name = "Voice Management")
 public class TimbreController {
     private final TimbreService timbreService;
 
     @GetMapping
-    @Operation(summary = "分页查找")
+    @Operation(summary = "Paged query")
     @RequiresPermissions("sys:role:superAdmin")
     @Parameters({
-            @Parameter(name = "ttsModelId", description = "对应 TTS 模型主键", required = true),
-            @Parameter(name = "name", description = "音色名称"),
-            @Parameter(name = Constant.PAGE, description = "当前页码，从1开始", required = true),
-            @Parameter(name = Constant.LIMIT, description = "每页显示记录数", required = true),
+            @Parameter(name = "ttsModelId", description = "Primary key of the corresponding TTS model", required = true),
+            @Parameter(name = "name", description = "Voice name"),
+            @Parameter(name = Constant.PAGE, description = "Current page number, starting from 1", required = true),
+            @Parameter(name = Constant.LIMIT, description = "Number of records per page", required = true),
     })
     public Result<PageData<TimbreDetailsVO>> page(
             @Parameter(hidden = true) @RequestParam Map<String, Object> params) {
@@ -62,7 +62,7 @@ public class TimbreController {
     }
 
     @PostMapping
-    @Operation(summary = "音色保存")
+    @Operation(summary = "Save voice")
     @RequiresPermissions("sys:role:superAdmin")
     public Result<Void> save(@RequestBody TimbreDataDTO dto) {
         ValidatorUtils.validateEntity(dto);
@@ -71,7 +71,7 @@ public class TimbreController {
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "音色修改")
+    @Operation(summary = "Update voice")
     @RequiresPermissions("sys:role:superAdmin")
     public Result<Void> update(
             @PathVariable String id,
@@ -82,7 +82,7 @@ public class TimbreController {
     }
 
     @PostMapping("/delete")
-    @Operation(summary = "音色删除")
+    @Operation(summary = "Delete voices")
     @RequiresPermissions("sys:role:superAdmin")
     public Result<Void> delete(@RequestBody String[] ids) {
         timbreService.delete(ids);

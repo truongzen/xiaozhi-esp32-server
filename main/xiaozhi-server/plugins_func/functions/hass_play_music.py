@@ -43,7 +43,7 @@ async def hass_play_music(conn: "ConnectionHandler", entity_id="", media_content
             action=Action.RECORD, result="指令已接收", response=result
         )
     except Exception as e:
-        logger.bind(tag=TAG).error(f"处理音乐意图错误: {e}")
+        logger.bind(tag=TAG).error(f"Error handling music intent: {e}")
         return ActionResponse(
             action=Action.RESPONSE, result=str(e), response="播放音乐时出错了"
         )

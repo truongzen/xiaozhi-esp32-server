@@ -1235,7 +1235,7 @@ class AgentSnapshotServiceImplTest {
         RenException error = assertThrows(RenException.class,
                 () -> service.restoreSnapshot(agentId, targetId, "stale-token"));
 
-        assertTrue(error.getMessage().contains("重新打开恢复预览"));
+        assertTrue(error.getMessage().contains("reopen the restore preview"));
         verify(snapshotDao, never()).selectLatestSnapshot(agentId);
         verify(snapshotDao, never()).insertWithNextVersion(any());
         verify(agentDao, never()).updateSnapshotFields(any());
@@ -1834,7 +1834,7 @@ class AgentSnapshotServiceImplTest {
                 () -> method.invoke(service, snapshotTag, new Date()));
 
         assertTrue(error.getCause() instanceof RenException);
-        assertEquals("快照引用的标签已被删除，无法恢复，请先重新创建或选择标签", error.getCause().getMessage());
+        assertEquals("A tag referenced by the snapshot has been deleted, unable to restore; please recreate or select the tag first", error.getCause().getMessage());
         verify(tagDao, never()).updateById(any(AgentTagEntity.class));
         verify(tagDao, never()).insert(any(AgentTagEntity.class));
     }

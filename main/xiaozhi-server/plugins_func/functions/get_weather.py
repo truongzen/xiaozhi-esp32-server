@@ -44,7 +44,7 @@ HEADERS = {
     )
 }
 
-# 天气代码 https://dev.qweather.com/docs/resource/icons/#weather-icons
+# Weather codes https://dev.qweather.com/docs/resource/icons/#weather-icons
 WEATHER_CODE_MAP = {
     "100": "晴",
     "101": "多云",
@@ -118,7 +118,7 @@ async def fetch_city_info(location, api_key, api_host):
     data = response.json()
     if data.get("error") is not None:
         logger.bind(tag=TAG).error(
-            f"获取天气失败，原因：{data.get('error', {}).get('detail')}"
+            f"Failed to fetch weather, reason: {data.get('error', {}).get('detail')}"
         )
         return None
     return data.get("location", [])[0] if data.get("location") else None
@@ -148,7 +148,7 @@ def parse_weather_info(soup):
             current_basic[key] = value
 
     temps_list = []
-    for row in soup.select(".city-forecast-tabs__row")[:7]:  # 取前7天的数据
+    for row in soup.select(".city-forecast-tabs__row")[:7]:  # Take the first 7 days of data
         date = row.select_one(".date-bg .date").get_text(strip=True)
         weather_code = (
             row.select_one(".date-bg .icon")["src"].split("/")[-1].split(".")[0]
@@ -171,16 +171,16 @@ async def get_weather(conn: "ConnectionHandler", location: str = None, lang: str
     default_location = weather_config.get("default_location", "广州")
     client_ip = conn.client_ip
 
-    # 优先使用用户提供的location参数
+    # Prefer the location argument provided by the user
     if not location:
-        # 通过客户端IP解析城市
+        # Resolve the city from the client IP
         if client_ip:
-            # 先从缓存获取IP对应的城市信息
+            # First try to get the city for this IP from the cache
             cached_ip_info = cache_manager.get(CacheType.IP_INFO, client_ip)
             if cached_ip_info:
                 location = cached_ip_info.get("city")
             else:
-                # 缓存未命中，调用API获取
+                # Cache miss, call the API
                 ip_info = get_ip_info(client_ip, logger)
                 if ip_info:
                     cache_manager.set(CacheType.IP_INFO, client_ip, ip_info)
@@ -189,15 +189,15 @@ async def get_weather(conn: "ConnectionHandler", location: str = None, lang: str
             if not location:
                 location = default_location
         else:
-            # 若无IP，使用默认位置
+            # No IP, use the default location
             location = default_location
-    # 尝试从缓存获取完整天气报告
+    # Try to get the full weather report from the cache
     weather_cache_key = f"full_weather_{location}_{lang}"
     cached_weather_report = cache_manager.get(CacheType.WEATHER, weather_cache_key)
     if cached_weather_report:
         return ActionResponse(Action.REQLLM, cached_weather_report, None)
 
-    # 缓存未命中，获取实时天气数据
+    # Cache miss, fetch live weather data
     city_info = await fetch_city_info(location, api_key, api_host)
     if not city_info:
         return ActionResponse(
@@ -210,22 +210,22 @@ async def get_weather(conn: "ConnectionHandler", location: str = None, lang: str
 
     weather_report = f"您查询的位置是：{city_name}\n\n当前天气: {current_abstract}\n"
 
-    # 添加有效的当前天气参数
+    # Add valid current weather parameters
     if current_basic:
         weather_report += "详细参数：\n"
         for key, value in current_basic.items():
-            if value != "0":  # 过滤无效值
+            if value != "0":  # Filter out invalid values
                 weather_report += f"  · {key}: {value}\n"
 
-    # 添加7天预报
+    # Add the 7-day forecast
     weather_report += "\n未来7天预报：\n"
     for date, weather, high, low in temps_list:
         weather_report += f"{date}: {weather}，气温 {low}~{high}\n"
 
-    # 提示语
+    # Hint text
     weather_report += "\n（如需某一天的具体天气，请告诉我日期）"
 
-    # 缓存完整的天气报告
+    # Cache the full weather report
     cache_manager.set(CacheType.WEATHER, weather_cache_key, weather_report)
 
     return ActionResponse(Action.REQLLM, weather_report, None)

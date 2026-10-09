@@ -4,25 +4,25 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
- * 智能体聊天记录总结DTO
+ * Agent chat history summary DTO
  */
 @Data
-@Schema(description = "智能体聊天记录总结对象")
+@Schema(description = "Agent chat history summary object")
 public class AgentChatSummaryDTO {
 
-    @Schema(description = "会话ID")
+    @Schema(description = "Session ID")
     private String sessionId;
 
-    @Schema(description = "智能体ID")
+    @Schema(description = "Agent ID")
     private String agentId;
 
-    @Schema(description = "总结内容")
+    @Schema(description = "Summary content")
     private String summary;
 
-    @Schema(description = "总结状态")
+    @Schema(description = "Summary status")
     private boolean success;
 
-    @Schema(description = "错误信息")
+    @Schema(description = "Error message")
     private String errorMessage;
 
     public AgentChatSummaryDTO() {

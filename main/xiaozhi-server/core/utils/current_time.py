@@ -1,6 +1,6 @@
 """
-时间工具模块
-提供统一的时间获取功能
+Time utility module
+Provides unified time retrieval
 """
 
 import cnlunar
@@ -19,21 +19,21 @@ WEEKDAY_MAP = {
 
 def get_current_time() -> str:
     """
-    获取当前时间字符串 (格式: HH:MM)
+    Get the current time string (format: HH:MM)
     """
     return datetime.now().strftime("%H:%M")
 
 
 def get_current_date() -> str:
     """
-    获取今天日期字符串 (格式: YYYY-MM-DD)
+    Get today's date string (format: YYYY-MM-DD)
     """
     return datetime.now().strftime("%Y-%m-%d")
 
 
 def get_current_weekday() -> str:
     """
-    获取今天星期几
+    Get today's weekday
     """
     now = datetime.now()
     return WEEKDAY_MAP[now.strftime("%A")]
@@ -41,7 +41,7 @@ def get_current_weekday() -> str:
 
 def get_current_lunar_date() -> str:
     """
-    获取农历日期字符串
+    Get the lunar date string
     """
     try:
         now = datetime.now()
@@ -57,8 +57,8 @@ def get_current_lunar_date() -> str:
 
 def get_current_time_info() -> tuple:
     """
-    获取当前时间信息
-    返回: (当前时间字符串, 今天日期, 今天星期, 农历日期)
+    Get current time info
+    Returns: (current time string, today's date, today's weekday, lunar date)
     """
     current_time = get_current_time()
     today_date = get_current_date()

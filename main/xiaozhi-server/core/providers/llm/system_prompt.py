@@ -1,8 +1,8 @@
 def get_system_prompt_for_function(functions: str) -> str:
     """
-    生成系统提示信息
-    :param functions: 可用的函数列表
-    :return: 系统提示信息
+    Build the system prompt
+    :param functions: list of available functions
+    :return: the system prompt
     """
 
     SYSTEM_PROMPT = f"""

@@ -6,8 +6,8 @@ import java.util.Collection;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 
 /**
- * 基础服务接口，所有Service接口都要继承
- * Copyright (c) 人人开源 All rights reserved.
+ * Base service interface that all Service interfaces must extend
+ * Copyright (c) Renren Open Source All rights reserved.
  * Website: https://www.renren.io
  */
 public interface BaseService<T> {
@@ -15,95 +15,95 @@ public interface BaseService<T> {
 
     /**
      * <p>
-     * 插入一条记录（选择字段，策略插入）
+     * Insert a record (selective fields, strategy-based insert)
      * </p>
      *
-     * @param entity 实体对象
+     * @param entity entity object
      */
     boolean insert(T entity);
 
     /**
      * <p>
-     * 插入（批量），该方法不支持 Oracle、SQL Server
+     * Insert (batch); this method does not support Oracle or SQL Server
      * </p>
      *
-     * @param entityList 实体对象集合
+     * @param entityList entity collection
      */
     boolean insertBatch(Collection<T> entityList);
 
     /**
      * <p>
-     * 插入（批量），该方法不支持 Oracle、SQL Server
+     * Insert (batch); this method does not support Oracle or SQL Server
      * </p>
      *
-     * @param entityList 实体对象集合
-     * @param batchSize  插入批次数量
+     * @param entityList entity collection
+     * @param batchSize  insert batch size
      */
     boolean insertBatch(Collection<T> entityList, int batchSize);
 
     /**
      * <p>
-     * 根据 ID 选择修改
+     * Update selectively by ID
      * </p>
      *
-     * @param entity 实体对象
+     * @param entity entity object
      */
     boolean updateById(T entity);
 
     /**
      * <p>
-     * 根据 whereEntity 条件，更新记录
+     * Update records according to the whereEntity condition
      * </p>
      *
-     * @param entity        实体对象
-     * @param updateWrapper 实体对象封装操作类
+     * @param entity        entity object
+     * @param updateWrapper entity wrapper for the operation
      *                      {@link com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper}
      */
     boolean update(T entity, Wrapper<T> updateWrapper);
 
     /**
      * <p>
-     * 根据ID 批量更新
+     * Batch update by ID
      * </p>
      *
-     * @param entityList 实体对象集合
+     * @param entityList entity collection
      */
     boolean updateBatchById(Collection<T> entityList);
 
     /**
      * <p>
-     * 根据ID 批量更新
+     * Batch update by ID
      * </p>
      *
-     * @param entityList 实体对象集合
-     * @param batchSize  更新批次数量
+     * @param entityList entity collection
+     * @param batchSize  update batch size
      */
     boolean updateBatchById(Collection<T> entityList, int batchSize);
 
     /**
      * <p>
-     * 根据 ID 查询
+     * Query by ID
      * </p>
      *
-     * @param id 主键ID
+     * @param id primary key ID
      */
     T selectById(Serializable id);
 
     /**
      * <p>
-     * 根据 ID 删除
+     * Delete by ID
      * </p>
      *
-     * @param id 主键ID
+     * @param id primary key ID
      */
     boolean deleteById(Serializable id);
 
     /**
      * <p>
-     * 删除（根据ID 批量删除）
+     * Delete (batch delete by ID)
      * </p>
      *
-     * @param idList 主键ID列表
+     * @param idList primary key ID list
      */
     boolean deleteBatchIds(Collection<? extends Serializable> idList);
 }

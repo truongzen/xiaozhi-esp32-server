@@ -9,7 +9,7 @@ from urllib.parse import urlparse
 TAG = __name__
 logger = setup_logging()
 
-# 需要禁用思考模式的平台域名及其对应参数（默认关闭思考模式）
+# Platform domains that need thinking mode disabled, with their parameters (thinking mode off by default)
 THINKING_DISABLED_DOMAINS = {
     "aliyuncs.com": {"enable_thinking": False},
     "deepseek.com": {"thinking": {"type": "disabled"}},
@@ -30,7 +30,7 @@ class LLMProvider(LLMProviderBase):
         
         timeout_config = config.get("timeout")
         if isinstance(timeout_config, dict):
-            # 细粒度超时配置
+            # Fine-grained timeout config
             custom_timeout = httpx.Timeout(
                 pool=timeout_config.get("pool", 2.0),
                 connect=timeout_config.get("connect", 3.0),
@@ -38,10 +38,10 @@ class LLMProvider(LLMProviderBase):
                 read=timeout_config.get("read", 60.0)
             )
         elif isinstance(timeout_config, (int, float)) and timeout_config > 0:
-            # 兼容旧的单一超时配置（整数或浮点数）
+            # Backward compatibility with the old single timeout value (int or float)
             custom_timeout = httpx.Timeout(timeout_config)
         else:
-            # 未配置或配置无效，使用默认值
+            # Not configured or invalid, use defaults
             custom_timeout = httpx.Timeout(300)
 
         param_defaults = {
@@ -63,7 +63,7 @@ class LLMProvider(LLMProviderBase):
                 setattr(self, param, None)
 
         logger.debug(
-            f"意图识别参数初始化: {self.temperature}, {self.max_tokens}, {self.top_p}, {self.frequency_penalty}"
+            f"Intent recognition parameters initialized: {self.temperature}, {self.max_tokens}, {self.top_p}, {self.frequency_penalty}"
         )
 
         model_key_msg = check_model_key("LLM", self.api_key)
@@ -73,20 +73,20 @@ class LLMProvider(LLMProviderBase):
 
     @staticmethod
     def normalize_dialogue(dialogue):
-        """自动修复 dialogue 中缺失 content 的消息"""
+        """Automatically fix messages in dialogue that are missing content"""
         for msg in dialogue:
             if "role" in msg and "content" not in msg:
                 msg["content"] = ""
         return dialogue
 
     def _apply_thinking_disabled(self, request_params: dict):
-        """根据域名自动禁用思考模式"""
+        """Automatically disable thinking mode based on domain"""
         parsed_url = urlparse(self.base_url)
         domain = parsed_url.netloc
         for disabled_domain, params in THINKING_DISABLED_DOMAINS.items():
             if disabled_domain in domain:
                 request_params.setdefault("extra_body", {}).update(params)
-                logger.bind(tag=TAG).info(f"为域名 {domain} 禁用思考模式，参数: {params}")
+                logger.bind(tag=TAG).info(f"Disabled thinking mode for domain {domain}, params: {params}")
                 break
 
     def response(self, session_id, dialogue, **kwargs):
@@ -98,7 +98,7 @@ class LLMProvider(LLMProviderBase):
             "stream": True,
         }
 
-        # 添加可选参数,只有当参数不为None时才添加
+        # Add optional parameters only when they are not None
         optional_params = {
             "max_tokens": kwargs.get("max_tokens", self.max_tokens),
             "temperature": kwargs.get("temperature", self.temperature),
@@ -110,7 +110,7 @@ class LLMProvider(LLMProviderBase):
             if value is not None:
                 request_params[key] = value
 
-        # 禁用思考模式
+        # Disable thinking mode
         self._apply_thinking_disabled(request_params)
 
         responses = self.client.chat.completions.create(**request_params)
@@ -156,7 +156,7 @@ class LLMProvider(LLMProviderBase):
             if value is not None:
                 request_params[key] = value
 
-        # 禁用思考模式
+        # Disable thinking mode
         self._apply_thinking_disabled(request_params)
 
         stream = self.client.chat.completions.create(**request_params)
@@ -171,9 +171,9 @@ class LLMProvider(LLMProviderBase):
                 elif isinstance(getattr(chunk, "usage", None), CompletionUsage):
                     usage_info = getattr(chunk, "usage", None)
                     logger.bind(tag=TAG).info(
-                        f"Token 消耗：输入 {getattr(usage_info, 'prompt_tokens', '未知')}，"
-                        f"输出 {getattr(usage_info, 'completion_tokens', '未知')}，"
-                        f"共计 {getattr(usage_info, 'total_tokens', '未知')}"
+                        f"Token usage: input {getattr(usage_info, 'prompt_tokens', 'unknown')}, "
+                        f"output {getattr(usage_info, 'completion_tokens', 'unknown')}, "
+                        f"total {getattr(usage_info, 'total_tokens', 'unknown')}"
                     )
         finally:
             stream.close()

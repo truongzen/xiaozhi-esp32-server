@@ -20,14 +20,14 @@ class TTSProvider(TTSProviderBase):
         self.host = "api.coze.cn"
         self.api_url = f"https://{self.host}/v1/audio/speech"
 
-        # 音频参数配置
+        # Audio parameter configuration
         speed = config.get("speed", "0")
         self.speed = int(speed) if speed else 0
 
         loudness_rate = config.get("loudness_rate", "0")
         self.loudness_rate = int(loudness_rate) if loudness_rate else 0
 
-        # 应用百分比调整（如果存在），否则使用公有化配置
+        # Apply percentage adjustments (if present), otherwise use the public configuration
         self._apply_percentage_params(config)
 
     async def text_to_speak(self, text, output_file):

@@ -30,19 +30,19 @@ public class SystemInitConfig {
 
     @PostConstruct
     public void init() {
-        // 检查版本号
+        // Check the version number
         String redisVersion = (String) redisUtils.get(RedisKeys.getVersionKey());
         if (!Constant.VERSION.equals(redisVersion)) {
-            // 如果版本不一致，清空Redis
+            // If the version differs, clear Redis
             redisUtils.emptyAll();
-            // 存储新版本号
+            // Store the new version number
             redisUtils.set(RedisKeys.getVersionKey(), Constant.VERSION);
         }
 
         sysParamsService.initServerSecret();
         configService.getConfig(false);
 
-        // 初始化设备通讯录缓存
+        // Initialize the device address book cache
         deviceAddressBookService.refreshCache();
     }
 }

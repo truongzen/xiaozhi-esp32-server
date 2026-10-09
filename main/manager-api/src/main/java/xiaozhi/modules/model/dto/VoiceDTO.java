@@ -10,35 +10,35 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "音色信息")
+@Schema(description = "Voice information")
 public class VoiceDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @Schema(description = "音色ID")
+    @Schema(description = "Voice ID")
     private String id;
 
-    @Schema(description = "音色名称")
+    @Schema(description = "Voice name")
     private String name;
 
-    @Schema(description = "音频播放地址")
+    @Schema(description = "Audio playback URL")
     private String voiceDemo;
     
-    @Schema(description = "语言类型")
+    @Schema(description = "Language type")
     private String languages;
     
-    @Schema(description = "是否为克隆音色")
+    @Schema(description = "Whether this is a cloned voice")
     private Boolean isClone;
 
-    // 添加双参数构造函数，保持向后兼容
+    // Two-argument constructor kept for backward compatibility
     public VoiceDTO(String id, String name) {
         this.id = id;
         this.name = name;
         this.voiceDemo = null;
         this.languages = null;
-        this.isClone = false; // 默认不是克隆音色
+        this.isClone = false; // Not a cloned voice by default
     }
     
-    // 添加三参数构造函数，用于普通音色
+    // Three-argument constructor for regular voices
     public VoiceDTO(String id, String name, String voiceDemo) {
         this.id = id;
         this.name = name;

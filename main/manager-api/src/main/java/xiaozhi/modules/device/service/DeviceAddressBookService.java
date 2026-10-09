@@ -8,45 +8,45 @@ import xiaozhi.modules.device.entity.DeviceAddressBookEntity;
 public interface DeviceAddressBookService {
 
     /**
-     * 获取设备通讯录列表
+     * Get the device address book list
      */
     List<DeviceAddressBookEntity> getAddressBookList(String macAddress);
 
     /**
-     * 获取所有设备的通讯录（全局缓存用）
+     * Get the address books of all devices (for the global cache)
      */
     Map<String, Map<String, String>> getAllAddressBooks();
 
     /**
-     * 更新别名
+     * Update alias
      */
     void updateAlias(String macAddress, String targetMac, String alias);
 
     /**
-     * 更新权限
+     * Update permission
      */
     void updatePermission(String macAddress, String targetMac, Boolean hasPermission);
 
     /**
-     * 添加或更新通讯录记录
+     * Add or update an address book record
      */
     void saveOrUpdate(String macAddress, String targetMac, String alias, Boolean hasPermission);
 
     /**
-     * 刷新通讯录缓存
+     * Refresh the address book cache
      */
     void refreshCache();
 
     /**
-     * 根据昵称发起呼叫
-     * @param callerMac 主叫方MAC地址
-     * @param nickname 被叫方昵称
-     * @param isAnswer 是否为接听模式（跳过权限检查）
+     * Place a call by nickname
+     * @param callerMac caller MAC address
+     * @param nickname callee nickname
+     * @param isAnswer whether this is answer mode (skips the permission check)
      */
     Map<String, Object> callByNickname(String callerMac, String nickname, boolean isAnswer);
 
     /**
-     * 批量删除设备相关的通讯录记录
+     * Batch delete address book records related to devices
      */
     void deleteByMacAddresses(List<String> macAddresses);
 }

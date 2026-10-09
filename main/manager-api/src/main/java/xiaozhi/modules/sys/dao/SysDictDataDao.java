@@ -10,7 +10,7 @@ import xiaozhi.modules.sys.entity.SysDictDataEntity;
 import xiaozhi.modules.sys.vo.SysDictDataItem;
 
 /**
- * 字典数据
+ * Dictionary data
  */
 @Mapper
 public interface SysDictDataDao extends BaseDao<SysDictDataEntity> {
@@ -18,15 +18,15 @@ public interface SysDictDataDao extends BaseDao<SysDictDataEntity> {
     List<SysDictDataItem> getDictDataByType(String dictType);
 
     /**
-     * 根据字典类型ID获取字典类型编码
+     * Get the dictionary type code by dictionary type ID
      * 
-     * @param dictTypeId 字典类型ID
-     * @return 字典类型编码
+     * @param dictTypeId dictionary type ID
+     * @return dictionary type code
      */
     String getTypeByTypeId(Long dictTypeId);
 
     /**
-     * 根据字典数据ID集合获取字典类型编码集合
+     * Get the dictionary type codes for a set of dictionary data IDs
      */
     List<String> getDictTypesByIdList(@Param("dictDataIdList") List<Long> dictDataIdList);
 }

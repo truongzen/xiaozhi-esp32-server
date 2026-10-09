@@ -24,14 +24,14 @@ import xiaozhi.modules.model.entity.ModelConfigEntity;
 import xiaozhi.modules.model.service.ModelConfigService;
 
 /**
- * OpenAI风格API的LLM服务实现
- * 支持阿里云、DeepSeek、ChatGLM等兼容OpenAI API的模型
+ * LLM service implementation for OpenAI-style APIs
+ * Supports OpenAI-API-compatible models such as Alibaba Cloud, DeepSeek and ChatGLM
  */
 @Slf4j
 @Service
 public class OpenAIStyleLLMServiceImpl implements LLMService {
 
-    // 需要禁用思考模式的平台域名及其对应参数
+    // Platform domains that require thinking mode to be disabled, with the corresponding parameters
     private static final Map<String, Map<String, Object>> THINKING_DISABLED_DOMAINS = new LinkedHashMap<>();
     static {
         THINKING_DISABLED_DOMAINS.put("aliyuncs.com", Map.of("enable_thinking", false));
@@ -48,13 +48,13 @@ public class OpenAIStyleLLMServiceImpl implements LLMService {
     private final RestTemplate restTemplate = new RestTemplate();
 
     /**
-     * 根据域名自动禁用思考模式
+     * Automatically disable thinking mode based on the domain
      */
     private void applyThinkingDisabled(String baseUrl, Map<String, Object> requestBody) {
         for (Map.Entry<String, Map<String, Object>> entry : THINKING_DISABLED_DOMAINS.entrySet()) {
             if (baseUrl.contains(entry.getKey())) {
                 requestBody.putAll(entry.getValue());
-                log.info("为域名 {} 禁用思考模式，参数: {}", baseUrl, entry.getValue());
+                log.info("Disabling thinking mode for domain {}, params: {}", baseUrl, entry.getValue());
                 break;
             }
         }
@@ -77,24 +77,24 @@ public class OpenAIStyleLLMServiceImpl implements LLMService {
     @Override
     public String generateSummary(String conversation, String promptTemplate, String modelId) {
         if (!isAvailable()) {
-            log.warn("LLM服务不可用，无法生成总结");
-            return "LLM服务不可用，无法生成总结";
+            log.warn("LLM service unavailable, cannot generate summary");
+            return "LLM service unavailable, cannot generate summary";
         }
 
         try {
-            // 从智控台获取LLM模型配置
+            // Get the LLM model configuration from the control console
             ModelConfigEntity llmConfig;
             if (modelId != null && !modelId.trim().isEmpty()) {
-                // 通过具体模型ID获取配置
+                // Get the configuration by specific model ID
                 llmConfig = modelConfigService.getModelByIdFromCache(modelId);
             } else {
-                // 保持向后兼容，使用默认配置
+                // Keep backward compatibility by using the default configuration
                 llmConfig = getDefaultLLMConfig();
             }
 
             if (llmConfig == null || llmConfig.getConfigJson() == null) {
-                log.error("未找到可用的LLM模型配置，modelId: {}", modelId);
-                return "未找到可用的LLM模型配置";
+                log.error("No available LLM model configuration found, modelId: {}", modelId);
+                return "No available LLM model configuration found";
             }
 
             JSONObject configJson = llmConfig.getConfigJson();
@@ -105,15 +105,15 @@ public class OpenAIStyleLLMServiceImpl implements LLMService {
             Integer maxTokens = configJson.getInt("max_tokens");
 
             if (StringUtils.isBlank(baseUrl) || StringUtils.isBlank(apiKey)) {
-                log.error("LLM配置不完整，baseUrl或apiKey为空");
-                return "LLM配置不完整，无法生成总结";
+                log.error("Incomplete LLM configuration: baseUrl or apiKey is empty");
+                return "Incomplete LLM configuration, cannot generate summary";
             }
 
-            // 构建提示词
+            // Build the prompt
             String prompt = (promptTemplate != null ? promptTemplate : DEFAULT_SUMMARY_PROMPT).replace("{conversation}",
                     conversation);
 
-            // 构建请求体
+            // Build the request body
             Map<String, Object> requestBody = new HashMap<>();
             requestBody.put("model", model != null ? model : "gpt-3.5-turbo");
 
@@ -125,17 +125,17 @@ public class OpenAIStyleLLMServiceImpl implements LLMService {
             requestBody.put("temperature", temperature != null ? temperature : 0.7);
             requestBody.put("max_tokens", maxTokens != null ? maxTokens : 2000);
 
-            // 禁用思考模式
+            // Disable thinking mode
             applyThinkingDisabled(baseUrl, requestBody);
 
-            // 发送HTTP请求
+            // Send the HTTP request
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.set("Authorization", "Bearer " + apiKey);
 
             HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
 
-            // 构建完整的API URL
+            // Build the full API URL
             String apiUrl = baseUrl;
             if (!apiUrl.endsWith("/chat/completions")) {
                 if (!apiUrl.endsWith("/")) {
@@ -156,13 +156,13 @@ public class OpenAIStyleLLMServiceImpl implements LLMService {
                     return messageObj.getStr("content");
                 }
             } else {
-                log.error("LLM API调用失败，状态码：{}，响应：{}", response.getStatusCode(), response.getBody());
+                log.error("LLM API call failed, status code: {}, response: {}", response.getStatusCode(), response.getBody());
             }
         } catch (Exception e) {
-            log.error("调用LLM服务生成总结时发生异常，modelId: {}", modelId, e);
+            log.error("Exception while calling LLM service to generate summary, modelId: {}", modelId, e);
         }
 
-        return "生成总结失败，请稍后重试";
+        return "Failed to generate summary, please try again later";
     }
 
     @Override
@@ -174,12 +174,12 @@ public class OpenAIStyleLLMServiceImpl implements LLMService {
     public String generateSummaryWithHistory(String conversation, String historyMemory, String promptTemplate,
             String modelId) {
         if (!isAvailable()) {
-            log.warn("LLM服务不可用，无法生成总结");
-            return "LLM服务不可用，无法生成总结";
+            log.warn("LLM service unavailable, cannot generate summary");
+            return "LLM service unavailable, cannot generate summary";
         }
 
         try {
-            // 从智控台获取LLM模型配置
+            // Get the LLM model configuration from the control console
             ModelConfigEntity llmConfig;
             if (modelId != null && !modelId.trim().isEmpty()) {
                 llmConfig = modelConfigService.getModelByIdFromCache(modelId);
@@ -188,8 +188,8 @@ public class OpenAIStyleLLMServiceImpl implements LLMService {
             }
 
             if (llmConfig == null || llmConfig.getConfigJson() == null) {
-                log.error("未找到可用的LLM模型配置，modelId: {}", modelId);
-                return "未找到可用的LLM模型配置";
+                log.error("No available LLM model configuration found, modelId: {}", modelId);
+                return "No available LLM model configuration found";
             }
 
             JSONObject configJson = llmConfig.getConfigJson();
@@ -198,16 +198,16 @@ public class OpenAIStyleLLMServiceImpl implements LLMService {
             String apiKey = configJson.getStr("api_key");
 
             if (StringUtils.isBlank(baseUrl) || StringUtils.isBlank(apiKey)) {
-                log.error("LLM配置不完整，baseUrl或apiKey为空");
-                return "LLM配置不完整，无法生成总结";
+                log.error("Incomplete LLM configuration: baseUrl or apiKey is empty");
+                return "Incomplete LLM configuration, cannot generate summary";
             }
 
-            // 构建提示词，包含历史记忆
+            // Build the prompt, including historical memory
             String prompt = (promptTemplate != null ? promptTemplate : DEFAULT_SUMMARY_PROMPT)
                     .replace("{history_memory}", historyMemory != null ? historyMemory : "无历史记忆")
                     .replace("{conversation}", conversation);
 
-            // 构建请求体
+            // Build the request body
             Map<String, Object> requestBody = new HashMap<>();
             requestBody.put("model", model != null ? model : "gpt-3.5-turbo");
 
@@ -219,17 +219,17 @@ public class OpenAIStyleLLMServiceImpl implements LLMService {
             requestBody.put("temperature", 0.2);
             requestBody.put("max_tokens", 2000);
 
-            // 禁用思考模式
+            // Disable thinking mode
             applyThinkingDisabled(baseUrl, requestBody);
 
-            // 发送HTTP请求
+            // Send the HTTP request
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.set("Authorization", "Bearer " + apiKey);
 
             HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
 
-            // 构建完整的API URL
+            // Build the full API URL
             String apiUrl = baseUrl;
             if (!apiUrl.endsWith("/chat/completions")) {
                 if (!apiUrl.endsWith("/")) {
@@ -250,13 +250,13 @@ public class OpenAIStyleLLMServiceImpl implements LLMService {
                     return messageObj.getStr("content");
                 }
             } else {
-                log.error("LLM API调用失败，状态码：{}，响应：{}", response.getStatusCode(), response.getBody());
+                log.error("LLM API call failed, status code: {}, response: {}", response.getStatusCode(), response.getBody());
             }
         } catch (Exception e) {
-            log.error("调用LLM服务生成总结时发生异常，modelId: {}", modelId, e);
+            log.error("Exception while calling LLM service to generate summary, modelId: {}", modelId, e);
         }
 
-        return "生成总结失败，请稍后重试";
+        return "Failed to generate summary, please try again later";
     }
 
     @Override
@@ -274,7 +274,7 @@ public class OpenAIStyleLLMServiceImpl implements LLMService {
             return baseUrl != null && !baseUrl.trim().isEmpty() &&
                     apiKey != null && !apiKey.trim().isEmpty();
         } catch (Exception e) {
-            log.error("检查LLM服务可用性时发生异常：", e);
+            log.error("Exception while checking LLM service availability:", e);
             return false;
         }
     }
@@ -286,10 +286,10 @@ public class OpenAIStyleLLMServiceImpl implements LLMService {
                 return isAvailable();
             }
 
-            // 通过具体模型ID获取配置
+            // Get the configuration by specific model ID
             ModelConfigEntity modelConfig = modelConfigService.getModelByIdFromCache(modelId);
             if (modelConfig == null || modelConfig.getConfigJson() == null) {
-                log.warn("未找到指定的LLM模型配置，modelId: {}", modelId);
+                log.warn("Specified LLM model configuration not found, modelId: {}", modelId);
                 return false;
             }
 
@@ -300,23 +300,23 @@ public class OpenAIStyleLLMServiceImpl implements LLMService {
             return baseUrl != null && !baseUrl.trim().isEmpty() &&
                     apiKey != null && !apiKey.trim().isEmpty();
         } catch (Exception e) {
-            log.error("检查LLM服务可用性时发生异常，modelId: {}", modelId, e);
+            log.error("Exception while checking LLM service availability, modelId: {}", modelId, e);
             return false;
         }
     }
 
     /**
-     * 从智控台获取默认的LLM模型配置
+     * Get the default LLM model configuration from the control console
      */
     private ModelConfigEntity getDefaultLLMConfig() {
         try {
-            // 获取所有启用的LLM模型配置
+            // Get all enabled LLM model configurations
             List<ModelConfigEntity> llmConfigs = modelConfigService.getEnabledModelsByType("LLM");
             if (llmConfigs == null || llmConfigs.isEmpty()) {
                 return null;
             }
 
-            // 优先返回默认配置，如果没有默认配置则返回第一个启用的配置
+            // Prefer the default configuration; if there is none, return the first enabled configuration
             for (ModelConfigEntity config : llmConfigs) {
                 if (config.getIsDefault() != null && config.getIsDefault() == 1) {
                     return config;
@@ -325,7 +325,7 @@ public class OpenAIStyleLLMServiceImpl implements LLMService {
 
             return llmConfigs.get(0);
         } catch (Exception e) {
-            log.error("获取LLM模型配置时发生异常：", e);
+            log.error("Exception while getting LLM model configuration:", e);
             return null;
         }
     }
@@ -333,7 +333,7 @@ public class OpenAIStyleLLMServiceImpl implements LLMService {
     @Override
     public String generateTitle(String conversation, String modelId) {
         if (!isAvailable()) {
-            log.warn("LLM服务不可用，无法生成标题");
+            log.warn("LLM service unavailable, cannot generate title");
             return null;
         }
 
@@ -346,7 +346,7 @@ public class OpenAIStyleLLMServiceImpl implements LLMService {
             }
 
             if (llmConfig == null || llmConfig.getConfigJson() == null) {
-                log.error("未找到可用的LLM模型配置，modelId: {}", modelId);
+                log.error("No available LLM model configuration found, modelId: {}", modelId);
                 return null;
             }
 
@@ -356,7 +356,7 @@ public class OpenAIStyleLLMServiceImpl implements LLMService {
             String apiKey = configJson.getStr("api_key");
 
             if (StringUtils.isBlank(baseUrl) || StringUtils.isBlank(apiKey)) {
-                log.error("LLM配置不完整，baseUrl或apiKey为空");
+                log.error("Incomplete LLM configuration: baseUrl or apiKey is empty");
                 return null;
             }
 
@@ -373,7 +373,7 @@ public class OpenAIStyleLLMServiceImpl implements LLMService {
             requestBody.put("temperature", 0.3);
             requestBody.put("max_tokens", 50);
 
-            // 禁用思考模式
+            // Disable thinking mode
             applyThinkingDisabled(baseUrl, requestBody);
 
             HttpHeaders headers = new HttpHeaders();
@@ -409,10 +409,10 @@ public class OpenAIStyleLLMServiceImpl implements LLMService {
                     }
                 }
             } else {
-                log.error("LLM API调用失败，状态码：{}，响应：{}", response.getStatusCode(), response.getBody());
+                log.error("LLM API call failed, status code: {}, response: {}", response.getStatusCode(), response.getBody());
             }
         } catch (Exception e) {
-            log.error("调用LLM服务生成标题时发生异常，modelId: {}", modelId, e);
+            log.error("Exception while calling LLM service to generate title, modelId: {}", modelId, e);
         }
 
         return null;

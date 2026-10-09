@@ -8,10 +8,10 @@ from tabulate import tabulate
 from core.utils.vllm import create_instance
 from config.settings import load_config
 
-# 设置全局日志级别为WARNING，抑制INFO级别日志
+# Set the global log level to WARNING to suppress INFO logs
 logging.basicConfig(level=logging.WARNING)
 
-description = "视觉识别模型性能测试"
+description = "Vision model (VLLM) performance test"
 
 
 class AsyncVisionPerformanceTester:
@@ -27,26 +27,26 @@ class AsyncVisionPerformanceTester:
             "请详细描述这张图片的内容",
         ]
 
-        # 加载测试图片
+        # Load test images
         self.results = {"vllm": {}}
 
     async def _test_vllm(self, vllm_name: str, config: Dict) -> Dict:
-        """异步测试单个视觉大模型性能"""
+        """Asynchronously test a single vision model"""
         try:
-            # 检查API密钥配置
+            # Check the API key config
             if "api_key" in config and any(
                 x in config["api_key"] for x in ["你的", "placeholder", "sk-xxx"]
             ):
-                print(f"⏭️  VLLM {vllm_name} 未配置api_key，已跳过")
+                print(f"⏭️  VLLM {vllm_name} has no api_key configured, skipped")
                 return {"name": vllm_name, "type": "vllm", "errors": 1}
 
-            # 获取实际类型（兼容旧配置）
+            # Get the actual type (compatible with old configs)
             module_type = config.get("type", vllm_name)
             vllm = create_instance(module_type, config)
 
-            print(f"🖼️ 测试 VLLM: {vllm_name}")
+            print(f"🖼️ Testing VLLM: {vllm_name}")
 
-            # 创建所有测试任务
+            # Create all test tasks
             test_tasks = []
             for question in self.test_questions:
                 for image in self.test_images:
@@ -54,24 +54,24 @@ class AsyncVisionPerformanceTester:
                         self._test_single_vision(vllm_name, vllm, question, image)
                     )
 
-            # 并发执行所有测试
+            # Run all tests concurrently
             test_results = await asyncio.gather(*test_tasks)
 
-            # 处理结果
+            # Process results
             valid_results = [r for r in test_results if r is not None]
             if not valid_results:
-                print(f"⚠️  {vllm_name} 无有效数据，可能配置错误")
+                print(f"⚠️  {vllm_name} has no valid data, possibly a config error")
                 return {"name": vllm_name, "type": "vllm", "errors": 1}
 
             response_times = [r["response_time"] for r in valid_results]
 
-            # 过滤异常数据
+            # Filter outliers
             mean = statistics.mean(response_times)
             stdev = statistics.stdev(response_times) if len(response_times) > 1 else 0
             filtered_times = [t for t in response_times if t <= mean + 3 * stdev]
 
             if len(filtered_times) < len(test_tasks) * 0.5:
-                print(f"⚠️  {vllm_name} 有效数据不足，可能网络不稳定")
+                print(f"⚠️  {vllm_name} has insufficient valid data, the network may be unstable")
                 return {"name": vllm_name, "type": "vllm", "errors": 1}
 
             return {
@@ -85,26 +85,26 @@ class AsyncVisionPerformanceTester:
             }
 
         except Exception as e:
-            print(f"⚠️ VLLM {vllm_name} 测试失败: {str(e)}")
+            print(f"⚠️ VLLM {vllm_name} test failed: {str(e)}")
             return {"name": vllm_name, "type": "vllm", "errors": 1}
 
     async def _test_single_vision(
         self, vllm_name: str, vllm, question: str, image: str
     ) -> Dict:
-        """测试单个视觉问题的性能"""
+        """Test performance for a single vision question"""
         try:
-            print(f"📝 {vllm_name} 开始测试: {question[:20]}...")
+            print(f"📝 {vllm_name} starting test: {question[:20]}...")
             start_time = time.time()
 
-            # 读取图片并转换为base64
+            # Read the image and convert it to base64
             with open(image, "rb") as image_file:
                 image_data = image_file.read()
                 image_base64 = base64.b64encode(image_data).decode("utf-8")
 
-            # 直接获取响应
+            # Get the response directly
             response = vllm.response(question, image_base64)
             response_time = time.time() - start_time
-            print(f"✓ {vllm_name} 完成响应: {response_time:.3f}s")
+            print(f"✓ {vllm_name} response complete: {response_time:.3f}s")
 
             return {
                 "name": vllm_name,
@@ -112,11 +112,11 @@ class AsyncVisionPerformanceTester:
                 "response_time": response_time,
             }
         except Exception as e:
-            print(f"⚠️ {vllm_name} 测试失败: {str(e)}")
+            print(f"⚠️ {vllm_name} test failed: {str(e)}")
             return None
 
     def _print_results(self):
-        """打印测试结果"""
+        """Print test results"""
         vllm_table = []
         for name, data in self.results["vllm"].items():
             if data["errors"] == 0:
@@ -124,62 +124,62 @@ class AsyncVisionPerformanceTester:
                 vllm_table.append(
                     [
                         name,
-                        f"{data['avg_response']:.3f}秒",
+                        f"{data['avg_response']:.3f}s",
                         f"{stability:.3f}",
                     ]
                 )
 
         if vllm_table:
-            print("\n视觉大模型性能排行:\n")
+            print("\nVision model performance ranking:\n")
             print(
                 tabulate(
                     vllm_table,
-                    headers=["模型名称", "响应耗时", "稳定性"],
+                    headers=["Model", "Response time", "Stability"],
                     tablefmt="github",
                     colalign=("left", "right", "right"),
                     disable_numparse=True,
                 )
             )
         else:
-            print("\n⚠️ 没有可用的视觉大模型进行测试。")
+            print("\n⚠️ No vision models available for testing.")
 
     async def run(self):
-        """执行全量异步测试"""
-        print("🔍 开始筛选可用视觉大模型...")
+        """Run the full async test"""
+        print("🔍 Filtering available vision models...")
 
         if not self.test_images:
-            print(f"\n⚠️  {self.image_root} 路径下没有图片文件，无法进行测试")
+            print(f"\n⚠️  No image files under {self.image_root}, unable to run the test")
             return
 
-        # 创建所有测试任务
+        # Create all test tasks
         all_tasks = []
 
-        # VLLM测试任务
+        # VLLM test tasks
         if self.config.get("VLLM") is not None:
             for vllm_name, config in self.config.get("VLLM", {}).items():
                 if "api_key" in config and any(
                     x in config["api_key"] for x in ["你的", "placeholder", "sk-xxx"]
                 ):
-                    print(f"⏭️  VLLM {vllm_name} 未配置api_key，已跳过")
+                    print(f"⏭️  VLLM {vllm_name} has no api_key configured, skipped")
                     continue
-                print(f"🖼️ 添加VLLM测试任务: {vllm_name}")
+                print(f"🖼️ Adding VLLM test task: {vllm_name}")
                 all_tasks.append(self._test_vllm(vllm_name, config))
 
-        print(f"\n✅ 找到 {len(all_tasks)} 个可用视觉大模型")
-        print(f"✅ 使用 {len(self.test_images)} 张测试图片")
-        print(f"✅ 使用 {len(self.test_questions)} 个测试问题")
-        print("\n⏳ 开始并发测试所有模型...\n")
+        print(f"\n✅ Found {len(all_tasks)} available vision models")
+        print(f"✅ Using {len(self.test_images)} test images")
+        print(f"✅ Using {len(self.test_questions)} test questions")
+        print("\n⏳ Starting concurrent tests of all models...\n")
 
-        # 并发执行所有测试任务
+        # Run all test tasks concurrently
         all_results = await asyncio.gather(*all_tasks, return_exceptions=True)
 
-        # 处理结果
+        # Process results
         for result in all_results:
             if isinstance(result, dict) and result["errors"] == 0:
                 self.results["vllm"][result["name"]] = result
 
-        # 打印结果
-        print("\n📊 生成测试报告...")
+        # Print results
+        print("\n📊 Generating test report...")
         self._print_results()
 
 

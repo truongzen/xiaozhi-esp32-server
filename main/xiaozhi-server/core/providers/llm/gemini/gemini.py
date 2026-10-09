@@ -26,8 +26,8 @@ def test_proxy(proxy_url: str, test_url: str) -> bool:
 
 def setup_proxy_env(http_proxy: str | None, https_proxy: str | None):
     """
-    分别测试 HTTP 和 HTTPS 代理是否可用，并设置环境变量。
-    如果 HTTPS 代理不可用但 HTTP 可用，会将 HTTPS_PROXY 也指向 HTTP。
+    Test whether the HTTP and HTTPS proxies are reachable and set the environment variables.
+    If the HTTPS proxy is unavailable but HTTP works, HTTPS_PROXY is pointed at the HTTP proxy as well.
     """
     test_http_url = "http://www.google.com"
     test_https_url = "https://www.google.com"
@@ -38,32 +38,32 @@ def setup_proxy_env(http_proxy: str | None, https_proxy: str | None):
         ok_http = test_proxy(http_proxy, test_http_url)
         if ok_http:
             os.environ["HTTP_PROXY"] = http_proxy
-            log.bind(tag=TAG).info(f"配置提供的Gemini HTTPS代理连通成功: {http_proxy}")
+            log.bind(tag=TAG).info(f"Configured Gemini HTTPS proxy is reachable: {http_proxy}")
         else:
-            log.bind(tag=TAG).warning(f"配置提供的Gemini HTTP代理不可用: {http_proxy}")
+            log.bind(tag=TAG).warning(f"Configured Gemini HTTP proxy is unavailable: {http_proxy}")
 
     if https_proxy:
         ok_https = test_proxy(https_proxy, test_https_url)
         if ok_https:
             os.environ["HTTPS_PROXY"] = https_proxy
-            log.bind(tag=TAG).info(f"配置提供的Gemini HTTPS代理连通成功: {https_proxy}")
+            log.bind(tag=TAG).info(f"Configured Gemini HTTPS proxy is reachable: {https_proxy}")
         else:
             log.bind(tag=TAG).warning(
-                f"配置提供的Gemini HTTPS代理不可用: {https_proxy}"
+                f"Configured Gemini HTTPS proxy is unavailable: {https_proxy}"
             )
 
-    # 如果https_proxy不可用，但http_proxy可用且能走通https，则复用http_proxy作为https_proxy
+    # If https_proxy is unavailable but http_proxy works and can reach HTTPS, reuse http_proxy as https_proxy
     if ok_http and not ok_https:
         if test_proxy(http_proxy, test_https_url):
             os.environ["HTTPS_PROXY"] = http_proxy
             ok_https = True
-            log.bind(tag=TAG).info(f"复用HTTP代理作为HTTPS代理: {http_proxy}")
+            log.bind(tag=TAG).info(f"Reusing HTTP proxy as HTTPS proxy: {http_proxy}")
 
     if not ok_http and not ok_https:
         log.bind(tag=TAG).error(
-            f"Gemini 代理设置失败: HTTP 和 HTTPS 代理都不可用，请检查配置"
+            f"Gemini proxy setup failed: both HTTP and HTTPS proxies are unavailable, please check the config"
         )
-        raise RuntimeError("HTTP 和 HTTPS 代理都不可用，请检查配置")
+        raise RuntimeError("Both HTTP and HTTPS proxies are unavailable, please check the config")
 
 
 class LLMProvider(LLMProviderBase):
@@ -79,19 +79,19 @@ class LLMProvider(LLMProviderBase):
 
         if http_proxy or https_proxy:
             log.bind(tag=TAG).info(
-                f"检测到Gemini代理配置，开始测试代理连通性和设置代理环境..."
+                f"Gemini proxy config detected, testing proxy connectivity and setting up proxy environment..."
             )
             setup_proxy_env(http_proxy, https_proxy)
             log.bind(tag=TAG).info(
-                f"Gemini 代理设置成功 - HTTP: {http_proxy}, HTTPS: {https_proxy}"
+                f"Gemini proxy set up successfully - HTTP: {http_proxy}, HTTPS: {https_proxy}"
             )
-        # 配置API密钥
+        # Configure the API key
         genai.configure(api_key=self.api_key)
 
-        # 设置请求超时（秒）
-        self.timeout = cfg.get("timeout", 120)  # 默认120秒
+        # Set request timeout (seconds)
+        self.timeout = cfg.get("timeout", 120)  # Default 120 seconds
 
-        # 创建模型实例
+        # Create the model instance
         self.model = genai.GenerativeModel(self.model_name)
 
         self.gen_cfg = GenerationConfig(
@@ -118,7 +118,7 @@ class LLMProvider(LLMProviderBase):
             )
         ]
 
-    # Gemini文档提到，无需维护session-id，直接用dialogue拼接而成
+    # Per the Gemini docs, no session ID is needed; the dialogue is concatenated directly
     def response(self, session_id, dialogue, **kwargs):
         yield from self._generate(dialogue, None)
 
@@ -128,7 +128,7 @@ class LLMProvider(LLMProviderBase):
     def _generate(self, dialogue, tools):
         role_map = {"assistant": "model", "user": "user"}
         contents: list = []
-        # 拼接对话
+        # Concatenate the dialogue
         for m in dialogue:
             r = m["role"]
 
@@ -177,7 +177,7 @@ class LLMProvider(LLMProviderBase):
             for chunk in stream:
                 cand = chunk.candidates[0]
                 for part in cand.content.parts:
-                    # a) 函数调用-通常是最后一段话才是函数调用
+                    # a) Function call - usually only the last segment is a function call
                     if getattr(part, "function_call", None):
                         fc = part.function_call
                         yield None, [
@@ -193,15 +193,15 @@ class LLMProvider(LLMProviderBase):
                             )
                         ]
                         return
-                    # b) 普通文本
+                    # b) Plain text
                     if getattr(part, "text", None):
                         yield part.text if tools is None else (part.text, None)
 
         finally:
             if tools is not None:
-                yield None, None  # function‑mode 结束，返回哑包
+                yield None, None  # end of function mode, return a dummy packet
 
-    # 关闭stream，预留后续打断对话功能的功能方法，官方文档推荐打断对话要关闭上一个流，可以有效减少配额计费和资源占用
+    # Close the stream; reserved for future conversation interruption. The official docs recommend closing the previous stream when interrupting, which reduces quota usage and resource consumption
     @staticmethod
     def _safe_finish_stream(stream: GenerateContentResponse):
         if hasattr(stream, "resolve"):
@@ -209,5 +209,5 @@ class LLMProvider(LLMProviderBase):
         elif hasattr(stream, "close"):
             stream.close()  # Gemini SDK version < 0.5.0
         else:
-            for _ in stream:  # 兜底耗尽
+            for _ in stream:  # drain as a fallback
                 pass

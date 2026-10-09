@@ -1,4 +1,4 @@
-/* ==================== 全局样式重置 ==================== */
+/* ==================== Global style reset ==================== */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -14,7 +14,7 @@ body {
     width: 100vw;
 }
 
-/* ==================== 背景容器 ==================== */
+/* ==================== Background container ==================== */
 .background-container {
     position: fixed;
     top: 0;
@@ -39,7 +39,7 @@ body {
     z-index: -1;
 }
 
-/* ==================== 主容器 ==================== */
+/* ==================== Main container ==================== */
 .container {
     position: relative;
     width: 100vw;
@@ -48,13 +48,13 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: flex-end;
-    /* 从底部开始排列 */
+    /* Lay out from the bottom */
     padding: 20px;
     padding-bottom: 0;
-    /* 移除底部padding，让模型可以延伸到页面底部 */
+    /* Remove bottom padding so the model can extend to the bottom of the page */
 }
 
-/* ==================== 模型加载区 ==================== */
+/* ==================== Model loading area ==================== */
 .model-container {
     position: absolute;
     top: 50%;
@@ -132,6 +132,14 @@ body {
     animation-delay: 0.55s;
 }
 
+.loading-char-float .main-char span:nth-child(7) {
+    animation-delay: 0.66s;
+}
+
+.loading-char-float .main-char span:nth-child(8) {
+    animation-delay: 0.77s;
+}
+
 @keyframes scan {
     0% {
         background-position: 0 0;
@@ -172,7 +180,7 @@ body {
     }
 }
 
-/* ==================== Live2D显示区域 ==================== */
+/* ==================== Live2D display area ==================== */
 #live2d-stage {
     position: fixed;
     top: 0;
@@ -234,7 +242,7 @@ body {
     }
 }
 
-/* ==================== 聊天消息流（弹幕样式） ==================== */
+/* ==================== Chat message stream (bullet-comment style) ==================== */
 .chat-container {
     position: absolute;
     bottom: 150px;
@@ -359,7 +367,7 @@ body {
     }
 }
 
-/* ==================== 底部控制栏 ==================== */
+/* ==================== Bottom control bar ==================== */
 .control-bar {
     position: fixed;
     bottom: 20px;
@@ -374,7 +382,7 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     z-index: 1000;
-    /* 确保控制栏在最上层 */
+    /* Keep the control bar on top */
 }
 
 .control-btn {
@@ -425,7 +433,7 @@ body {
     font-weight: 500;
 }
 
-/* 拨号按钮特殊样式 */
+/* Dial button style */
 .dial-btn.dial-active {
     background: rgba(237, 66, 69, 0.9);
 }
@@ -434,7 +442,7 @@ body {
     background: rgba(237, 66, 69, 1);
 }
 
-/* 录音按钮特殊样式 */
+/* Record button style */
 .control-btn.recording {
     background: rgba(237, 66, 69, 0.9);
     animation: pulse 1.5s infinite;
@@ -444,7 +452,7 @@ body {
     background: rgba(237, 66, 69, 1);
 }
 
-/* 摄像头按钮特殊样式 */
+/* Camera button style */
 #cameraBtn.camera-active {
     background: rgba(237, 66, 69, 0.9);
 }
@@ -453,7 +461,7 @@ body {
     background: rgba(237, 66, 69, 1);
 }
 
-/* 录音按钮脉冲动画 */
+/* Record button pulse animation */
 @keyframes pulse {
     0% {
         box-shadow: 0 0 0 0 rgba(237, 66, 69, 0.7);
@@ -468,7 +476,7 @@ body {
     }
 }
 
-/* ==================== 弹窗样式 ==================== */
+/* ==================== Modal styles ==================== */
 .modal {
     display: none;
     position: fixed;
@@ -553,7 +561,7 @@ body {
     overflow-y: auto;
 }
 
-/* ==================== 输入组样式 ==================== */
+/* ==================== Input group styles ==================== */
 .input-group {
     margin-bottom: 20px;
 }
@@ -590,7 +598,7 @@ body {
     font-family: inherit;
 }
 
-/* ==================== 按钮样式 ==================== */
+/* ==================== Button styles ==================== */
 .modal-actions {
     display: flex;
     gap: 12px;
@@ -598,7 +606,7 @@ body {
     margin-top: 24px;
 }
 
-/* ==================== 文件协议警告样式 ==================== */
+/* ==================== file:// protocol warning styles ==================== */
 #fileProtocolWarning {
     position: fixed;
     top: 50%;
@@ -655,7 +663,7 @@ body {
     font-weight: 600;
 }
 
-/* 背景模糊遮罩 */
+/* Blurred background overlay */
 .file-protocol-overlay {
     position: fixed;
     top: 0;
@@ -668,7 +676,7 @@ body {
     animation: fadeIn 0.3s ease-out;
 }
 
-/* 动画效果 */
+/* Animation effects */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -691,7 +699,7 @@ body {
     }
 }
 
-/* ==================== 连接信息样式 ==================== */
+/* ==================== Connection info styles ==================== */
 .connection-info {
     margin-top: 20px;
     padding: 16px;
@@ -740,7 +748,7 @@ body {
     background: #5d6269;
 }
 
-/* ==================== 设置标签页样式 ==================== */
+/* ==================== Settings tab styles ==================== */
 .settings-tabs {
     display: flex;
     border-bottom: 1px solid #40444b;
@@ -777,7 +785,7 @@ body {
     display: block;
 }
 
-/* ==================== 配置面板样式 ==================== */
+/* ==================== Config panel styles ==================== */
 .config-panel {
     background: #2f3136;
     border-radius: 8px;
@@ -892,7 +900,7 @@ body {
     fill: #ffffff;
 }
 
-/* ==================== MCP工具样式 ==================== */
+/* ==================== MCP tool styles ==================== */
 .mcp-tools-container {
     background: #2f3136;
     border-radius: 8px;
@@ -927,7 +935,7 @@ body {
     margin-bottom: 16px;
 }
 
-/* MCP工具卡片样式 */
+/* MCP tool card styles */
 .mcp-tool-card {
     background: #36393f;
     border: 1px solid #40444b;
@@ -1201,7 +1209,7 @@ body {
     max-width: 450px;
 }
 
-/* ==================== 音频可视化器样式 ==================== */
+/* ==================== Audio visualizer styles ==================== */
 .audio-visualizer {
     position: fixed;
     bottom: 100px;
@@ -1215,7 +1223,7 @@ body {
     z-index: 999;
 }
 
-/* 滚动条样式 */
+/* Scrollbar styles */
 .chat-stream::-webkit-scrollbar,
 .modal-body::-webkit-scrollbar,
 .mcp-tools-list::-webkit-scrollbar {
@@ -1242,7 +1250,7 @@ body {
     background: #4f545c;
 }
 
-/* ==================== 摄像头显示区域样式 ==================== */
+/* ==================== Camera display area styles ==================== */
 .camera-container {
     position: fixed;
     top: 20px;
@@ -1322,7 +1330,7 @@ body {
     display: block;
 }
 
-/* ==================== 响应式设计 ==================== */
+/* ==================== Responsive design ==================== */
 @media (max-width: 768px) {
     .container {
         padding: 10px;
@@ -1437,7 +1445,7 @@ body {
     }
 }
 
-/* 竖屏优化 */
+/* Portrait optimization */
 @media (max-height: 700px) {
     .live2d-section {
         height: 55vh;
@@ -1457,7 +1465,7 @@ body {
     }
 }
 
-/* 横屏优化 */
+/* Landscape optimization */
 @media (min-width: 1024px) and (min-height: 600px) {
     .live2d-section {
         height: 75vh;

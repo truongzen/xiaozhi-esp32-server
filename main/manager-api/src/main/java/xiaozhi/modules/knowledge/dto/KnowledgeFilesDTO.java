@@ -10,82 +10,82 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 @Data
-@Schema(description = "知识库文档")
+@Schema(description = "Knowledge base document")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class KnowledgeFilesDTO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
-    @Schema(description = "唯一标识")
+    @Schema(description = "Unique identifier")
     private String id;
 
-    @Schema(description = "文档ID")
+    @Schema(description = "Document ID")
     private String documentId;
 
-    @Schema(description = "知识库ID")
+    @Schema(description = "Knowledge base ID")
     private String datasetId;
 
-    @Schema(description = "文档名称")
+    @Schema(description = "Document name")
     private String name;
 
-    @Schema(description = "文档类型")
+    @Schema(description = "Document type")
     private String fileType;
 
-    @Schema(description = "文件大小（字节）")
+    @Schema(description = "File size (bytes)")
     private Long fileSize;
 
-    @Schema(description = "文件路径")
+    @Schema(description = "File path")
     private String filePath;
 
-    @Schema(description = "解析进度 (0.0 ~ 1.0)")
+    @Schema(description = "Parsing progress (0.0 ~ 1.0)")
     private Double progress;
 
-    @Schema(description = "缩略图 (Base64 或 URL)")
+    @Schema(description = "Thumbnail (Base64 or URL)")
     private String thumbnail;
 
-    @Schema(description = "解析耗时 (单位: 秒)")
+    @Schema(description = "Parsing duration (seconds)")
     private Double processDuration;
 
-    @Schema(description = "来源类型 (local, s3, url 等)")
+    @Schema(description = "Source type (local, s3, url, etc.)")
     private String sourceType;
 
-    @Schema(description = "元数据字段 (Map 格式)")
+    @Schema(description = "Metadata fields (Map format)")
     private Map<String, Object> metaFields;
 
-    @Schema(description = "分块方法")
+    @Schema(description = "Chunking method")
     private String chunkMethod;
 
-    @Schema(description = "解析器配置")
+    @Schema(description = "Parser configuration")
     private Map<String, Object> parserConfig;
 
-    @Schema(description = "可用状态 (1: 启用/正常, 0: 禁用/失效)")
+    @Schema(description = "Availability status (1: enabled/normal, 0: disabled/invalid)")
     private String status;
 
-    @Schema(description = "运行状态 (UNSTART/RUNNING/CANCEL/DONE/FAIL)")
+    @Schema(description = "Run status (UNSTART/RUNNING/CANCEL/DONE/FAIL)")
     private String run;
 
-    @Schema(description = "创建者")
+    @Schema(description = "Creator")
     private Long creator;
 
-    @Schema(description = "创建时间")
+    @Schema(description = "Creation time")
     private Date createdAt;
 
-    @Schema(description = "更新者")
+    @Schema(description = "Updater")
     private Long updater;
 
-    @Schema(description = "更新时间")
+    @Schema(description = "Update time")
     private Date updatedAt;
 
-    @Schema(description = "分块数量")
+    @Schema(description = "Number of chunks")
     private Integer chunkCount;
 
-    @Schema(description = "Token数量")
+    @Schema(description = "Number of tokens")
     private Long tokenCount;
 
-    @Schema(description = "解析错误信息")
+    @Schema(description = "Parsing error message")
     private String error;
 
-    // 文档解析状态常量定义
+    // Document parsing status constants
     private static final Integer STATUS_UNSTART = 0;
     private static final Integer STATUS_RUNNING = 1;
     private static final Integer STATUS_CANCEL = 2;
@@ -93,14 +93,14 @@ public class KnowledgeFilesDTO implements Serializable {
     private static final Integer STATUS_FAIL = 4;
 
     /**
-     * 获取文档解析状态码（基于run字段转换）
+     * Get the document parsing status code (converted from the run field)
      */
     public Integer getParseStatusCode() {
         if (run == null) {
             return STATUS_UNSTART;
         }
 
-        // RAGFlow根据run字段的值直接映射到对应的状态码
+        // Map RAGFlow's run field value directly to the corresponding status code
         switch (run.toUpperCase()) {
             case "RUNNING":
                 return STATUS_RUNNING;

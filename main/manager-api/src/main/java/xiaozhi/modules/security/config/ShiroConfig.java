@@ -25,8 +25,8 @@ import xiaozhi.modules.security.secret.ServerSecretFilter;
 import xiaozhi.modules.sys.service.SysParamsService;
 
 /**
- * Shiro的配置文件
- * Copyright (c) 人人开源 All rights reserved.
+ * Shiro configuration
+ * Copyright (c) Renren Open Source All rights reserved.
  * Website: https://www.renren.io
  */
 @Configuration
@@ -61,19 +61,19 @@ public class ShiroConfig {
         shiroFilter.setShiroFilterConfiguration(config);
 
         Map<String, Filter> filters = new HashMap<>();
-        // oauth过滤
+        // OAuth filter
         filters.put("oauth2", new Oauth2Filter());
-        // 服务密钥过滤
+        // Server secret filter
         filters.put("server", new ServerSecretFilter(sysParamsService));
         shiroFilter.setFilters(filters);
 
-        // 添加Shiro的内置过滤器
+        // Add Shiro's built-in filters
         /*
-         * anon：无需认证就可以访问
-         * authc：必须认证了才能让问
-         * user：必须拥有，记住我功能，才能访问
-         * perms：拥有对某个资源的权限才能访问
-         * role：拥有某个角色权限才能访问
+         * anon: accessible without authentication
+         * authc: accessible only after authentication
+         * user: accessible only with remember-me
+         * perms: accessible only with permission on the resource
+         * role: accessible only with the given role
          */
         Map<String, String> filterMap = new LinkedHashMap<>();
         filterMap.put("/ota/**", "anon");
@@ -89,7 +89,7 @@ public class ShiroConfig {
         filterMap.put("/user/pub-config", "anon");
         filterMap.put("/user/register", "anon");
         filterMap.put("/user/retrieve-password", "anon");
-        // 将config路径使用server服务过滤器
+        // Use the server filter for the config path
         filterMap.put("/config/**", "server");
         filterMap.put("/device/address-book/call", "server");
         filterMap.put("/agent/chat-history/report", "server");

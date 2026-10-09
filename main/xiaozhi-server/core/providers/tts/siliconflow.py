@@ -20,7 +20,7 @@ class TTSProvider(TTSProviderBase):
         self.speed = float(config.get("speed", 1.0))
         self.gain = config.get("gain")
 
-        # 应用百分比调整（如果存在），否则使用公有化配置
+        # Apply percentage adjustments (if present), otherwise use the public configuration
         self._apply_percentage_params(config)
 
         self.host = "api.siliconflow.cn"

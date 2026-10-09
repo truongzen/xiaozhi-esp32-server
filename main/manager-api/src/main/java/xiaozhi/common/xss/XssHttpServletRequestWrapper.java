@@ -17,8 +17,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
 
 /**
- * XSS过滤处理
- * Copyright (c) 人人开源 All rights reserved.
+ * XSS filter handling
+ * Copyright (c) Renren Open Source All rights reserved.
  * Website: https://www.renren.io
  */
 public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
@@ -29,18 +29,18 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
     @Override
     public ServletInputStream getInputStream() throws IOException {
-        // 非json类型，直接返回
+        // Not JSON, return as is
         if (!MediaType.APPLICATION_JSON_VALUE.equalsIgnoreCase(super.getHeader(HttpHeaders.CONTENT_TYPE))) {
             return super.getInputStream();
         }
 
-        // 为空，直接返回
+        // Empty, return as is
         String json = IoUtil.readUtf8(super.getInputStream());
         if (StringUtils.isBlank(json)) {
             return super.getInputStream();
         }
 
-        // xss过滤
+        // XSS filtering
         json = xssEncode(json);
         final ByteArrayInputStream bis = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
         return new ServletInputStream() {

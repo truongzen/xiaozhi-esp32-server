@@ -76,11 +76,12 @@ async def hass_get_state(conn: "ConnectionHandler", entity_id=""):
         ha_response = await handle_hass_get_state(conn, entity_id)
         return ActionResponse(Action.REQLLM, ha_response, None)
     except httpx.TimeoutException:
-        logger.bind(tag=TAG).error("获取Home Assistant状态超时")
+        logger.bind(tag=TAG).error("Timed out getting Home Assistant state")
         return ActionResponse(Action.ERROR, "请求超时", None)
     except Exception as e:
+        # error_msg is spoken back to the user via TTS, keep it in Chinese
         error_msg = f"执行Home Assistant操作失败"
-        logger.bind(tag=TAG).error(error_msg)
+        logger.bind(tag=TAG).error("Failed to execute Home Assistant operation")
         return ActionResponse(Action.ERROR, error_msg, None)
 
 
@@ -92,11 +93,12 @@ async def hass_set_state(conn: "ConnectionHandler", entity_id="", state=None):
         ha_response = await handle_hass_set_state(conn, entity_id, state)
         return ActionResponse(Action.REQLLM, ha_response, None)
     except httpx.TimeoutException:
-        logger.bind(tag=TAG).error("设置Home Assistant状态超时")
+        logger.bind(tag=TAG).error("Timed out setting Home Assistant state")
         return ActionResponse(Action.ERROR, "请求超时", None)
     except Exception as e:
+        # error_msg is spoken back to the user via TTS, keep it in Chinese
         error_msg = f"执行Home Assistant操作失败"
-        logger.bind(tag=TAG).error(error_msg)
+        logger.bind(tag=TAG).error("Failed to execute Home Assistant operation")
         return ActionResponse(Action.ERROR, error_msg, None)
 
 
@@ -112,7 +114,7 @@ async def handle_hass_get_state(conn: "ConnectionHandler", entity_id):
 
     if response.status_code == 200:
         responsetext = "设备状态:" + response.json()["state"] + " "
-        logger.bind(tag=TAG).info(f"api返回内容: {response.json()}")
+        logger.bind(tag=TAG).info(f"API response content: {response.json()}")
 
         if "media_title" in response.json()["attributes"]:
             responsetext = (
@@ -149,7 +151,7 @@ async def handle_hass_get_state(conn: "ConnectionHandler", entity_id):
                 + str(response.json()["attributes"]["brightness"])
                 + " "
             )
-        logger.bind(tag=TAG).info(f"查询返回内容: {responsetext}")
+        logger.bind(tag=TAG).info(f"Query response content: {responsetext}")
         return responsetext
     else:
         return f"切换失败，错误码: {response.status_code}"
@@ -260,7 +262,7 @@ async def handle_hass_set_state(conn: "ConnectionHandler", entity_id, state):
         response = await client.post(url, headers=headers, json=data)
 
     logger.bind(tag=TAG).info(
-        f"设置状态:{description},url:{url},return_code:{response.status_code}"
+        f"Set state: {description}, url: {url}, return_code: {response.status_code}"
     )
     if response.status_code == 200:
         return description

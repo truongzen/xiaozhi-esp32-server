@@ -12,26 +12,26 @@ logger = setup_logging()
 class ASRProvider(ASRProviderBase):
     def __init__(self, config: dict, delete_audio_file: bool):
         super().__init__()
-        # 音频文件上传类型，流式文本识别输出
+        # Audio file upload type, streaming text recognition output
         self.interface_type = InterfaceType.NON_STREAM
-        """Qwen3-ASR-Flash ASR初始化"""
+        """Qwen3-ASR-Flash ASR initialization"""
         
-        # 配置参数
+        # Configuration parameters
         self.api_key = config.get("api_key")
         if not self.api_key:
-            raise ValueError("Qwen3-ASR-Flash 需要配置 api_key")
+            raise ValueError("Qwen3-ASR-Flash requires api_key")
             
         self.model_name = config.get("model_name", "qwen3-asr-flash")
         self.output_dir = config.get("output_dir", "./audio_output")
         self.delete_audio_file = delete_audio_file
         
-        # ASR选项配置
-        self.enable_lid = config.get("enable_lid", True)  # 自动语种检测
-        self.enable_itn = config.get("enable_itn", True)  # 逆文本归一化
-        self.language = config.get("language", None)  # 指定语种，默认自动检测
-        self.context = config.get("context", "")  # 上下文信息，用于提高识别准确率
+        # ASR options
+        self.enable_lid = config.get("enable_lid", True)  # Automatic language detection
+        self.enable_itn = config.get("enable_itn", True)  # Inverse text normalization
+        self.language = config.get("language", None)  # Specified language, auto-detect by default
+        self.context = config.get("context", "")  # Context information, used to improve recognition accuracy
         
-        # 确保输出目录存在
+        # Ensure the output directory exists
         os.makedirs(self.output_dir, exist_ok=True)
 
     def prefers_temp_file(self) -> bool:
@@ -43,7 +43,7 @@ class ASRProvider(ASRProviderBase):
     async def speech_to_text(
         self, opus_data: List[bytes], session_id: str, artifacts=None
     ) -> Tuple[Optional[str], Optional[str]]:
-        """将语音数据转换为文本"""
+        """Convert speech data to text"""
         temp_file_path = None
         file_path = None
         try:
@@ -53,7 +53,7 @@ class ASRProvider(ASRProviderBase):
             file_path = artifacts.file_path
             if not temp_file_path:
                 return "", file_path
-            # 构造请求消息
+            # Build the request messages
             messages = [
                 {
                     "role": "user",
@@ -63,7 +63,7 @@ class ASRProvider(ASRProviderBase):
                 }
             ]
             
-            # 如果有上下文信息，添加system消息
+            # If context is provided, add a system message
             if self.context:
                 messages.insert(0, {
                     "role": "system", 
@@ -72,20 +72,20 @@ class ASRProvider(ASRProviderBase):
                     ]
                 })
             
-            # 准备ASR选项
+            # Prepare ASR options
             asr_options = {
                 "enable_lid": self.enable_lid,
                 "enable_itn": self.enable_itn
             }
             
-            # 如果指定了语种，添加到选项中
+            # If a language is specified, add it to the options
             if self.language:
                 asr_options["language"] = self.language
             
-            # 设置API密钥
+            # Set the API key
             dashscope.api_key = self.api_key
             
-            # 发送流式请求
+            # Send streaming request
             response = dashscope.MultiModalConversation.call(
                 model=self.model_name,
                 messages=messages,
@@ -94,12 +94,12 @@ class ASRProvider(ASRProviderBase):
                 stream=True
             )
             
-            # 处理流式响应
+            # Handle the streaming response
             full_text = ""
             for chunk in response:
                 try:
                     text = chunk["output"]["choices"][0]["message"].content[0]["text"]
-                    # 更新为最新的完整文本
+                    # Update to the latest full text
                     full_text = text.strip()
                 except:
                     pass
@@ -107,5 +107,5 @@ class ASRProvider(ASRProviderBase):
             return full_text, file_path
                 
         except Exception as e:
-            logger.bind(tag=tag).error(f"语音识别失败: {e}")
+            logger.bind(tag=tag).error(f"Speech recognition failed: {e}")
             return "", file_path

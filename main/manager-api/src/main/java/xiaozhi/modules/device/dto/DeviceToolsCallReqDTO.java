@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class DeviceToolsCallReqDTO {
 
-    @NotBlank(message = "工具名称不能为空")
+    @NotBlank(message = "Tool name cannot be empty")
     private String name;
 
     private Map<String, Object> arguments;

@@ -29,7 +29,7 @@ import xiaozhi.modules.voiceclone.dto.VoiceCloneDTO;
 import xiaozhi.modules.voiceclone.dto.VoiceCloneResponseDTO;
 import xiaozhi.modules.voiceclone.service.VoiceCloneService;
 
-@Tag(name = "音色资源管理", description = "音色资源开通相关接口")
+@Tag(name = "Voice Resource Management", description = "APIs for voice resource provisioning")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -40,10 +40,10 @@ public class VoiceResourceController {
     private final ModelConfigService modelConfigService;
 
     @GetMapping
-    @Operation(summary = "分页查询音色资源")
+    @Operation(summary = "Paged query of voice resources")
     @Parameters({
-            @Parameter(name = Constant.PAGE, description = "当前页码，从1开始", required = true),
-            @Parameter(name = Constant.LIMIT, description = "每页显示记录数", required = true)
+            @Parameter(name = Constant.PAGE, description = "Current page number, starting from 1", required = true),
+            @Parameter(name = Constant.LIMIT, description = "Number of records per page", required = true)
     })
     @RequiresPermissions("sys:role:superAdmin")
     public Result<PageData<VoiceCloneResponseDTO>> page(
@@ -54,7 +54,7 @@ public class VoiceResourceController {
     }
 
     @GetMapping("{id}")
-    @Operation(summary = "获取音色资源详情")
+    @Operation(summary = "Get voice resource details")
     @RequiresPermissions("sys:role:superAdmin")
     public Result<VoiceCloneResponseDTO> get(@PathVariable("id") String id) {
         VoiceCloneResponseDTO data = voiceCloneService.getByIdWithNames(id);
@@ -62,7 +62,7 @@ public class VoiceResourceController {
     }
 
     @PostMapping
-    @Operation(summary = "新增音色资源")
+    @Operation(summary = "Add voice resource")
     @RequiresPermissions("sys:role:superAdmin")
     public Result<Void> save(@RequestBody VoiceCloneDTO dto) {
         if (dto == null) {
@@ -88,7 +88,7 @@ public class VoiceResourceController {
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "删除音色资源")
+    @Operation(summary = "Delete voice resources")
     @RequiresPermissions("sys:role:superAdmin")
     public Result<Void> delete(@PathVariable("id") String[] ids) {
         if (ids == null || ids.length == 0) {
@@ -99,7 +99,7 @@ public class VoiceResourceController {
     }
 
     @GetMapping("/user/{userId}")
-    @Operation(summary = "根据用户ID获取音色资源列表")
+    @Operation(summary = "Get voice resource list by user ID")
     @RequiresPermissions("sys:role:normal")
     public Result<List<VoiceCloneResponseDTO>> getByUserId(@PathVariable("userId") Long userId) {
         List<VoiceCloneResponseDTO> list = voiceCloneService.getByUserIdWithNames(userId);
@@ -107,7 +107,7 @@ public class VoiceResourceController {
     }
 
     @GetMapping("/ttsPlatforms")
-    @Operation(summary = "获取TTS平台列表")
+    @Operation(summary = "Get TTS platform list")
     @RequiresPermissions("sys:role:superAdmin")
     public Result<List<Map<String, Object>>> getTtsPlatformList() {
         List<Map<String, Object>> list = modelConfigService.getTtsPlatformList();

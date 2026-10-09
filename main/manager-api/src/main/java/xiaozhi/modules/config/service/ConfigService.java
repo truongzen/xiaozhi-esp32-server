@@ -5,27 +5,27 @@ import java.util.Map;
 
 public interface ConfigService {
     /**
-     * 获取服务器配置
+     * Get server configuration
      *
-     * @param isCache 是否缓存
-     * @return 配置信息
+     * @param isCache whether to cache
+     * @return configuration info
      */
     Map<String, Object> getConfig(Boolean isCache);
 
     /**
-     * 获取智能体模型配置
+     * Get agent model configuration
      *
-     * @param macAddress     MAC地址
-     * @param selectedModule 客户端已实例化的模型
-     * @return 模型配置信息
+     * @param macAddress     MAC address
+     * @param selectedModule models already instantiated on the client
+     * @return model configuration info
      */
     Map<String, Object> getAgentModels(String macAddress, Map<String, String> selectedModule);
 
     /**
-     * 获取智能体替换词
+     * Get agent replacement words
      *
-     * @param macAddress 设备MAC地址
-     * @return 替换词列表，格式如 ["模板1|模板01", "模板2|模板02"]
+     * @param macAddress device MAC address
+     * @return replacement word list, formatted like ["word1|word01", "word2|word02"]
      */
     List<String> getCorrectWords(String macAddress);
 }

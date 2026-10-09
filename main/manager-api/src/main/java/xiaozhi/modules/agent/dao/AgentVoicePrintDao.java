@@ -8,7 +8,7 @@ import xiaozhi.modules.agent.entity.AgentChatHistoryEntity;
 import xiaozhi.modules.agent.entity.AgentVoicePrintEntity;
 
 /**
- * {@link AgentChatHistoryEntity} 智能体聊天历史记录Dao对象
+ * {@link AgentChatHistoryEntity} agent chat history DAO
  *
  * @author Goody
  * @version 1.0, 2025/4/30

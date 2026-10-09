@@ -1,5 +1,5 @@
 """
-不使用记忆，可以选择此模块
+Select this module to disable memory
 """
 
 from ..base import MemoryProviderBase, logger

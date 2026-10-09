@@ -37,14 +37,14 @@ public class ALiYunSmsService implements SmsService {
                     .setPhoneNumbers(phone)
                     .setTemplateParam(String.format("{\"code\":\"%s\"}", VerificationCode));
             RuntimeOptions runtime = new RuntimeOptions();
-            // 复制代码运行请自行打印 API 的返回值
+            // When running copied code, print the API return value yourself
             SendSmsResponse sendSmsResponse = client.sendSmsWithOptions(sendSmsRequest, runtime);
-            log.info("发送短信响应的requestID: {}", sendSmsResponse.getBody().getRequestId());
+            log.info("SMS send response requestID: {}", sendSmsResponse.getBody().getRequestId());
         } catch (Exception e) {
-            // 如果发送失败了退还这次发送数
+            // If sending failed, refund this send count
             String todayCountKey = RedisKeys.getSMSTodayCountKey(phone);
             redisUtils.delete(todayCountKey);
-            // 错误 message
+            // Error message
             log.error(e.getMessage());
             throw new RenException(ErrorCode.SMS_SEND_FAILED);
         }
@@ -53,8 +53,8 @@ public class ALiYunSmsService implements SmsService {
 
 
     /**
-     * 创建阿里云连接
-     * @return 返回连接对象
+     * Create an Aliyun client
+     * @return the client object
      */
     private Client createClient(){
         String ACCESS_KEY_ID = sysParamsService.getValue(Constant.SysMSMParam
@@ -65,11 +65,11 @@ public class ALiYunSmsService implements SmsService {
             Config config = new Config()
                     .setAccessKeyId(ACCESS_KEY_ID)
                     .setAccessKeySecret(ACCESS_KEY_SECRET);
-            // 配置 Endpoint。中国站请使用dysmsapi.aliyuncs.com
+            // Configure the endpoint. Use dysmsapi.aliyuncs.com for the China site
             config.endpoint = "dysmsapi.aliyuncs.com";
             return new Client(config);
         }catch (Exception e){
-            // 错误 message
+            // Error message
             log.error(e.getMessage());
             throw new RenException(ErrorCode.SMS_CONNECTION_FAILED);
         }

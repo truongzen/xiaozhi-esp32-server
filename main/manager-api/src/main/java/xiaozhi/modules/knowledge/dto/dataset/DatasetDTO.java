@@ -11,438 +11,438 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.*;
 
 /**
- * 知识库管理聚合 DTO
+ * Aggregate DTO for knowledge base management
  * <p>
- * 容器类，内含知识库模块所有请求/响应对象的静态内部类定义。
+ * Container class holding static inner classes for all request/response objects of the knowledge base module.
  * </p>
  */
-@Schema(description = "知识库管理聚合 DTO")
+@Schema(description = "Aggregate DTO for knowledge base management")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DatasetDTO {
 
-    // ========== 通用内部类 ==========
+    // ========== Common inner classes ==========
 
     /**
-     * 解析器配置
+     * Parser configuration
      */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    @Schema(description = "解析器配置")
+    @Schema(description = "Parser configuration")
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class ParserConfig implements Serializable {
 
-        @Schema(description = "分块 token 数量", example = "128")
+        @Schema(description = "Chunk token count", example = "128")
         @JsonProperty("chunk_token_num")
         private Integer chunkTokenNum;
 
-        @Schema(description = "分隔符", example = "\\n!?;。；！？")
+        @Schema(description = "Delimiter", example = "\\n!?;。；！？")
         private String delimiter;
 
-        @Schema(description = "布局识别模型: DeepDOC / Simple", example = "DeepDOC")
+        @Schema(description = "Layout recognition model: DeepDOC / Simple", example = "DeepDOC")
         @JsonProperty("layout_recognize")
         private String layoutRecognize;
 
-        @Schema(description = "是否将 Excel 转为 HTML", example = "false")
+        @Schema(description = "Whether to convert Excel to HTML", example = "false")
         private Boolean html4excel;
 
-        @Schema(description = "自动生成关键词数量 (0 表示关闭)", example = "0")
+        @Schema(description = "Number of keywords to auto-generate (0 disables)", example = "0")
         @JsonProperty("auto_keywords")
         private Integer autoKeywords;
 
-        @Schema(description = "自动生成问题数量 (0 表示关闭)", example = "0")
+        @Schema(description = "Number of questions to auto-generate (0 disables)", example = "0")
         @JsonProperty("auto_questions")
         private Integer autoQuestions;
     }
 
-    // ========== 请求类 ==========
+    // ========== Request classes ==========
 
     /**
-     * 创建知识库请求 (映射接口 1: create)
+     * Create knowledge base request (maps to API 1: create)
      */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    @Schema(description = "创建知识库请求")
+    @Schema(description = "Create knowledge base request")
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class CreateReq implements Serializable {
 
-        @NotBlank(message = "知识库名称不能为空")
-        @Schema(description = "知识库名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "my_dataset")
+        @NotBlank(message = "Knowledge base name cannot be empty")
+        @Schema(description = "Knowledge base name", requiredMode = Schema.RequiredMode.REQUIRED, example = "my_dataset")
         private String name;
 
-        @Schema(description = "知识库头像 (Base64 编码)", example = "")
+        @Schema(description = "Knowledge base avatar (Base64 encoded)", example = "")
         private String avatar;
 
-        @Schema(description = "知识库描述", example = "用于存储产品文档")
+        @Schema(description = "Knowledge base description", example = "Stores product documentation")
         private String description;
 
-        @Schema(description = "嵌入模型名称", example = "BAAI/bge-large-zh-v1.5")
+        @Schema(description = "Embedding model name", example = "BAAI/bge-large-zh-v1.5")
         @JsonProperty("embedding_model")
         private String embeddingModel;
 
-        @Schema(description = "权限设置: me / team", example = "me")
+        @Schema(description = "Permission setting: me / team", example = "me")
         private String permission;
 
-        @Schema(description = "分块方法: naive / manual / qa / table / paper / book / laws / presentation / picture / one / knowledge_graph / email", example = "naive")
+        @Schema(description = "Chunking method: naive / manual / qa / table / paper / book / laws / presentation / picture / one / knowledge_graph / email", example = "naive")
         @JsonProperty("chunk_method")
         private String chunkMethod;
 
-        @Schema(description = "解析器配置")
+        @Schema(description = "Parser configuration")
         @JsonProperty("parser_config")
         private ParserConfig parserConfig;
     }
 
     /**
-     * 更新知识库请求 (映射接口 4: update)
+     * Update knowledge base request (maps to API 4: update)
      */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    @Schema(description = "更新知识库请求")
+    @Schema(description = "Update knowledge base request")
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class UpdateReq implements Serializable {
 
-        @Schema(description = "知识库名称", example = "updated_dataset")
+        @Schema(description = "Knowledge base name", example = "updated_dataset")
         private String name;
 
-        @Schema(description = "知识库头像 (Base64 编码)", example = "")
+        @Schema(description = "Knowledge base avatar (Base64 encoded)", example = "")
         private String avatar;
 
-        @Schema(description = "知识库描述", example = "更新后的描述")
+        @Schema(description = "Knowledge base description", example = "Updated description")
         private String description;
 
-        @Schema(description = "权限设置: me / team", example = "team")
+        @Schema(description = "Permission setting: me / team", example = "team")
         private String permission;
 
-        @Schema(description = "嵌入模型名称", example = "BAAI/bge-large-zh-v1.5")
+        @Schema(description = "Embedding model name", example = "BAAI/bge-large-zh-v1.5")
         @JsonProperty("embedding_model")
         private String embeddingModel;
 
-        @Schema(description = "分块方法: naive / manual / qa / table / paper / book / laws / presentation / picture / one / knowledge_graph / email", example = "naive")
+        @Schema(description = "Chunking method: naive / manual / qa / table / paper / book / laws / presentation / picture / one / knowledge_graph / email", example = "naive")
         @JsonProperty("chunk_method")
         private String chunkMethod;
 
-        @Schema(description = "解析器配置")
+        @Schema(description = "Parser configuration")
         @JsonProperty("parser_config")
         private ParserConfig parserConfig;
 
         @JsonInclude(JsonInclude.Include.NON_NULL)
-        @Schema(description = "PageRank 权重 (0-100)", example = "50")
+        @Schema(description = "PageRank weight (0-100)", example = "50")
         private Integer pagerank;
     }
 
     /**
-     * 查询知识库列表请求 (映射接口 3: list_datasets)
+     * Query knowledge base list request (maps to API 3: list_datasets)
      */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    @Schema(description = "查询知识库列表请求")
+    @Schema(description = "Query knowledge base list request")
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class ListReq implements Serializable {
 
-        @Schema(description = "页码 (从 1 开始)", example = "1")
+        @Schema(description = "Page number (starting from 1)", example = "1")
         private Integer page;
 
-        @Schema(description = "每页数量", example = "30")
+        @Schema(description = "Page size", example = "30")
         @JsonProperty("page_size")
         private Integer pageSize;
 
-        @Schema(description = "排序字段: create_time / update_time", example = "create_time")
+        @Schema(description = "Sort field: create_time / update_time", example = "create_time")
         private String orderby;
 
-        @Schema(description = "是否降序", example = "true")
+        @Schema(description = "Whether descending", example = "true")
         private Boolean desc;
 
-        @Schema(description = "按名称过滤 (模糊匹配)", example = "my_dataset")
+        @Schema(description = "Filter by name (fuzzy match)", example = "my_dataset")
         private String name;
 
-        @Schema(description = "按知识库 ID 过滤", example = "abc123")
+        @Schema(description = "Filter by knowledge base ID", example = "abc123")
         private String id;
     }
 
     /**
-     * 批量删除知识库请求 (映射接口 2: delete)
+     * Batch delete knowledge bases request (maps to API 2: delete)
      */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    @Schema(description = "批量删除知识库请求")
+    @Schema(description = "Batch delete knowledge bases request")
     public static class BatchIdReq implements Serializable {
 
-        @NotNull(message = "知识库 ID 列表不能为空")
-        @Size(min = 1, message = "至少需要一个知识库 ID")
-        @Schema(description = "知识库 ID 列表", requiredMode = Schema.RequiredMode.REQUIRED, example = "[\"id1\", \"id2\"]")
+        @NotNull(message = "Knowledge base ID list cannot be empty")
+        @Size(min = 1, message = "At least one knowledge base ID is required")
+        @Schema(description = "Knowledge base ID list", requiredMode = Schema.RequiredMode.REQUIRED, example = "[\"id1\", \"id2\"]")
         private List<String> ids;
     }
 
     /**
-     * 运行 GraphRAG 请求
+     * Run GraphRAG request
      */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    @Schema(description = "运行 GraphRAG 请求")
+    @Schema(description = "Run GraphRAG request")
     public static class RunGraphRagReq implements Serializable {
 
-        @Schema(description = "实体类型列表", example = "[\"person\", \"organization\"]")
+        @Schema(description = "Entity type list", example = "[\"person\", \"organization\"]")
         @JsonProperty("entity_types")
         private List<String> entityTypes;
 
-        @Schema(description = "构建方法: light / fast / full", example = "light")
+        @Schema(description = "Build method: light / fast / full", example = "light")
         private String method;
     }
 
     /**
-     * 运行 RAPTOR 请求
+     * Run RAPTOR request
      */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    @Schema(description = "运行 RAPTOR 请求")
+    @Schema(description = "Run RAPTOR request")
     public static class RunRaptorReq implements Serializable {
 
-        @Schema(description = "最大聚类数", example = "64")
+        @Schema(description = "Maximum number of clusters", example = "64")
         @JsonProperty("max_cluster")
         private Integer maxCluster;
 
-        @Schema(description = "自定义提示词", example = "请总结以下内容...")
+        @Schema(description = "Custom prompt", example = "Please summarize the following content...")
         private String prompt;
     }
 
     /**
-     * 异步任务 ID 响应 VO (映射接口 7/8: run_graphrag/run_raptor)
+     * Async task ID response VO (maps to APIs 7/8: run_graphrag/run_raptor)
      */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    @Schema(description = "异步任务 ID 响应")
+    @Schema(description = "Async task ID response")
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class TaskIdVO implements Serializable {
 
-        @Schema(description = "GraphRAG 任务 ID", example = "task_uuid_12345678")
+        @Schema(description = "GraphRAG task ID", example = "task_uuid_12345678")
         @JsonProperty("graphrag_task_id")
         private String graphragTaskId;
 
-        @Schema(description = "RAPTOR 任务 ID", example = "task_uuid_87654321")
+        @Schema(description = "RAPTOR task ID", example = "task_uuid_87654321")
         @JsonProperty("raptor_task_id")
         private String raptorTaskId;
     }
 
-    // ========== 响应类 ==========
+    // ========== Response classes ==========
 
     /**
-     * 知识库详情 VO (映射接口 1/3 的返回数据项)
+     * Knowledge base details VO (data item returned by APIs 1/3)
      */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    @Schema(description = "知识库详情 VO")
+    @Schema(description = "Knowledge base details VO")
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class InfoVO implements Serializable {
 
-        @Schema(description = "知识库 ID", example = "abc123")
+        @Schema(description = "Knowledge base ID", example = "abc123")
         private String id;
 
-        @Schema(description = "知识库名称", example = "my_dataset")
+        @Schema(description = "Knowledge base name", example = "my_dataset")
         private String name;
 
-        @Schema(description = "知识库头像 (Base64 编码)", example = "")
+        @Schema(description = "Knowledge base avatar (Base64 encoded)", example = "")
         private String avatar;
 
-        @Schema(description = "租户 ID", example = "tenant_001")
+        @Schema(description = "Tenant ID", example = "tenant_001")
         @JsonProperty("tenant_id")
         private String tenantId;
 
-        @Schema(description = "知识库描述", example = "用于存储产品文档")
+        @Schema(description = "Knowledge base description", example = "Stores product documentation")
         private String description;
 
-        @Schema(description = "嵌入模型名称", example = "BAAI/bge-large-zh-v1.5")
+        @Schema(description = "Embedding model name", example = "BAAI/bge-large-zh-v1.5")
         @JsonProperty("embedding_model")
         private String embeddingModel;
 
-        @Schema(description = "权限设置: me / team", example = "me")
+        @Schema(description = "Permission setting: me / team", example = "me")
         private String permission;
 
-        @Schema(description = "分块方法", example = "naive")
+        @Schema(description = "Chunking method", example = "naive")
         @JsonProperty("chunk_method")
         private String chunkMethod;
 
-        @Schema(description = "解析器配置")
+        @Schema(description = "Parser configuration")
         @JsonProperty("parser_config")
         private ParserConfig parserConfig;
 
-        @Schema(description = "分块总数", example = "1024")
+        @Schema(description = "Total number of chunks", example = "1024")
         @JsonProperty("chunk_count")
         private Long chunkCount;
 
-        @Schema(description = "文档总数", example = "50")
+        @Schema(description = "Total number of documents", example = "50")
         @JsonProperty("document_count")
         private Long documentCount;
 
-        @Schema(description = "创建时间 (时间戳)", example = "1700000000000")
+        @Schema(description = "Creation time (timestamp)", example = "1700000000000")
         @JsonProperty("create_time")
         private Long createTime;
 
-        @Schema(description = "更新时间 (时间戳)", example = "1700000001000")
+        @Schema(description = "Update time (timestamp)", example = "1700000001000")
         @JsonProperty("update_time")
         private Long updateTime;
 
-        @Schema(description = "总 Token 数", example = "102400")
+        @Schema(description = "Total number of tokens", example = "102400")
         @JsonProperty("token_num")
         private Long tokenNum;
 
-        @Schema(description = "创建日期 (格式: yyyy-MM-dd HH:mm:ss)")
+        @Schema(description = "Creation date (format: yyyy-MM-dd HH:mm:ss)")
         @JsonProperty("create_date")
         private String createDate;
 
-        @Schema(description = "最后更新日期 (格式: yyyy-MM-dd HH:mm:ss)")
+        @Schema(description = "Last update date (format: yyyy-MM-dd HH:mm:ss)")
         @JsonProperty("update_date")
         private String updateDate;
     }
 
     /**
-     * 批量操作响应 VO
+     * Batch operation response VO
      */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    @Schema(description = "批量操作响应 VO")
+    @Schema(description = "Batch operation response VO")
     public static class BatchOperationVO implements Serializable {
 
-        @Schema(description = "成功操作数量", example = "5")
+        @Schema(description = "Number of successful operations", example = "5")
         @JsonProperty("success_count")
         private Integer successCount;
 
-        @Schema(description = "错误列表")
+        @Schema(description = "Error list")
         private List<Object> errors;
     }
 
-    // ========== 知识图谱相关 ==========
+    // ========== Knowledge graph ==========
 
     /**
-     * 知识图谱数据 VO (映射接口 5: knowledge_graph)
+     * Knowledge graph data VO (maps to API 5: knowledge_graph)
      */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    @Schema(description = "知识图谱数据 VO")
+    @Schema(description = "Knowledge graph data VO")
     public static class GraphVO implements Serializable {
 
-        @Schema(description = "图谱节点列表")
+        @Schema(description = "Graph node list")
         private List<Node> nodes;
 
-        @Schema(description = "图谱边列表")
+        @Schema(description = "Graph edge list")
         private List<Edge> edges;
 
-        @Schema(description = "思维导图数据")
+        @Schema(description = "Mind map data")
         @JsonProperty("mind_map")
         private Map<String, Object> mindMap;
 
         /**
-         * 图谱节点
+         * Graph node
          */
         @Data
         @NoArgsConstructor
         @AllArgsConstructor
         @Builder
-        @Schema(description = "图谱节点")
+        @Schema(description = "Graph node")
         @JsonIgnoreProperties(ignoreUnknown = true)
         public static class Node implements Serializable {
 
-            @Schema(description = "节点 ID", example = "node_001")
+            @Schema(description = "Node ID", example = "node_001")
             private String id;
 
-            @Schema(description = "节点标签", example = "产品")
+            @Schema(description = "Node label", example = "Product")
             private String label;
 
-            @Schema(description = "PageRank 值", example = "0.85")
+            @Schema(description = "PageRank value", example = "0.85")
             private Double pagerank;
 
-            @Schema(description = "节点颜色", example = "#FF5733")
+            @Schema(description = "Node color", example = "#FF5733")
             private String color;
 
-            @Schema(description = "节点图片 URL", example = "https://example.com/icon.png")
+            @Schema(description = "Node image URL", example = "https://example.com/icon.png")
             private String img;
         }
 
         /**
-         * 图谱边
+         * Graph edge
          */
         @Data
         @NoArgsConstructor
         @AllArgsConstructor
         @Builder
-        @Schema(description = "图谱边")
+        @Schema(description = "Graph edge")
         @JsonIgnoreProperties(ignoreUnknown = true)
         public static class Edge implements Serializable {
 
-            @Schema(description = "源节点 ID", example = "node_001")
+            @Schema(description = "Source node ID", example = "node_001")
             private String source;
 
-            @Schema(description = "目标节点 ID", example = "node_002")
+            @Schema(description = "Target node ID", example = "node_002")
             private String target;
 
-            @Schema(description = "边权重", example = "0.75")
+            @Schema(description = "Edge weight", example = "0.75")
             private Double weight;
 
-            @Schema(description = "边标签 (关系描述)", example = "属于")
+            @Schema(description = "Edge label (relationship description)", example = "belongs to")
             private String label;
         }
     }
 
-    // ========== 异步任务追踪 (GraphRAG/RAPTOR) ==========
+    // ========== Async task tracking (GraphRAG/RAPTOR) ==========
 
     /**
-     * 异步任务追踪 VO (映射接口 9/10: 任务进度返回)
+     * Async task tracking VO (maps to APIs 9/10: task progress)
      */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    @Schema(description = "异步任务追踪 VO")
+    @Schema(description = "Async task tracking VO")
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class TaskTraceVO implements Serializable {
 
-        @Schema(description = "任务 ID", example = "task_001")
+        @Schema(description = "Task ID", example = "task_001")
         private String id;
 
-        @Schema(description = "文档 ID", example = "doc_001")
+        @Schema(description = "Document ID", example = "doc_001")
         @JsonProperty("doc_id")
         private String docId;
 
-        @Schema(description = "起始页码", example = "1")
+        @Schema(description = "Start page", example = "1")
         @JsonProperty("from_page")
         private Integer fromPage;
 
-        @Schema(description = "结束页码", example = "10")
+        @Schema(description = "End page", example = "10")
         @JsonProperty("to_page")
         private Integer toPage;
 
-        @Schema(description = "进度百分比 (0.0 - 1.0)", example = "0.75")
+        @Schema(description = "Progress percentage (0.0 - 1.0)", example = "0.75")
         private Double progress;
 
-        @Schema(description = "进度消息", example = "正在处理第 5 页...")
+        @Schema(description = "Progress message", example = "Processing page 5...")
         @JsonProperty("progress_msg")
         private String progressMsg;
 
-        @Schema(description = "创建时间 (时间戳)", example = "1700000000000")
+        @Schema(description = "Creation time (timestamp)", example = "1700000000000")
         @JsonProperty("create_time")
         private Long createTime;
 
-        @Schema(description = "更新时间 (时间戳)", example = "1700000001000")
+        @Schema(description = "Update time (timestamp)", example = "1700000001000")
         @JsonProperty("update_time")
         private Long updateTime;
     }

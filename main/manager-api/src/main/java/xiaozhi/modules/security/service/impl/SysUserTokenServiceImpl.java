@@ -27,24 +27,24 @@ public class SysUserTokenServiceImpl extends BaseServiceImpl<SysUserTokenDao, Sy
 
     private final SysUserService sysUserService;
     /**
-     * 12小时后过期
+     * Expires after 12 hours
      */
     private final static int EXPIRE = 3600 * 12;
 
     @Override
     public Result<TokenDTO> createToken(Long userId) {
-        // 用户token
+        // User token
         String token;
 
-        // 当前时间
+        // Current time
         Date now = new Date();
-        // 过期时间
+        // Expiration time
         Date expireTime = new Date(now.getTime() + EXPIRE * 1000);
 
-        // 判断是否生成过token
+        // Check whether a token has been generated
         SysUserTokenEntity tokenEntity = baseDao.getByUserId(userId);
         if (tokenEntity == null) {
-            // 生成一个token
+            // Generate a token
             token = TokenGenerator.generateValue();
 
             tokenEntity = new SysUserTokenEntity();
@@ -53,12 +53,12 @@ public class SysUserTokenServiceImpl extends BaseServiceImpl<SysUserTokenDao, Sy
             tokenEntity.setUpdateDate(now);
             tokenEntity.setExpireDate(expireTime);
 
-            // 保存token
+            // Save the token
             this.insert(tokenEntity);
         } else {
-            // 判断token是否过期
+            // Check whether the token has expired
             if (tokenEntity.getExpireDate().getTime() < System.currentTimeMillis()) {
-                // token过期，重新生成token
+                // Token expired, generate a new one
                 token = TokenGenerator.generateValue();
             } else {
                 token = tokenEntity.getToken();
@@ -68,7 +68,7 @@ public class SysUserTokenServiceImpl extends BaseServiceImpl<SysUserTokenDao, Sy
             tokenEntity.setUpdateDate(now);
             tokenEntity.setExpireDate(expireTime);
 
-            // 更新token
+            // Update the token
             this.updateById(tokenEntity);
         }
 
@@ -106,10 +106,10 @@ public class SysUserTokenServiceImpl extends BaseServiceImpl<SysUserTokenDao, Sy
 
     @Override
     public void changePassword(Long userId, PasswordDTO passwordDTO) {
-        // 修改密码
+        // Change password
         sysUserService.changePassword(userId, passwordDTO);
 
-        // 使 token 失效，后需要重新登录
+        // Invalidate the token; the user must log in again
         Date expireDate = DateUtil.offsetMinute(new Date(), -1);
         baseDao.logout(userId, expireDate);
     }

@@ -58,11 +58,13 @@ public class DeviceAddressBookServiceImpl implements DeviceAddressBookService {
     public Map<String, Object> callByNickname(String callerMac, String nickname, boolean isAnswer) {
         Map<String, Map<String, String>> allBooks = getAllAddressBooks();
 
+        // NOTE: the Chinese messages returned by this flow are relayed by xiaozhi-server's call_device
+        // plugin and spoken to the end user via TTS, so they are intentionally kept in Chinese.
         if (isAnswer) {
             return postToMqtt("/api/call/accept", Map.of("mac", callerMac), "接听");
         }
 
-        // 主动呼叫模式
+        // Active call mode
         Map<String, String> callerBook = allBooks.get(callerMac.toLowerCase());
         if (callerBook == null) {
             return errorResult("未找到备注为'" + nickname + "'的设备");
@@ -79,7 +81,7 @@ public class DeviceAddressBookServiceImpl implements DeviceAddressBookService {
             return errorResult("呼叫失败，您没有权限呼叫该设备");
         }
 
-        // 获取目标设备如何称呼主叫方
+        // Get how the target device addresses the caller
         Map<String, String> targetBook = allBooks.get(targetMac.toLowerCase());
         String callerNickname = null;
         if (targetBook != null) {
@@ -109,20 +111,20 @@ public class DeviceAddressBookServiceImpl implements DeviceAddressBookService {
             String alias = entity.getAlias();
             Boolean hasPermission = entity.getHasPermission();
 
-            // 构建正向映射: A对B的映射 nickname -> macB|permission
+            // Build the forward mapping: A's mapping for B, nickname -> macB|permission
             if (alias != null && !alias.isEmpty()) {
                 result.computeIfAbsent(macA, k -> new HashMap<>());
                 String permStr = (hasPermission != null && hasPermission) ? "1" : "0";
                 result.get(macA).put(alias, macB + "|" + permStr);
             }
 
-            // 构建反向记录用于查找B对A的称呼
+            // Build reverse records to look up what B calls A
             if (alias != null && !alias.isEmpty()) {
                 reverseMap.put(macB + ":" + macA, alias);
             }
         }
 
-        // 构建反向映射: B对A的映射 macA -> nickname
+        // Build the reverse mapping: B's mapping for A, macA -> nickname
         for (DeviceAddressBookEntity entity : allRecords) {
             String macA = entity.getMacAddress().toLowerCase();
             String macB = entity.getTargetMac().toLowerCase();
@@ -159,11 +161,11 @@ public class DeviceAddressBookServiceImpl implements DeviceAddressBookService {
             DeviceAddressBookEntity entity = new DeviceAddressBookEntity();
             entity.setMacAddress(macAddress);
             entity.setTargetMac(targetMac);
-            // 如果 alias 为空，就默认使用设备名称
+            // If alias is empty, default to the device name
             if (StringUtils.isBlank(alias)) {
                 alias = deviceService.getDeviceByMacAddress(targetMac).getAlias();
             }
-            // 检查重名
+            // Check for duplicate names
             alias = generateUniqueAlias(macAddress, targetMac, alias);
             entity.setAlias(alias);
             entity.setHasPermission(hasPermission);

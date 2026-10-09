@@ -1,8 +1,8 @@
-# Docker安装全模块
+# Docker install: all modules
 
 version: '3'
 services:
-  # Server模块
+  # Server module
   xiaozhi-esp32-server:
     image: ghcr.nju.edu.cn/xinnan-tech/xiaozhi-esp32-server:server_latest
     container_name: xiaozhi-esp32-server
@@ -13,21 +13,21 @@ services:
     networks:
       - default
     ports:
-      # ws服务端
+      # WebSocket server
       - "8000:8000"
-      # http服务的端口，用于视觉分析接口
+      # HTTP service port, used for the vision analysis API
       - "8003:8003"
     security_opt:
       - seccomp:unconfined
     environment:
       - TZ=Asia/Shanghai
     volumes:
-      # 配置文件目录
+      # Config file directory
       - ./data:/opt/xiaozhi-esp32-server/data
-      # 模型文件挂接，很重要
+      # Model file mount - important
       - ./models/SenseVoiceSmall/model.pt:/opt/xiaozhi-esp32-server/models/SenseVoiceSmall/model.pt
 
-  # manager-api和manager-web模块
+  # manager-api and manager-web modules
   xiaozhi-esp32-server-web:
     image: ghcr.nju.edu.cn/xinnan-tech/xiaozhi-esp32-server:web_latest
     container_name: xiaozhi-esp32-server-web
@@ -40,7 +40,7 @@ services:
       xiaozhi-esp32-server-redis:
         condition: service_healthy
     ports:
-      # 智控台
+      # Control panel (manager-web)
       - "8002:8002"
     environment:
       - TZ=Asia/Shanghai
@@ -51,9 +51,9 @@ services:
       - SPRING_DATA_REDIS_PASSWORD=
       - SPRING_DATA_REDIS_PORT=6379
     volumes:
-      # 配置文件目录
+      # Config file directory
       - ./uploadfile:/uploadfile
-  # 数据库模块
+  # Database module
   xiaozhi-esp32-server-db:
     image: mysql:latest
     container_name: xiaozhi-esp32-server-db
@@ -74,7 +74,7 @@ services:
       - MYSQL_ROOT_PASSWORD=123456
       - MYSQL_DATABASE=xiaozhi_esp32_server
       - MYSQL_INITDB_ARGS="--character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci"
-  # redis模块
+  # Redis module
   xiaozhi-esp32-server-redis:
     image: redis:8.0
     expose:

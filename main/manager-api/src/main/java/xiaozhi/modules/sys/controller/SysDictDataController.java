@@ -29,7 +29,7 @@ import xiaozhi.modules.sys.vo.SysDictDataItem;
 import xiaozhi.modules.sys.vo.SysDictDataVO;
 
 /**
- * 字典数据管理
+ * Dictionary data management
  *
  * @author czc
  * @since 2025-04-30
@@ -37,22 +37,22 @@ import xiaozhi.modules.sys.vo.SysDictDataVO;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/admin/dict/data")
-@Tag(name = "字典数据管理")
+@Tag(name = "Dictionary Data Management")
 public class SysDictDataController {
     private final SysDictDataService sysDictDataService;
 
     @GetMapping("/page")
-    @Operation(summary = "分页查询字典数据")
+    @Operation(summary = "Page dictionary data")
     @RequiresPermissions("sys:role:superAdmin")
-    @Parameters({ @Parameter(name = "dictTypeId", description = "字典类型ID", required = true),
-            @Parameter(name = "dictLabel", description = "数据标签"), @Parameter(name = "dictValue", description = "数据值"),
-            @Parameter(name = Constant.PAGE, description = "当前页码，从1开始", required = true),
-            @Parameter(name = Constant.LIMIT, description = "每页显示记录数", required = true) })
+    @Parameters({ @Parameter(name = "dictTypeId", description = "Dictionary type ID", required = true),
+            @Parameter(name = "dictLabel", description = "Data label"), @Parameter(name = "dictValue", description = "Data value"),
+            @Parameter(name = Constant.PAGE, description = "Current page number, starting from 1", required = true),
+            @Parameter(name = Constant.LIMIT, description = "Records per page", required = true) })
     public Result<PageData<SysDictDataVO>> page(@Parameter(hidden = true) @RequestParam Map<String, Object> params) {
         ValidatorUtils.validateEntity(params);
-        // 强制校验dictTypeId是否存在
+        // Enforce that dictTypeId is present
         if (!params.containsKey("dictTypeId") || StringUtils.isEmpty(String.valueOf(params.get("dictTypeId")))) {
-            return new Result<PageData<SysDictDataVO>>().error("dictTypeId不能为空");
+            return new Result<PageData<SysDictDataVO>>().error("dictTypeId cannot be empty");
         }
 
         PageData<SysDictDataVO> page = sysDictDataService.page(params);
@@ -60,7 +60,7 @@ public class SysDictDataController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "获取字典数据详情")
+    @Operation(summary = "Get dictionary data details")
     @RequiresPermissions("sys:role:superAdmin")
     public Result<SysDictDataVO> get(@PathVariable("id") Long id) {
         SysDictDataVO vo = sysDictDataService.get(id);
@@ -68,7 +68,7 @@ public class SysDictDataController {
     }
 
     @PostMapping("/save")
-    @Operation(summary = "新增字典数据")
+    @Operation(summary = "Add dict data")
     @RequiresPermissions("sys:role:superAdmin")
     public Result<Void> save(@RequestBody SysDictDataDTO dto) {
         ValidatorUtils.validateEntity(dto);
@@ -77,7 +77,7 @@ public class SysDictDataController {
     }
 
     @PutMapping("/update")
-    @Operation(summary = "修改字典数据")
+    @Operation(summary = "Update dictionary data")
     @RequiresPermissions("sys:role:superAdmin")
     public Result<Void> update(@RequestBody SysDictDataDTO dto) {
         ValidatorUtils.validateEntity(dto);
@@ -86,16 +86,16 @@ public class SysDictDataController {
     }
 
     @PostMapping("/delete")
-    @Operation(summary = "删除字典数据")
+    @Operation(summary = "Delete dictionary data")
     @RequiresPermissions("sys:role:superAdmin")
-    @Parameter(name = "ids", description = "ID数组", required = true)
+    @Parameter(name = "ids", description = "ID array", required = true)
     public Result<Void> delete(@RequestBody Long[] ids) {
         sysDictDataService.delete(ids);
         return new Result<>();
     }
 
     @GetMapping("/type/{dictType}")
-    @Operation(summary = "获取字典数据列表")
+    @Operation(summary = "Get dictionary data list")
     @RequiresPermissions("sys:role:normal")
     public Result<List<SysDictDataItem>> getDictDataByType(@PathVariable("dictType") String dictType) {
         List<SysDictDataItem> list = sysDictDataService.getDictDataByType(dictType);

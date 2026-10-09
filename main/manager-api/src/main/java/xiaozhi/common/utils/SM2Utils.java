@@ -21,16 +21,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * SM2加密工具类（采用十六进制格式，与chancheng-archive-service项目保持一致）
+ * SM2 encryption utility (uses hex format, consistent with the chancheng-archive-service project)
  */
 public class SM2Utils {
 
     /**
-     * 公钥常量
+     * Public key constant
      */
     public static final String KEY_PUBLIC_KEY = "publicKey";
     /**
-     * 私钥返回值常量
+     * Private key return value constant
      */
     public static final String KEY_PRIVATE_KEY = "privateKey";
 
@@ -39,78 +39,78 @@ public class SM2Utils {
     }
 
     /**
-     * SM2加密算法
+     * SM2 encryption
      *
-     * @param publicKey 十六进制公钥
-     * @param data      明文数据
-     * @return 十六进制密文
+     * @param publicKey hex public key
+     * @param data      plaintext data
+     * @return hex ciphertext
      */
     public static String encrypt(String publicKey, String data) {
         try {
-            // 获取一条SM2曲线参数
+            // Get the SM2 curve parameters
             X9ECParameters sm2ECParameters = GMNamedCurves.getByName("sm2p256v1");
-            // 构造ECC算法参数，曲线方程、椭圆曲线G点、大整数N
+            // Build the ECC domain parameters: curve equation, G point, big integer N
             ECDomainParameters domainParameters = new ECDomainParameters(sm2ECParameters.getCurve(), sm2ECParameters.getG(), sm2ECParameters.getN());
-            //提取公钥点
+            // Extract the public key point
             ECPoint pukPoint = sm2ECParameters.getCurve().decodePoint(Hex.decode(publicKey));
-            // 公钥前面的02或者03表示是压缩公钥，04表示未压缩公钥, 04的时候，可以去掉前面的04
+            // A 02 or 03 prefix means a compressed public key, 04 means uncompressed; with 04 the prefix can be dropped
             ECPublicKeyParameters publicKeyParameters = new ECPublicKeyParameters(pukPoint, domainParameters);
 
             SM2Engine sm2Engine = new SM2Engine(SM2Engine.Mode.C1C3C2);
-            // 设置sm2为加密模式
+            // Put SM2 in encryption mode
             sm2Engine.init(true, new ParametersWithRandom(publicKeyParameters, new SecureRandom()));
 
             byte[] in = data.getBytes(StandardCharsets.UTF_8);
             byte[] arrayOfBytes = sm2Engine.processBlock(in, 0, in.length);
             return Hex.toHexString(arrayOfBytes);
         } catch (Exception e) {
-            throw new RuntimeException("SM2加密失败", e);
+            throw new RuntimeException("SM2 encryption failed", e);
         }
     }
 
     /**
-     * SM2解密算法
+     * SM2 decryption
      *
-     * @param privateKey 十六进制私钥
-     * @param cipherData 十六进制密文数据
-     * @return 明文
+     * @param privateKey hex private key
+     * @param cipherData hex ciphertext
+     * @return plaintext
      */
     public static String decrypt(String privateKey, String cipherData) {
         try {
-            // 使用BC库加解密时密文以04开头，传入的密文前面没有04则补上
+            // With the BC library the ciphertext starts with 04; prepend 04 if missing
             if (!cipherData.startsWith("04")) {
                 cipherData = "04" + cipherData;
             }
             byte[] cipherDataByte = Hex.decode(cipherData);
             BigInteger privateKeyD = new BigInteger(privateKey, 16);
-            //获取一条SM2曲线参数
+            // Get the SM2 curve parameters
             X9ECParameters sm2ECParameters = GMNamedCurves.getByName("sm2p256v1");
-            //构造domain参数
+            // Build the domain parameters
             ECDomainParameters domainParameters = new ECDomainParameters(sm2ECParameters.getCurve(), sm2ECParameters.getG(), sm2ECParameters.getN());
             ECPrivateKeyParameters privateKeyParameters = new ECPrivateKeyParameters(privateKeyD, domainParameters);
 
             SM2Engine sm2Engine = new SM2Engine(SM2Engine.Mode.C1C3C2);
-            // 设置sm2为解密模式
+            // Put SM2 in decryption mode
             sm2Engine.init(false, privateKeyParameters);
 
             byte[] arrayOfBytes = sm2Engine.processBlock(cipherDataByte, 0, cipherDataByte.length);
             return new String(arrayOfBytes, StandardCharsets.UTF_8);
         } catch (Exception e) {
-            throw new RuntimeException("SM2解密失败", e);
+            throw new RuntimeException("SM2 decryption failed", e);
         }
     }
 
     /**
-     * 生成密钥对
+     * Generate a key pair
      */
     public static Map<String, String> createKey() {
         try {
             ECGenParameterSpec sm2Spec = new ECGenParameterSpec("sm2p256v1");
-            // 获取一个椭圆曲线类型的密钥对生成器
+            // Get an elliptic-curve key pair generator
             KeyPairGenerator kpg = KeyPairGenerator.getInstance("EC", new BouncyCastleProvider());
-            // 使用SM2参数初始化生成器
+            // Initialize the generator with SM2 parameters
             kpg.initialize(sm2Spec);
-            // 获取密钥对
+            // Get the key pair
             KeyPair keyPair = kpg.generateKeyPair();
             PublicKey publicKey = keyPair.getPublic();
             BCECPublicKey p = (BCECPublicKey) publicKey;
@@ -122,7 +122,7 @@ public class SM2Utils {
             result.put(KEY_PRIVATE_KEY, Hex.toHexString(s.getD().toByteArray()));
             return result;
         } catch (Exception e) {
-            throw new RuntimeException("生成SM2密钥对失败", e);
+            throw new RuntimeException("Failed to generate SM2 key pair", e);
         }
     }
 

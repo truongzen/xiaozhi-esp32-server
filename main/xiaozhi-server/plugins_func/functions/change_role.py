@@ -46,13 +46,13 @@ change_role_function_desc = {
 
 @register_function("change_role", change_role_function_desc, ToolType.CHANGE_SYS_PROMPT)
 def change_role(conn: "ConnectionHandler", role: str, role_name: str):
-    """切换角色"""
+    """Switch role"""
     if role not in prompts:
         return ActionResponse(
             action=Action.RESPONSE, result="切换角色失败", response="不支持的角色"
         )
     new_prompt = prompts[role].replace("{{assistant_name}}", role_name)
     conn.change_system_prompt(new_prompt)
-    logger.bind(tag=TAG).info(f"准备切换角色:{role},角色名字:{role_name}")
+    logger.bind(tag=TAG).info(f"Preparing to switch role: {role}, role name: {role_name}")
     res = f"切换角色成功,我是{role}{role_name}"
     return ActionResponse(action=Action.RESPONSE, result="切换角色已处理", response=res)

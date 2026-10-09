@@ -13,7 +13,7 @@ server:
         http-only: true
 
 spring:
-  # 环境 dev|test|prod
+  # Environment dev|test|prod
   profiles:
     active: dev
   messages:
@@ -46,15 +46,15 @@ renren:
 #mybatis
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
-  #实体扫描，多个package用逗号或者分号分隔
+  # Entity scanning; separate multiple packages with commas or semicolons
   typeAliasesPackage: xiaozhi.modules.*.entity
   global-config:
-    #数据库相关配置
+    # Database-related configuration
     db-config:
-      #主键类型
+      # Primary key type
       id-type: ASSIGN_ID
     banner: false
-  #原生配置
+  # Native configuration
   configuration:
     map-underscore-to-camel-case: true
     cache-enabled: false

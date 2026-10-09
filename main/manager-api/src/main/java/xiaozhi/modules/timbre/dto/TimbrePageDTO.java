@@ -5,25 +5,25 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 /**
- * 音色分页参数DTO
+ * Voice paging parameters DTO
  * 
  * @author zjy
  * @since 2025-3-21
  */
 @Data
-@Schema(description = "音色分页参数")
+@Schema(description = "Voice paging parameters")
 public class TimbrePageDTO {
 
-    @Schema(description = "对应 TTS 模型主键")
+    @Schema(description = "Primary key of the corresponding TTS model")
     @NotBlank(message = "{timbre.ttsModelId.require}")
     private String ttsModelId;
 
-    @Schema(description = "音色名称")
+    @Schema(description = "Voice name")
     private String name;
 
-    @Schema(description = "页数")
+    @Schema(description = "Page number")
     private String page;
 
-    @Schema(description = "显示列数")
+    @Schema(description = "Number of records per page")
     private String limit;
 }

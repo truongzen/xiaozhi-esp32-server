@@ -26,7 +26,7 @@ import xiaozhi.modules.sys.service.SysDictTypeService;
 import xiaozhi.modules.sys.vo.SysDictTypeVO;
 
 /**
- * 字典类型管理
+ * Dictionary type management
  *
  * @author czc
  * @since 2025-04-30
@@ -34,17 +34,17 @@ import xiaozhi.modules.sys.vo.SysDictTypeVO;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/admin/dict/type")
-@Tag(name = "字典类型管理")
+@Tag(name = "Dictionary Type Management")
 public class SysDictTypeController {
     private final SysDictTypeService sysDictTypeService;
 
     @GetMapping("/page")
-    @Operation(summary = "分页查询字典类型")
+    @Operation(summary = "Page dictionary types")
     @RequiresPermissions("sys:role:superAdmin")
-    @Parameters({ @Parameter(name = "dictType", description = "字典类型编码"),
-            @Parameter(name = "dictName", description = "字典类型名称"),
-            @Parameter(name = Constant.PAGE, description = "当前页码，从1开始", required = true),
-            @Parameter(name = Constant.LIMIT, description = "每页显示记录数", required = true) })
+    @Parameters({ @Parameter(name = "dictType", description = "Dictionary type code"),
+            @Parameter(name = "dictName", description = "Dictionary type name"),
+            @Parameter(name = Constant.PAGE, description = "Current page number, starting from 1", required = true),
+            @Parameter(name = Constant.LIMIT, description = "Records per page", required = true) })
     public Result<PageData<SysDictTypeVO>> page(@Parameter(hidden = true) @RequestParam Map<String, Object> params) {
         ValidatorUtils.validateEntity(params);
         PageData<SysDictTypeVO> page = sysDictTypeService.page(params);
@@ -52,7 +52,7 @@ public class SysDictTypeController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "获取字典类型详情")
+    @Operation(summary = "Get dictionary type details")
     @RequiresPermissions("sys:role:superAdmin")
     public Result<SysDictTypeVO> get(@PathVariable("id") Long id) {
         SysDictTypeVO vo = sysDictTypeService.get(id);
@@ -60,10 +60,10 @@ public class SysDictTypeController {
     }
 
     @PostMapping("/save")
-    @Operation(summary = "保存字典类型")
+    @Operation(summary = "Save dictionary type")
     @RequiresPermissions("sys:role:superAdmin")
     public Result<Void> save(@RequestBody SysDictTypeDTO dto) {
-        // 参数校验
+        // Validate parameters
         ValidatorUtils.validateEntity(dto);
 
         sysDictTypeService.save(dto);
@@ -71,10 +71,10 @@ public class SysDictTypeController {
     }
 
     @PutMapping("/update")
-    @Operation(summary = "修改字典类型")
+    @Operation(summary = "Update dictionary type")
     @RequiresPermissions("sys:role:superAdmin")
     public Result<Void> update(@RequestBody SysDictTypeDTO dto) {
-        // 参数校验
+        // Validate parameters
         ValidatorUtils.validateEntity(dto);
 
         sysDictTypeService.update(dto);
@@ -82,9 +82,9 @@ public class SysDictTypeController {
     }
 
     @PostMapping("/delete")
-    @Operation(summary = "删除字典类型")
+    @Operation(summary = "Delete dictionary type")
     @RequiresPermissions("sys:role:superAdmin")
-    @Parameter(name = "ids", description = "ID数组", required = true)
+    @Parameter(name = "ids", description = "ID array", required = true)
     public Result<Void> delete(@RequestBody Long[] ids) {
         sysDictTypeService.delete(ids);
         return new Result<>();

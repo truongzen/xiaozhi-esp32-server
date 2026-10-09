@@ -23,9 +23,9 @@ class TTSProvider(TTSProviderBase):
             try:
                 self.params = json.loads(self.params)
             except json.JSONDecodeError:
-                raise ValueError("Custom TTS配置参数出错,无法将字符串解析为对象")
+                raise ValueError("Custom TTS configuration parameter error: unable to parse string into an object")
         elif not isinstance(self.params, dict):
-            raise TypeError("Custom TTS配置参数出错, 请参考配置说明")
+            raise TypeError("Custom TTS configuration parameter error, please refer to the configuration guide")
 
     def generate_filename(self):
         return os.path.join(self.output_file, f"tts-{datetime.now().date()}@{uuid.uuid4().hex}.{self.audio_file_type}")
@@ -58,6 +58,6 @@ class TTSProvider(TTSProviderBase):
             else:
                 return resp.content
         else:
-            error_msg = f"Custom TTS请求失败: {resp.status_code} - {resp.text}"
+            error_msg = f"Custom TTS request failed: {resp.status_code} - {resp.text}"
             logger.bind(tag=TAG).error(error_msg)
-            raise Exception(error_msg)  # 抛出异常，让调用方捕获
+            raise Exception(error_msg)  # Raise so the caller can handle it

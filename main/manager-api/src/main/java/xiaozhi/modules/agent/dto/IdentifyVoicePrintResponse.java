@@ -5,17 +5,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
- * 声纹识别接口返回的对象
+ * Response object of the voiceprint identification API
  */
 @Data
 public class IdentifyVoicePrintResponse {
     /**
-     * 最匹配的声纹id
+     * ID of the best-matching voiceprint
      */
     @JsonProperty("speaker_id")
     private String speakerId;
     /**
-     * 声纹的分数
+     * Voiceprint score
      */
     private Double score;
 }

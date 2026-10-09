@@ -15,29 +15,29 @@ import xiaozhi.modules.agent.typehandler.ContextProviderListTypeHandler;
 
 @Data
 @TableName(value = "ai_agent_context_provider", autoResultMap = true)
-@Schema(description = "智能体上下文源配置")
+@Schema(description = "Agent context provider configuration")
 public class AgentContextProviderEntity {
 
     @TableId(type = IdType.ASSIGN_UUID)
-    @Schema(description = "主键")
+    @Schema(description = "Primary key")
     private String id;
 
-    @Schema(description = "智能体ID")
+    @Schema(description = "Agent ID")
     private String agentId;
 
-    @Schema(description = "上下文源配置")
+    @Schema(description = "Context provider configuration")
     @TableField(typeHandler = ContextProviderListTypeHandler.class)
     private List<ContextProviderDTO> contextProviders;
 
-    @Schema(description = "创建者")
+    @Schema(description = "Creator")
     private Long creator;
 
-    @Schema(description = "创建时间")
+    @Schema(description = "Creation time")
     private Date createdAt;
 
-    @Schema(description = "更新者")
+    @Schema(description = "Updater")
     private Long updater;
 
-    @Schema(description = "更新时间")
+    @Schema(description = "Update time")
     private Date updatedAt;
 }

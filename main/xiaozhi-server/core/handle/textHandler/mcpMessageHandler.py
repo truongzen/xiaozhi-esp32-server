@@ -9,7 +9,7 @@ from core.providers.tools.device_mcp import handle_mcp_message
 
 
 class McpTextMessageHandler(TextMessageHandler):
-    """MCP消息处理器"""
+    """MCP message handler"""
 
     @property
     def message_type(self) -> TextMessageType:

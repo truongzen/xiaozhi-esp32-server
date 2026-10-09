@@ -6,41 +6,41 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
- * 音色详情展示VO
+ * VO for displaying voice details
  * 
  * @author zjy
  * @since 2025-3-21
  */
 @Data
 public class TimbreDetailsVO implements Serializable {
-    @Schema(description = "音色id")
+    @Schema(description = "Voice ID")
     private String id;
 
-    @Schema(description = "语言")
+    @Schema(description = "Language")
     private String languages;
 
-    @Schema(description = "音色名称")
+    @Schema(description = "Voice name")
     private String name;
 
-    @Schema(description = "备注")
+    @Schema(description = "Remark")
     private String remark;
 
-    @Schema(description = "参考音频路径")
+    @Schema(description = "Reference audio path")
     private String referenceAudio;
 
-    @Schema(description = "參考文本")
+    @Schema(description = "Reference text")
     private String referenceText;
 
-    @Schema(description = "排序")
+    @Schema(description = "Sort order")
     private Long sort;
 
-    @Schema(description = "对应 TTS 模型主键")
+    @Schema(description = "Primary key of the corresponding TTS model")
     private String ttsModelId;
 
-    @Schema(description = "音色编码")
+    @Schema(description = "Voice code")
     private String ttsVoice;
 
-    @Schema(description = "音频播放地址")
+    @Schema(description = "Audio playback URL")
     private String voiceDemo;
 
 }

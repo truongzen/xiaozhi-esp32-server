@@ -36,13 +36,13 @@ class ASRProvider(ASRProviderBase):
                 "Authorization": f"Bearer {self.api_key}",
             }
             
-            # 使用data参数传递模型名称
+            # Pass the model name via the data parameter
             data = {
                 "model": self.model
             }
 
 
-            with open(file_path, "rb") as audio_file:  # 使用with语句确保文件关闭
+            with open(file_path, "rb") as audio_file:  # Use a with statement to ensure the file is closed
                 files = {
                     "file": audio_file
                 }
@@ -55,16 +55,16 @@ class ASRProvider(ASRProviderBase):
                     headers=headers
                 )
                 logger.bind(tag=TAG).debug(
-                    f"语音识别耗时: {time.time() - start_time:.3f}s | 结果: {response.text}"
+                    f"Speech recognition time: {time.time() - start_time:.3f}s | result: {response.text}"
                 )
 
             if response.status_code == 200:
                 text = response.json().get("text", "")
                 return text, file_path
             else:
-                raise Exception(f"API请求失败: {response.status_code} - {response.text}")
+                raise Exception(f"API request failed: {response.status_code} - {response.text}")
                 
         except Exception as e:
-            logger.bind(tag=TAG).error(f"语音识别失败: {e}")
+            logger.bind(tag=TAG).error(f"Speech recognition failed: {e}")
             return "", None
         

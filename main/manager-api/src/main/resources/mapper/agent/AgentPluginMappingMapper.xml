@@ -11,7 +11,7 @@
         <result property="paramInfo" column="param_info" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <!-- 用于映射根据agentId查询完整插件信息 -->
+    <!-- Maps the full plugin info queried by agentId -->
     <resultMap id="AgentPluginWithCodeMap" type="xiaozhi.modules.agent.entity.AgentPluginMapping">
         <id column="id" property="id" jdbcType="BIGINT"/>
         <result column="agentId" property="agentId" jdbcType="VARCHAR"/>

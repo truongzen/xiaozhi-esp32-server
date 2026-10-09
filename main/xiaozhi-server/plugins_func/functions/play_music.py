@@ -46,14 +46,14 @@ async def play_music(conn: "ConnectionHandler", song_name: str):
             action=Action.RECORD, result="指令已接收", response="正在为您播放音乐"
         )
     except Exception as e:
-        conn.logger.bind(tag=TAG).error(f"处理音乐意图错误: {e}")
+        conn.logger.bind(tag=TAG).error(f"Error handling music intent: {e}")
         return ActionResponse(
             action=Action.RESPONSE, result=str(e), response="播放音乐时出错了"
         )
 
 
 def _extract_song_name(text):
-    """从用户输入中提取歌名"""
+    """Extract the song name from user input"""
     for keyword in ["播放音乐"]:
         if keyword in text:
             parts = text.split(keyword)
@@ -63,7 +63,7 @@ def _extract_song_name(text):
 
 
 def _find_best_match(potential_song, music_files):
-    """查找最匹配的歌曲"""
+    """Find the best matching song"""
     best_match = None
     highest_ratio = 0
 
@@ -81,13 +81,13 @@ def get_music_files(music_dir, music_ext):
     music_files = []
     music_file_names = []
     for file in music_dir.rglob("*"):
-        # 判断是否是文件
+        # Check whether it is a file
         if file.is_file():
-            # 获取文件扩展名
+            # Get the file extension
             ext = file.suffix.lower()
-            # 判断扩展名是否在列表中
+            # Check whether the extension is in the list
             if ext in music_ext:
-                # 添加相对路径
+                # Add the relative path
                 music_files.append(str(file.relative_to(music_dir)))
                 music_file_names.append(
                     os.path.splitext(str(file.relative_to(music_dir)))[0]
@@ -102,7 +102,7 @@ def initialize_music_handler(conn: "ConnectionHandler"):
         if "play_music" in plugins_config:
             MUSIC_CACHE["music_config"] = plugins_config["play_music"]
             MUSIC_CACHE["music_dir"] = os.path.abspath(
-                MUSIC_CACHE["music_config"].get("music_dir", "./music")  # 默认路径修改
+                MUSIC_CACHE["music_config"].get("music_dir", "./music")  # Default path
             )
             MUSIC_CACHE["music_ext"] = MUSIC_CACHE["music_config"].get(
                 "music_ext", (".mp3", ".wav", ".p3")
@@ -114,7 +114,7 @@ def initialize_music_handler(conn: "ConnectionHandler"):
             MUSIC_CACHE["music_dir"] = os.path.abspath("./music")
             MUSIC_CACHE["music_ext"] = (".mp3", ".wav", ".p3")
             MUSIC_CACHE["refresh_time"] = 60
-        # 获取音乐文件列表
+        # Get the list of music files
         MUSIC_CACHE["music_files"], MUSIC_CACHE["music_file_names"] = get_music_files(
             MUSIC_CACHE["music_dir"], MUSIC_CACHE["music_ext"]
         )
@@ -126,14 +126,14 @@ async def handle_music_command(conn: "ConnectionHandler", text):
     initialize_music_handler(conn)
     global MUSIC_CACHE
 
-    """处理音乐播放指令"""
+    """Handle the music playback command"""
     clean_text = re.sub(r"[^\w\s]", "", text).strip()
-    conn.logger.bind(tag=TAG).debug(f"检查是否是音乐命令: {clean_text}")
+    conn.logger.bind(tag=TAG).debug(f"Checking whether this is a music command: {clean_text}")
 
-    # 尝试匹配具体歌名
+    # Try to match a specific song name
     if os.path.exists(MUSIC_CACHE["music_dir"]):
         if time.time() - MUSIC_CACHE["scan_time"] > MUSIC_CACHE["refresh_time"]:
-            # 刷新音乐文件列表
+            # Refresh the music file list
             MUSIC_CACHE["music_files"], MUSIC_CACHE["music_file_names"] = (
                 get_music_files(MUSIC_CACHE["music_dir"], MUSIC_CACHE["music_ext"])
             )
@@ -143,17 +143,17 @@ async def handle_music_command(conn: "ConnectionHandler", text):
         if potential_song:
             best_match = _find_best_match(potential_song, MUSIC_CACHE["music_files"])
             if best_match:
-                conn.logger.bind(tag=TAG).info(f"找到最匹配的歌曲: {best_match}")
+                conn.logger.bind(tag=TAG).info(f"Found best matching song: {best_match}")
                 await play_local_music(conn, specific_file=best_match)
                 return True
-    # 检查是否是通用播放音乐命令
+    # Check whether it is a generic play-music command
     await play_local_music(conn)
     return True
 
 
 def _get_random_play_prompt(song_name):
-    """生成随机播放引导语"""
-    # 移除文件扩展名
+    """Generate a random playback intro phrase"""
+    # Remove the file extension
     clean_name = os.path.splitext(song_name)[0]
     prompts = [
         f"正在为您播放，《{clean_name}》",
@@ -164,33 +164,33 @@ def _get_random_play_prompt(song_name):
         f"接下来请欣赏，《{clean_name}》",
         f"此刻为您献上，《{clean_name}》",
     ]
-    # 直接使用random.choice，不设置seed
+    # Use random.choice directly without seeding
     return random.choice(prompts)
 
 
 async def play_local_music(conn: "ConnectionHandler", specific_file=None):
     global MUSIC_CACHE
-    """播放本地音乐文件"""
+    """Play a local music file"""
     try:
         if not os.path.exists(MUSIC_CACHE["music_dir"]):
             conn.logger.bind(tag=TAG).error(
-                f"音乐目录不存在: " + MUSIC_CACHE["music_dir"]
+                f"Music directory does not exist: " + MUSIC_CACHE["music_dir"]
             )
             return
 
-        # 确保路径正确性
+        # Make sure the path is correct
         if specific_file:
             selected_music = specific_file
             music_path = os.path.join(MUSIC_CACHE["music_dir"], specific_file)
         else:
             if not MUSIC_CACHE["music_files"]:
-                conn.logger.bind(tag=TAG).error("未找到MP3音乐文件")
+                conn.logger.bind(tag=TAG).error("No MP3 music files found")
                 return
             selected_music = random.choice(MUSIC_CACHE["music_files"])
             music_path = os.path.join(MUSIC_CACHE["music_dir"], selected_music)
 
         if not os.path.exists(music_path):
-            conn.logger.bind(tag=TAG).error(f"选定的音乐文件不存在: {music_path}")
+            conn.logger.bind(tag=TAG).error(f"Selected music file does not exist: {music_path}")
             return
         text = _get_random_play_prompt(selected_music)
         conn.tts.store_tts_text(conn.sentence_id, text)
@@ -230,5 +230,5 @@ async def play_local_music(conn: "ConnectionHandler", specific_file=None):
             )
 
     except Exception as e:
-        conn.logger.bind(tag=TAG).error(f"播放音乐失败: {str(e)}")
-        conn.logger.bind(tag=TAG).error(f"详细错误: {traceback.format_exc()}")
+        conn.logger.bind(tag=TAG).error(f"Failed to play music: {str(e)}")
+        conn.logger.bind(tag=TAG).error(f"Error details: {traceback.format_exc()}")

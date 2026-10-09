@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="xiaozhi.modules.agent.dao.AgentDao">
-    <!-- 获取智能体的设备数量 -->
+    <!-- Get the device count of an agent -->
     <select id="getDeviceCountByAgentId" resultType="java.lang.Integer">
         SELECT COUNT(*) FROM ai_device WHERE agent_id = #{agentId}
     </select>

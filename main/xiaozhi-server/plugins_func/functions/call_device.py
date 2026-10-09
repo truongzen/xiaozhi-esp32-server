@@ -1,4 +1,4 @@
-"""呼叫设备工具"""
+"""Device calling tool"""
 import httpx
 from config.logger import setup_logging
 from plugins_func.register import register_function, ToolType, ActionResponse, Action
@@ -44,7 +44,7 @@ def _failed_reply(msg: str) -> ActionResponse:
 
 
 def _is_answering(conn: "ConnectionHandler") -> bool:
-    """检查是否为接听模式（conn.incoming_call 不为空）"""
+    """Check whether we are in answering mode (conn.incoming_call is not None)"""
     return hasattr(conn, 'incoming_call') and conn.incoming_call is not None
 
 
@@ -58,18 +58,18 @@ async def call_device(conn: "ConnectionHandler", nickname: str):
     api_url = api_config.get("url")
     api_secret = api_config.get("secret")
     if not api_url or not api_secret:
-        logger.bind(tag=TAG).error("manager-api配置缺失")   
+        logger.bind(tag=TAG).error("manager-api config is missing")   
         return _failed_reply("配置错误，请稍后再试")
 
     headers = {"Authorization": f"Bearer {api_secret}"}
 
-    # 区分是主动呼叫还是接听来电
+    # Distinguish between placing a call and answering an incoming call
     is_answer = _is_answering(conn)
     params = {"callerMac": caller_mac, "nickname": nickname}   
     if is_answer:
         params["answer"] = "true"
 
-    # 查询通讯录并发起呼叫
+    # Look up the address book and place the call
     try:
         resp = await _request_api(
             f"{api_url}/device/address-book/call",
@@ -78,7 +78,7 @@ async def call_device(conn: "ConnectionHandler", nickname: str):
         )
         result = resp.json()
     except httpx.HTTPError as e:
-        logger.bind(tag=TAG).error(f"呼叫请求失败: {e}")
+        logger.bind(tag=TAG).error(f"Call request failed: {e}")
         return _failed_reply("呼叫失败，请稍后再试")
 
     if result.get("code") != 0:

@@ -7,22 +7,22 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 /**
- * 短信验证码请求DTO
+ * SMS verification code request DTO
  */
 @Data
-@Schema(description = "短信验证码请求")
+@Schema(description = "SMS verification code request")
 public class SmsVerificationDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @Schema(description = "手机号码")
+    @Schema(description = "Mobile phone number")
     @NotBlank(message = "{sysuser.username.require}")
     private String phone;
 
-    @Schema(description = "验证码")
+    @Schema(description = "Verification code")
     @NotBlank(message = "{sysuser.captcha.require}")
     private String captcha;
 
-    @Schema(description = "唯一标识")
+    @Schema(description = "Unique identifier")
     @NotBlank(message = "{sysuser.uuid.require}")
     private String captchaId;
 }

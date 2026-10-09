@@ -1,30 +1,30 @@
 import { log } from '../../utils/logger.js?v=0205';
 
-// WebSocket 连接
+// WebSocket connection
 export async function webSocketConnect(otaUrl, config) {
 
     if (!validateConfig(config)) {
         return;
     }
 
-    // 发送OTA请求并获取返回的websocket信息
+    // Send the OTA request and get the returned websocket info
     const otaResult = await sendOTA(otaUrl, config);
     if (!otaResult) {
-        log('无法从OTA服务器获取信息', 'error');
+        log('Unable to get information from the OTA server', 'error');
         return;
     }
 
-    // 从OTA响应中提取websocket信息
+    // Extract websocket info from the OTA response
     const { websocket } = otaResult;
     if (!websocket || !websocket.url) {
-        log('OTA响应中缺少websocket信息', 'error');
+        log('OTA response is missing websocket info', 'error');
         return;
     }
 
-    // 使用OTA返回的websocket URL
+    // Use the websocket URL returned by OTA
     let connUrl = new URL(websocket.url);
 
-    // 添加token参数（从OTA响应中获取）
+    // Add the token parameter (from the OTA response)
     if (websocket.token) {
         if (websocket.token.startsWith("Bearer ")) {
             connUrl.searchParams.append('authorization', websocket.token);
@@ -33,13 +33,13 @@ export async function webSocketConnect(otaUrl, config) {
         }
     }
 
-    // 添加认证参数（保持原有逻辑）
+    // Add authentication parameters (keep original logic)
     connUrl.searchParams.append('device-id', config.deviceId);
     connUrl.searchParams.append('client-id', config.clientId);
 
     const wsurl = connUrl.toString()
 
-    log(`正在连接: ${wsurl}`, 'info');
+    log(`Connecting: ${wsurl}`, 'info');
 
     if (wsurl) {
         document.getElementById('serverUrl').value = wsurl;
@@ -48,20 +48,20 @@ export async function webSocketConnect(otaUrl, config) {
     return new WebSocket(connUrl.toString());
 }
 
-// 验证配置
+// Validate configuration
 function validateConfig(config) {
     if (!config.deviceMac) {
-        log('设备MAC地址不能为空', 'error');
+        log('Device MAC address cannot be empty', 'error');
         return false;
     }
     if (!config.clientId) {
-        log('客户端ID不能为空', 'error');
+        log('Client ID cannot be empty', 'error');
         return false;
     }
     return true;
 }
 
-// OTA发送请求，验证状态，并返回响应数据
+// Send the OTA request, check the status and return the response data
 async function sendOTA(otaUrl, config) {
     try {
         const res = await fetch(otaUrl, {
@@ -102,8 +102,8 @@ async function sendOTA(otaUrl, config) {
         if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
 
         const result = await res.json();
-        return result; // 返回完整的响应数据
+        return result; // Return the full response data
     } catch (err) {
-        return null; // 失败返回null
+        return null; // Return null on failure
     }
 }

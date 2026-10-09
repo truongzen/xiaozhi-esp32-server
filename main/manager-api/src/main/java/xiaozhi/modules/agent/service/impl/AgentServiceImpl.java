@@ -104,18 +104,18 @@ public class AgentServiceImpl extends BaseServiceImpl<AgentDao, AgentEntity> imp
             agent.setChatHistoryConf(Constant.ChatHistoryConfEnum.RECORD_TEXT_AUDIO.getCode());
         }
 
-        // 查询上下文源配置
+        // Query the context provider configuration
         AgentContextProviderEntity contextProviderEntity = agentContextProviderService.getByAgentId(id);
         if (contextProviderEntity != null) {
             agent.setContextProviders(contextProviderEntity.getContextProviders());
         }
 
-        // 查询替换词文件ID列表
+        // Query the replacement word file ID list
         List<String> correctWordFileIds = correctWordFileService.getAgentCorrectWordFileIds(id);
         agent.setCorrectWordFileIds(correctWordFileIds);
         agent.setCurrentVersionNo(agentSnapshotService.getCurrentVersionNo(id));
 
-        // 无需额外查询插件列表，已通过SQL查询出来
+        // No need to query the plugin list separately; it is already loaded by the SQL query
         return agent;
     }
 
@@ -180,17 +180,17 @@ public class AgentServiceImpl extends BaseServiceImpl<AgentDao, AgentEntity> imp
 
     @Override
     public boolean insert(AgentEntity entity) {
-        // 如果ID为空，自动生成一个UUID作为ID
+        // If the ID is empty, generate a UUID as the ID
         if (entity.getId() == null || entity.getId().trim().isEmpty()) {
             entity.setId(UUID.randomUUID().toString().replace("-", ""));
         }
 
-        // 如果智能体编码为空，自动生成一个带前缀的编码
+        // If the agent code is empty, generate a prefixed code
         if (entity.getAgentCode() == null || entity.getAgentCode().trim().isEmpty()) {
             entity.setAgentCode("AGT_" + System.currentTimeMillis());
         }
 
-        // 如果排序字段为空，设置默认值0
+        // If the sort field is empty, default it to 0
         if (entity.getSort() == null) {
             entity.setSort(0);
         }
@@ -232,10 +232,10 @@ public class AgentServiceImpl extends BaseServiceImpl<AgentDao, AgentEntity> imp
 
         if (StringUtils.isNotBlank(keyword)) {
             queryWrapper.and(w -> {
-                // 按名称搜索
+                // Search by name
                 w.like("agent_name", keyword);
 
-                // 按MAC地址搜索：先查设备，再获取对应的智能体ID
+                // Search by MAC address: find the device first, then get the corresponding agent ID
                 List<DeviceEntity> devices = Optional
                         .ofNullable(deviceService.searchDevicesByMacAddress(keyword, userId))
                         .orElseGet(ArrayList::new);
@@ -247,7 +247,7 @@ public class AgentServiceImpl extends BaseServiceImpl<AgentDao, AgentEntity> imp
                     w.or().in("id", agentIds);
                 }
 
-                // 按标签名搜索
+                // Search by tag name
                 List<String> tagAgentIds = agentTagService.getAgentIdsByTagName(keyword);
                 if (CollUtil.isNotEmpty(tagAgentIds)) {
                     w.or().in("id", tagAgentIds);
@@ -260,7 +260,7 @@ public class AgentServiceImpl extends BaseServiceImpl<AgentDao, AgentEntity> imp
     }
 
     /**
-     * 将AgentEntity转换为AgentDTO
+     * Convert AgentEntity to AgentDTO
      */
     private AgentDTO buildAgentDTO(AgentEntity agent) {
         AgentDTO dto = new AgentDTO();
@@ -268,28 +268,28 @@ public class AgentServiceImpl extends BaseServiceImpl<AgentDao, AgentEntity> imp
         dto.setAgentName(agent.getAgentName());
         dto.setSystemPrompt(agent.getSystemPrompt());
 
-        // 获取 TTS 模型名称
+        // Get the TTS model name
         dto.setTtsModelName(modelConfigService.getModelNameById(agent.getTtsModelId()));
 
-        // 获取 LLM 模型名称
+        // Get the LLM model name
         dto.setLlmModelName(modelConfigService.getModelNameById(agent.getLlmModelId()));
 
-        // 获取 VLLM 模型名称
+        // Get the VLLM model name
         dto.setVllmModelName(modelConfigService.getModelNameById(agent.getVllmModelId()));
 
-        // 获取记忆模型名称
+        // Get the memory model name
         dto.setMemModelId(agent.getMemModelId());
 
-        // 获取 TTS 音色名称
+        // Get the TTS voice name
         dto.setTtsVoiceName(timbreModelService.getTimbreNameById(agent.getTtsVoiceId()));
 
-        // 获取智能体最近的最后连接时长
+        // Get the agent's most recent last connection time
         dto.setLastConnectedAt(deviceService.getLatestLastConnectionTime(agent.getId()));
 
-        // 获取设备数量
+        // Get the device count
         dto.setDeviceCount(getDeviceCountByAgentId(agent.getId()));
 
-        // 获取标签列表
+        // Get the tag list
         List<AgentTagEntity> tags = agentTagDao.selectByAgentId(agent.getId());
         if (CollUtil.isNotEmpty(tags)) {
             dto.setTags(tags.stream().map(this::convertTagToDTO).collect(Collectors.toList()));
@@ -311,16 +311,16 @@ public class AgentServiceImpl extends BaseServiceImpl<AgentDao, AgentEntity> imp
             return 0;
         }
 
-        // 先从Redis中获取
+        // Try Redis first
         Integer cachedCount = (Integer) redisUtils.get(RedisKeys.getAgentDeviceCountById(agentId));
         if (cachedCount != null) {
             return cachedCount;
         }
 
-        // 如果Redis中没有，则从数据库查询
+        // If not in Redis, query the database
         Integer deviceCount = agentDao.getDeviceCountByAgentId(agentId);
 
-        // 将结果存入Redis
+        // Store the result in Redis
         if (deviceCount != null) {
             redisUtils.set(RedisKeys.getAgentDeviceCountById(agentId), deviceCount, 60);
         }
@@ -342,7 +342,7 @@ public class AgentServiceImpl extends BaseServiceImpl<AgentDao, AgentEntity> imp
         return hasAgentPermission(agent, userId);
     }
 
-    // 根据id更新智能体信息
+    // Update agent info by ID
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateAgentById(String agentId, AgentUpdateDTO dto) {
@@ -355,7 +355,7 @@ public class AgentServiceImpl extends BaseServiceImpl<AgentDao, AgentEntity> imp
         updateAgentById(agentId, dto, userId, true);
     }
 
-    // 根据id更新智能体信息
+    // Update agent info by ID
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateAgentById(String agentId, AgentUpdateDTO dto, boolean createSnapshot) {
@@ -373,14 +373,14 @@ public class AgentServiceImpl extends BaseServiceImpl<AgentDao, AgentEntity> imp
             requireAgentPermission(lockedAgent, userId);
         }
 
-        // 锁定后查询现有实体和关联配置
+        // After locking, query the existing entity and related configuration
         AgentEntity existingEntity = this.getAgentById(agentId);
         if (createSnapshot) {
             int currentVersionNo = agentSnapshotService.getCurrentVersionNo(agentId);
             agentSnapshotService.createSnapshot(agentId, currentVersionNo == 0 ? "initial" : "current");
         }
 
-        // 只更新提供的非空字段
+        // Only update the provided non-null fields
         if (dto.getAgentName() != null) {
             existingEntity.setAgentName(dto.getAgentName());
         }
@@ -445,22 +445,22 @@ public class AgentServiceImpl extends BaseServiceImpl<AgentDao, AgentEntity> imp
             existingEntity.setSort(dto.getSort());
         }
 
-        // 更新函数插件信息
+        // Update function plugin info
         List<AgentUpdateDTO.FunctionInfo> functions = dto.getFunctions();
         if (functions != null) {
-            // 1. 收集本次提交的 pluginId
+            // 1. Collect the pluginIds submitted this time
             List<String> newPluginIds = functions.stream()
                     .map(AgentUpdateDTO.FunctionInfo::getPluginId)
                     .toList();
 
-            // 2. 查询当前agent现有的所有映射
+            // 2. Query all existing mappings of the current agent
             List<AgentPluginMapping> existing = agentPluginMappingService.list(
                     new QueryWrapper<AgentPluginMapping>()
                             .eq("agent_id", agentId));
             Map<String, AgentPluginMapping> existMap = existing.stream()
                     .collect(Collectors.toMap(AgentPluginMapping::getPluginId, Function.identity()));
 
-            // 3. 构造所有要 保存或更新 的实体
+            // 3. Build all entities to save or update
             List<AgentPluginMapping> allToPersist = functions.stream().map(info -> {
                 AgentPluginMapping m = new AgentPluginMapping();
                 m.setAgentId(agentId);
@@ -468,13 +468,13 @@ public class AgentServiceImpl extends BaseServiceImpl<AgentDao, AgentEntity> imp
                 m.setParamInfo(JsonUtils.toJsonString(info.getParamInfo()));
                 AgentPluginMapping old = existMap.get(info.getPluginId());
                 if (old != null) {
-                    // 已存在，设置id表示更新
+                    // Already exists, set the id to mark it as an update
                     m.setId(old.getId());
                 }
                 return m;
             }).toList();
 
-            // 4. 拆分：已有ID的走更新，无ID的走插入
+            // 4. Split: entities with an ID are updated, those without are inserted
             List<AgentPluginMapping> toUpdate = allToPersist.stream()
                     .filter(m -> m.getId() != null)
                     .toList();
@@ -489,7 +489,7 @@ public class AgentServiceImpl extends BaseServiceImpl<AgentDao, AgentEntity> imp
                 agentPluginMappingService.saveBatch(toInsert, IRepository.DEFAULT_BATCH_SIZE);
             }
 
-            // 5. 删除本次不在提交列表里的插件映射
+            // 5. Delete plugin mappings not in the submitted list
             List<Long> toDelete = existing.stream()
                     .filter(old -> !newPluginIds.contains(old.getPluginId()))
                     .map(AgentPluginMapping::getId)
@@ -499,23 +499,23 @@ public class AgentServiceImpl extends BaseServiceImpl<AgentDao, AgentEntity> imp
             }
         }
 
-        // 设置更新者信息
+        // Set updater info
         UserDetail user = SecurityUser.getUser();
         existingEntity.setUpdater(user.getId());
         existingEntity.setUpdatedAt(new Date());
 
-        // 更新记忆策略
-        // 删除所有记录
+        // Update the memory strategy
+        // Delete all records
         if (existingEntity.getMemModelId() != null && existingEntity.getMemModelId().equals(Constant.MEMORY_NO_MEM)) {
             agentChatHistoryService.deleteByAgentId(existingEntity.getId(), true, true);
             existingEntity.setSummaryMemory("");
-            // 删除记忆
+            // Delete memory
         } else if (existingEntity.getMemModelId() != null
                 && existingEntity.getMemModelId().equals(Constant.MEMORY_MEM_REPORT_ONLY)) {
             existingEntity.setSummaryMemory("");
         }
 
-        // 更新上下文源配置
+        // Update the context provider configuration
         if (dto.getContextProviders() != null) {
             AgentContextProviderEntity contextEntity = new AgentContextProviderEntity();
             contextEntity.setAgentId(agentId);
@@ -523,12 +523,12 @@ public class AgentServiceImpl extends BaseServiceImpl<AgentDao, AgentEntity> imp
             agentContextProviderService.saveOrUpdateByAgentId(contextEntity);
         }
 
-        // 更新替换词文件关联
+        // Update replacement word file associations
         if (dto.getCorrectWordFileIds() != null) {
             correctWordFileService.saveAgentCorrectWords(agentId, dto.getCorrectWordFileIds());
         }
 
-        // 更新智能体标签
+        // Update agent tags
         if (dto.getTagNames() != null || dto.getTagIds() != null) {
             agentTagService.saveAgentTags(agentId, dto.getTagIds(), dto.getTagNames());
         }
@@ -567,11 +567,11 @@ public class AgentServiceImpl extends BaseServiceImpl<AgentDao, AgentEntity> imp
     }
 
     /**
-     * 验证大语言模型和意图识别的参数是否符合匹配
+     * Check whether the LLM and intent recognition parameters are compatible
      * 
-     * @param llmModelId    大语言模型id
-     * @param intentModelId 意图识别id
-     * @return T 匹配 : F 不匹配
+     * @param llmModelId    LLM ID
+     * @param intentModelId intent recognition ID
+     * @return true: compatible, false: incompatible
      */
     private boolean validateLLMIntentParams(String llmModelId, String intentModelId) {
         if (StringUtils.isBlank(llmModelId)) {
@@ -579,24 +579,24 @@ public class AgentServiceImpl extends BaseServiceImpl<AgentDao, AgentEntity> imp
         }
         ModelConfigEntity llmModelData = modelConfigService.selectById(llmModelId);
         String type = llmModelData.getConfigJson().get("type").toString();
-        // 如果查询大语言模型是openai或者ollama，意图识别选参数都可以
+        // If the LLM is openai or ollama, any intent recognition option is allowed
         if ("openai".equals(type) || "ollama".equals(type)) {
             return true;
         }
-        // 除了openai和ollama的类型，不可以选择id为Intent_function_call（函数调用）的意图识别
+        // Except for openai and ollama types, the intent recognition with ID Intent_function_call (function calling) cannot be selected
         return !"Intent_function_call".equals(intentModelId);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public String createAgent(AgentCreateDTO dto) {
-        // 转换为实体
+        // Convert to entity
         AgentEntity entity = ConvertUtils.sourceToTarget(dto, AgentEntity.class);
 
-        // 获取默认模板
+        // Get the default template
         AgentTemplateEntity template = agentTemplateService.getDefaultTemplate();
         if (template != null) {
-            // 设置模板中的默认值
+            // Set default values from the template
             entity.setAsrModelId(template.getAsrModelId());
             entity.setVadModelId(template.getVadModelId());
             entity.setLlmModelId(template.getLlmModelId());
@@ -630,13 +630,13 @@ public class AgentServiceImpl extends BaseServiceImpl<AgentDao, AgentEntity> imp
                 entity.setSummaryMemory("");
             }
 
-            // 根据记忆模型类型设置默认的chatHistoryConf值
+            // Set the default chatHistoryConf value based on the memory model type
             if (template.getMemModelId() != null) {
                 if (template.getMemModelId().equals("Memory_nomem")) {
-                    // 无记忆功能的模型，默认不记录聊天记录
+                    // For models without memory, do not record chat history by default
                     entity.setChatHistoryConf(0);
                 } else {
-                    // 有记忆功能的模型，默认记录文本和语音
+                    // For models with memory, record text and audio by default
                     entity.setChatHistoryConf(2);
                 }
             } else {
@@ -654,18 +654,18 @@ public class AgentServiceImpl extends BaseServiceImpl<AgentDao, AgentEntity> imp
             }
         }
 
-        // 设置用户ID和创建者信息
+        // Set user ID and creator info
         UserDetail user = SecurityUser.getUser();
         entity.setUserId(user.getId());
         entity.setCreator(user.getId());
         entity.setCreatedAt(new Date());
 
-        // 保存智能体
+        // Save the agent
         insert(entity);
 
-        // 设置默认插件
+        // Set default plugins
         List<AgentPluginMapping> toInsert = new ArrayList<>();
-        // 播放音乐、查天气、查新闻
+        // Play music, check weather, get news
         String[] pluginIds = new String[] { "SYSTEM_PLUGIN_MUSIC", "SYSTEM_PLUGIN_WEATHER",
                 "SYSTEM_PLUGIN_NEWS_NEWSNOW" };
         for (String pluginId : pluginIds) {
@@ -687,7 +687,7 @@ public class AgentServiceImpl extends BaseServiceImpl<AgentDao, AgentEntity> imp
             mapping.setAgentId(entity.getId());
             toInsert.add(mapping);
         }
-        // 保存默认插件
+        // Save default plugins
         agentPluginMappingService.saveBatch(toInsert, IRepository.DEFAULT_BATCH_SIZE);
         agentSnapshotService.createSnapshot(entity.getId(), "initial");
         return entity.getId();

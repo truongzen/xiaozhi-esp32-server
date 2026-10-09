@@ -13,27 +13,27 @@ from plugins_func.register import Action
 
 TAG = __name__
 
-# 设置最大文件大小为5MB
+# Maximum file size is 5MB
 MAX_FILE_SIZE = 5 * 1024 * 1024
 
 
 class VisionHandler(BaseHandler):
     def __init__(self, config: dict):
         super().__init__(config)
-        # 初始化认证工具
+        # Initialize the authentication helper
         self.auth = AuthToken(config["server"]["auth_key"])
 
     def _create_error_response(self, message: str) -> dict:
-        """创建统一的错误响应格式"""
+        """Create a unified error response"""
         return {"success": False, "message": message}
 
     def _verify_auth_token(self, request) -> Tuple[bool, Optional[str]]:
-        """验证认证token"""
-        # 测试模式：允许特定测试令牌或跳过验证
+        """Verify the authentication token"""
+        # Test mode: allow specific test tokens or skip verification
         auth_header = request.headers.get("Authorization", "")
         client_id = request.headers.get("Client-Id", "")
 
-        # 允许测试客户端跳过认证
+        # Allow test clients to skip authentication
         if client_id == "web_test_client":
             device_id = request.headers.get("Device-Id", "test_device")
             return True, device_id
@@ -41,66 +41,66 @@ class VisionHandler(BaseHandler):
         if not auth_header.startswith("Bearer "):
             return False, None
 
-        token = auth_header[7:]  # 移除"Bearer "前缀
+        token = auth_header[7:]  # Strip the "Bearer " prefix
         return self.auth.verify_token(token)
 
     async def handle_post(self, request):
-        """处理 MCP Vision POST 请求"""
-        response = None  # 初始化response变量
+        """Handle an MCP Vision POST request"""
+        response = None  # Initialize the response variable
         try:
-            # 验证token
+            # Verify the token
             is_valid, token_device_id = self._verify_auth_token(request)
             if not is_valid:
                 response = web.Response(
                     text=json.dumps(
-                        self._create_error_response("无效的认证token或token已过期")
+                        self._create_error_response("Invalid or expired authentication token")
                     ),
                     content_type="application/json",
                     status=401,
                 )
                 return response
 
-            # 获取请求头信息
+            # Get the request headers
             device_id = request.headers.get("Device-Id", "")
             client_id = request.headers.get("Client-Id", "")
             if device_id != token_device_id:
-                raise ValueError("设备ID与token不匹配")
-            # 解析multipart/form-data请求
+                raise ValueError("Device ID does not match the token")
+            # Parse the multipart/form-data request
             reader = await request.multipart()
 
-            # 读取question字段
+            # Read the question field
             question_field = await reader.next()
             if question_field is None:
-                raise ValueError("缺少问题字段")
+                raise ValueError("Missing question field")
             question = await question_field.text()
             self.logger.bind(tag=TAG).debug(f"Question: {question}")
 
-            # 读取图片文件
+            # Read the image file
             image_field = await reader.next()
             if image_field is None:
-                raise ValueError("缺少图片文件")
+                raise ValueError("Missing image file")
 
-            # 读取图片数据
+            # Read the image data
             image_data = await image_field.read()
             if not image_data:
-                raise ValueError("图片数据为空")
+                raise ValueError("Image data is empty")
 
-            # 检查文件大小
+            # Check the file size
             if len(image_data) > MAX_FILE_SIZE:
                 raise ValueError(
-                    f"图片大小超过限制，最大允许{MAX_FILE_SIZE/1024/1024}MB"
+                    f"Image size exceeds the limit; maximum allowed is {MAX_FILE_SIZE/1024/1024}MB"
                 )
 
-            # 检查文件格式
+            # Check the file format
             if not is_valid_image_file(image_data):
                 raise ValueError(
-                    "不支持的文件格式，请上传有效的图片文件（支持JPEG、PNG、GIF、BMP、TIFF、WEBP格式）"
+                    "Unsupported file format. Please upload a valid image file (JPEG, PNG, GIF, BMP, TIFF and WEBP are supported)"
                 )
 
-            # 将图片转换为base64编码
+            # Convert the image to base64
             image_base64 = base64.b64encode(image_data).decode("utf-8")
 
-            # 如果开启了智控台，则从智控台获取模型配置
+            # If the control console is enabled, get the model configuration from it
             current_config = copy.deepcopy(self.config)
             read_config_from_api = current_config.get("read_config_from_api", False)
             if read_config_from_api:
@@ -112,7 +112,7 @@ class VisionHandler(BaseHandler):
 
             select_vllm_module = current_config["selected_module"].get("VLLM")
             if not select_vllm_module:
-                raise ValueError("您还未设置默认的视觉分析模块")
+                raise ValueError("You have not set a default vision analysis module yet")
 
             vllm_type = (
                 select_vllm_module
@@ -121,7 +121,7 @@ class VisionHandler(BaseHandler):
             )
 
             if not vllm_type:
-                raise ValueError(f"无法找到VLLM模块对应的供应器{vllm_type}")
+                raise ValueError(f"Unable to find the provider for VLLM module {vllm_type}")
 
             vllm = create_instance(
                 vllm_type, current_config["VLLM"][select_vllm_module]
@@ -140,15 +140,15 @@ class VisionHandler(BaseHandler):
                 content_type="application/json",
             )
         except ValueError as e:
-            self.logger.bind(tag=TAG).error(f"MCP Vision POST请求异常: {e}")
+            self.logger.bind(tag=TAG).error(f"MCP Vision POST request error: {e}")
             return_json = self._create_error_response(str(e))
             response = web.Response(
                 text=json.dumps(return_json, separators=(",", ":")),
                 content_type="application/json",
             )
         except Exception as e:
-            self.logger.bind(tag=TAG).error(f"MCP Vision POST请求异常: {e}")
-            return_json = self._create_error_response("处理请求时发生错误")
+            self.logger.bind(tag=TAG).error(f"MCP Vision POST request error: {e}")
+            return_json = self._create_error_response("An error occurred while processing the request")
             response = web.Response(
                 text=json.dumps(return_json, separators=(",", ":")),
                 content_type="application/json",
@@ -159,20 +159,20 @@ class VisionHandler(BaseHandler):
             return response
 
     async def handle_get(self, request):
-        """处理 MCP Vision GET 请求"""
+        """Handle an MCP Vision GET request"""
         try:
             vision_explain = get_vision_url(self.config)
             if vision_explain and len(vision_explain) > 0 and "null" != vision_explain:
                 message = (
-                    f"MCP Vision 接口运行正常，视觉解释接口地址是：{vision_explain}"
+                    f"MCP Vision interface is running normally; the vision explain interface address is: {vision_explain}"
                 )
             else:
-                message = "MCP Vision 接口运行不正常，请打开data目录下的.config.yaml文件，找到【server.vision_explain】，设置好地址"
+                message = "MCP Vision interface is not working properly. Open the .config.yaml file in the data directory, find [server.vision_explain] and set the address"
 
             response = web.Response(text=message, content_type="text/plain")
         except Exception as e:
-            self.logger.bind(tag=TAG).error(f"MCP Vision GET请求异常: {e}")
-            return_json = self._create_error_response("服务器内部错误")
+            self.logger.bind(tag=TAG).error(f"MCP Vision GET request error: {e}")
+            return_json = self._create_error_response("Internal server error")
             response = web.Response(
                 text=json.dumps(return_json, separators=(",", ":")),
                 content_type="application/json",

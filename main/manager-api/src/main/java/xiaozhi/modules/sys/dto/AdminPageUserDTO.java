@@ -5,23 +5,23 @@ import jakarta.validation.constraints.Min;
 import lombok.Data;
 
 /**
- * 管理员分页用户的参数DTO
+ * Parameter DTO for admin user paging
  * 
  * @author zjy
  * @since 2025-3-21
  */
 @Data
-@Schema(description = "管理员分页用户的参数DTO")
+@Schema(description = "Parameter DTO for admin user paging")
 public class AdminPageUserDTO {
 
-    @Schema(description = "手机号码")
+    @Schema(description = "Mobile phone number")
     private String mobile;
 
-    @Schema(description = "页数")
+    @Schema(description = "Page number")
     @Min(value = 0, message = "{sort.number}")
     private String page;
 
-    @Schema(description = "显示列数")
+    @Schema(description = "Page size")
     @Min(value = 0, message = "{sort.number}")
     private String limit;
 }

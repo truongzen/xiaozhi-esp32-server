@@ -1,4 +1,4 @@
-// 主应用入口
+// Main application entry
 import { checkOpusLoaded, initOpusEncoder } from './core/audio/opus-codec.js?v=0205';
 import { getAudioPlayer } from './core/audio/player.js?v=0205';
 import { checkMicrophoneAvailability, isHttpNonLocalhost } from './core/audio/recorder.js?v=0205';
@@ -7,7 +7,7 @@ import { startWakewordBridgeListener } from './core/network/wakeword-bridge.js?v
 import { uiController } from './ui/controller.js?v=0205';
 import { log } from './utils/logger.js?v=0205';
 
-// 辅助函数：将Base64数据转换为Blob
+// Helper: convert Base64 data to a Blob
 function dataURItoBlob(dataURI) {
     const byteString = atob(dataURI.split(',')[1]);
     const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
@@ -19,7 +19,7 @@ function dataURItoBlob(dataURI) {
     return new Blob([ab], { type: mimeString });
 }
 
-// 应用类
+// Application class
 class App {
     constructor() {
         this.uiController = null;
@@ -29,64 +29,64 @@ class App {
         this.currentFacingMode = 'user';
     }
 
-    // 初始化应用
+    // Initialize the application
     async init() {
-        log('正在初始化应用...', 'info');
-        // 初始化UI控制器
+        log('Initializing application...', 'info');
+        // Initialize the UI controller
         this.uiController = uiController;
         this.uiController.init();
-        // 检查Opus库
+        // Check the Opus library
         checkOpusLoaded();
-        // 初始化Opus编码器
+        // Initialize the Opus encoder
         initOpusEncoder();
-        // 初始化音频播放器
+        // Initialize the audio player
         this.audioPlayer = getAudioPlayer();
         await this.audioPlayer.start();
-        // 初始化MCP工具
+        // Initialize MCP tools
         initMcpTools();
-        // 初始化本地唤醒事件监听
+        // Initialize the local wake event listener
         startWakewordBridgeListener();
-        // 检查麦克风可用性
+        // Check microphone availability
         await this.checkMicrophoneAvailability();
-        // 检查摄像头可用性
+        // Check camera availability
         this.checkCameraAvailability();
-        // 初始化Live2D
+        // Initialize Live2D
         await this.initLive2D();
-        // 初始化摄像头
+        // Initialize the camera
         this.initCamera();
-        // 关闭加载loading
+        // Hide the loading indicator
         this.setModelLoadingStatus(false);
-        log('应用初始化完成', 'success');
+        log('Application initialized', 'success');
     }
 
-    // 初始化Live2D
+    // Initialize Live2D
     async initLive2D() {
         try {
-            // 检查Live2DManager是否已加载
+            // Check whether Live2DManager is loaded
             if (typeof window.Live2DManager === 'undefined') {
-                throw new Error('Live2DManager未加载，请检查脚本引入顺序');
+                throw new Error('Live2DManager is not loaded, please check the script include order');
             }
             this.live2dManager = new window.Live2DManager();
             await this.live2dManager.initializeLive2D();
-            // 更新UI状态
+            // Update UI state
             const live2dStatus = document.getElementById('live2dStatus');
             if (live2dStatus) {
-                live2dStatus.textContent = '● 已加载';
+                live2dStatus.textContent = '● Loaded';
                 live2dStatus.className = 'status loaded';
             }
-            log('Live2D初始化完成', 'success');
+            log('Live2D initialized', 'success');
         } catch (error) {
-            log(`Live2D初始化失败: ${error.message}`, 'error');
-            // 更新UI状态
+            log(`Live2D initialization failed: ${error.message}`, 'error');
+            // Update UI state
             const live2dStatus = document.getElementById('live2dStatus');
             if (live2dStatus) {
-                live2dStatus.textContent = '● 加载失败';
+                live2dStatus.textContent = '● Load failed';
                 live2dStatus.className = 'status error';
             }
         }
     }
 
-    // 设置model加载状态
+    // Set model loading state
     setModelLoadingStatus(isLoading) {
         const modelLoading = document.getElementById('modelLoading');
         if (modelLoading) {
@@ -95,24 +95,24 @@ class App {
     }
 
     /**
-     * 检查麦克风可用性
-     * 在应用初始化时调用，检查麦克风是否可用并更新UI状态
+     * Check microphone availability
+     * Called during app initialization to check whether the microphone is available and update the UI
      */
     async checkMicrophoneAvailability() {
         try {
             const isAvailable = await checkMicrophoneAvailability();
             const isHttp = isHttpNonLocalhost();
-            // 保存可用性状态到全局变量
+            // Save availability state to a global variable
             window.microphoneAvailable = isAvailable;
             window.isHttpNonLocalhost = isHttp;
-            // 更新UI
+            // Update UI
             if (this.uiController) {
                 this.uiController.updateMicrophoneAvailability(isAvailable, isHttp);
             }
-            log(`麦克风可用性检查完成: ${isAvailable ? '可用' : '不可用'}`, isAvailable ? 'success' : 'warning');
+            log(`Microphone availability check complete: ${isAvailable ? 'available' : 'unavailable'}`, isAvailable ? 'success' : 'warning');
         } catch (error) {
-            log(`检查麦克风可用性失败: ${error.message}`, 'error');
-            // 默认设置为不可用
+            log(`Failed to check microphone availability: ${error.message}`, 'error');
+            // Default to unavailable
             window.microphoneAvailable = false;
             window.isHttpNonLocalhost = isHttpNonLocalhost();
             if (this.uiController) {
@@ -121,13 +121,13 @@ class App {
         }
     }
 
-    // 检查摄像头可用性
+    // Check camera availability
     checkCameraAvailability() {
         window.cameraAvailable = true;
-        log('摄像头可用性检查完成: 默认已绑定验证码', 'success');
+        log('Camera availability check complete: verification code assumed bound by default', 'success');
     }
 
-    // 初始化摄像头
+    // Initialize the camera
     async initCamera() {
         const cameraContainer = document.getElementById('cameraContainer');
         const cameraVideo = document.getElementById('cameraVideo');
@@ -136,7 +136,7 @@ class App {
         const dialBtn = document.getElementById('dialBtn');
 
         if (!cameraContainer || !cameraVideo) {
-            log('摄像头元素未找到，跳过初始化', 'warning');
+            log('Camera element not found, skipping initialization', 'warning');
             return Promise.resolve(false);
         }
 
@@ -190,10 +190,10 @@ class App {
             window.startCamera = async () => {
                 try {
                     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                        log('浏览器不支持摄像头API', 'warning');
+                        log('Browser does not support the camera API', 'warning');
                         return false;
                     }
-                    log('正在请求摄像头权限...', 'info');
+                    log('Requesting camera permission...', 'info');
                     this.cameraStream = await navigator.mediaDevices.getUserMedia({
                         video: { width: 180, height: 240, facingMode: this.currentFacingMode },
                         audio: false
@@ -206,23 +206,23 @@ class App {
                     }
                     cameraContainer.classList.add('active');
 
-                    // 切换时挂断情况
+                    // Handle hang-up during switching
                     const hasActive = dialBtn.classList.contains('dial-active');
                     if (!hasActive) {
                         cameraContainer.classList.remove('active');
                         cameraSwitch.classList.remove('active');
                         window.stopCamera();
                     }
-                    log('摄像头已启动', 'success');
+                    log('Camera started', 'success');
                     return true;
                 } catch (error) {
-                    log(`启动摄像头失败: ${error.name} - ${error.message}`, 'error');
+                    log(`Failed to start camera: ${error.name} - ${error.message}`, 'error');
                     if (error.name === 'NotAllowedError') {
-                        log('摄像头权限被拒绝，请检查浏览器设置', 'warning');
+                        log('Camera permission denied, please check browser settings', 'warning');
                     } else if (error.name === 'NotFoundError') {
-                        log('未找到摄像头设备', 'warning');
+                        log('No camera device found', 'warning');
                     } else if (error.name === 'NotReadableError') {
-                        log('摄像头已被其他程序占用', 'warning');
+                        log('Camera is in use by another program', 'warning');
                     }
                     return false;
                 }
@@ -233,7 +233,7 @@ class App {
                     this.cameraStream.getTracks().forEach(track => track.stop());
                     this.cameraStream = null;
                     cameraVideo.srcObject = null;
-                    log('摄像头已关闭', 'info');
+                    log('Camera turned off', 'info');
                 }
             };
 
@@ -269,10 +269,10 @@ class App {
                     const video = cameraVideo;
 
                     if (!video || video.readyState !== video.HAVE_ENOUGH_DATA) {
-                        log('无法拍照：摄像头未就绪', 'warning');
+                        log('Cannot take photo: camera not ready', 'warning');
                         resolve({
                             success: false,
-                            error: '摄像头未就绪，请确保已连接且摄像头已启动'
+                            error: 'Camera not ready, please make sure you are connected and the camera is started'
                         });
                         return;
                     }
@@ -283,7 +283,7 @@ class App {
                     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
                     const photoData = canvas.toDataURL('image/jpeg', 0.8);
-                    log(`拍照成功，图像数据长度: ${photoData.length}`, 'success');
+                    log(`Photo taken, image data length: ${photoData.length}`, 'success');
 
                     try {
                         const xz_tester_vision = localStorage.getItem('xz_tester_vision');
@@ -293,15 +293,15 @@ class App {
                             try {
                                 visionInfo = JSON.parse(xz_tester_vision);
                             } catch (err) {
-                                throw new Error(`视觉配置解析失败`);
+                                throw new Error(`Failed to parse vision config`);
                             }
 
                             const { url, token } = visionInfo || {};
                             if (!url || !token) {
-                                throw new Error('视觉分析失败：配置缺少接口地址(url)或令牌(token)');
+                                throw new Error('Vision analysis failed: config is missing the endpoint URL (url) or token (token)');
                             }
 
-                            log(`正在发送图片到视觉分析接口: ${url}`, 'info');
+                            log(`Sending image to vision analysis endpoint: ${url}`, 'info');
 
                             const deviceId = document.getElementById('deviceMac')?.value || '';
                             const clientId = document.getElementById('clientId')?.value || 'web_test_client';
@@ -325,7 +325,7 @@ class App {
                             }
 
                             const analysisResult = await response.json();
-                            log(`视觉分析完成: ${JSON.stringify(analysisResult).substring(0, 200)}...`, 'success');
+                            log(`Vision analysis complete: ${JSON.stringify(analysisResult).substring(0, 200)}...`, 'success');
 
                             resolve({
                                 success: true,
@@ -336,10 +336,10 @@ class App {
                                 vision_analysis: analysisResult
                             });
                         } else {
-                            log('未配置视觉分析服务', 'warning');
+                            log('Vision analysis service is not configured', 'warning');
                         }
                     } catch (error) {
-                        log(`视觉分析失败: ${error.message}`, 'error');
+                        log(`Vision analysis failed: ${error.message}`, 'error');
                         resolve({
                             success: true,
                             message: question,
@@ -349,25 +349,25 @@ class App {
                             vision_analysis: {
                                 success: false,
                                 error: error.message,
-                                fallback: '无法连接到视觉分析服务'
+                                fallback: 'Unable to connect to the vision analysis service'
                             }
                         });
                     }
                 });
             };
 
-            log('摄像头初始化完成', 'success');
+            log('Camera initialized', 'success');
             resolve(true);
         });
     }
 }
 
-// 创建并启动应用
+// Create and start the application
 const app = new App();
-// 将应用实例暴露到全局，供其他模块访问
+// Expose the app instance globally for other modules
 window.chatApp = app;
 document.addEventListener('DOMContentLoaded', () => {
-    // 初始化应用
+    // Initialize the application
     app.init();
 });
 export default app;

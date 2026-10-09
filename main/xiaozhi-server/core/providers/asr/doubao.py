@@ -37,9 +37,9 @@ def parse_response(res):
     protocol_version(4 bits), header_size(4 bits),
     message_type(4 bits), message_type_specific_flags(4 bits)
     serialization_method(4 bits) message_compression(4 bits)
-    reserved （8bits) 保留字段
-    header_extensions 扩展头(大小等于 8 * 4 * (header_size - 1) )
-    payload 类似与http 请求体
+    reserved (8 bits)
+    header_extensions extension header (size equals 8 * 4 * (header_size - 1) )
+    payload similar to an HTTP request body
     """
     protocol_version = res[0] >> 4
     header_size = res[0] & 0x0F
@@ -97,7 +97,7 @@ class ASRProvider(ASRProviderBase):
         self.success_code = 1000
         self.seg_duration = 15000
 
-        # 确保输出目录存在
+        # Ensure the output directory exists
         os.makedirs(self.output_dir, exist_ok=True)
 
     @staticmethod
@@ -168,7 +168,7 @@ class ASRProvider(ASRProviderBase):
                 if (
                     "payload_msg" in result
                     and result["payload_msg"]["code"] != self.success_code
-                    and result["payload_msg"]["code"] != 1013  # 忽略无有效语音的错误
+                    and result["payload_msg"]["code"] != 1013  # Ignore the "no valid speech" error
                 ):
                     logger.bind(tag=TAG).error(f"ASR error: {result}")
                     return None
@@ -205,7 +205,7 @@ class ASRProvider(ASRProviderBase):
                         return result["payload_msg"]["result"][0]["text"]
                     return None
                 elif "payload_msg" in result and result["payload_msg"]["code"] == 1013:
-                    # 无有效语音，返回空字符串
+                    # No valid speech, return an empty string
                     return ""
                 else:
                     logger.bind(tag=TAG).error(f"ASR error: {result}")
@@ -234,27 +234,27 @@ class ASRProvider(ASRProviderBase):
     async def speech_to_text(
         self, opus_data: List[bytes], session_id: str, artifacts=None
     ) -> Tuple[Optional[str], Optional[str]]:
-        """将语音数据转换为文本"""
+        """Convert speech data to text"""
 
         try:
             if artifacts is None:
                 return "", None
 
-            # 直接使用PCM数据
-            # 计算分段大小 (单声道, 16bit, 16kHz采样率)
+            # Use PCM data directly
+            # Compute segment size (mono, 16-bit, 16kHz sample rate)
             size_per_sec = 1 * 2 * 16000  # nchannels * sampwidth * framerate
             segment_size = int(size_per_sec * self.seg_duration / 1000)
 
-            # 语音识别
+            # Speech recognition
             start_time = time.time()
             text = await self._send_request(artifacts.pcm_bytes, segment_size)
             if text:
                 logger.bind(tag=TAG).debug(
-                    f"语音识别耗时: {time.time() - start_time:.3f}s | 结果: {text}"
+                    f"Speech recognition time: {time.time() - start_time:.3f}s | result: {text}"
                 )
                 return text, artifacts.file_path
             return "", artifacts.file_path
 
         except Exception as e:
-            logger.bind(tag=TAG).error(f"语音识别失败: {e}", exc_info=True)
+            logger.bind(tag=TAG).error(f"Speech recognition failed: {e}", exc_info=True)
             return "", None

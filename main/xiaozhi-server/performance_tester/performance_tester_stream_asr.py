@@ -17,7 +17,7 @@ import hashlib
 from datetime import datetime
 from wsgiref.handlers import format_date_time
 from time import mktime
-description = "流式ASR首词延迟测试"
+description = "Streaming ASR first-word latency test"
 try:
     import dashscope
 except ImportError:
@@ -50,15 +50,15 @@ class BaseASRTester:
         raise NotImplementedError
 
     def _calculate_result(self, service_name, latencies, test_count):
-        """计算测试结果（修复：正确处理None值，剔除失败测试）"""
-        # 剔除None值（失败的测试）和无效延迟，只统计有效延迟
+        """Compute test results (fix: handles None values correctly, excludes failed runs)"""
+        # Exclude None values (failed runs) and invalid latencies; only count valid latencies
         valid_latencies = [l for l in latencies if l is not None and l > 0]
         if valid_latencies:
             avg_latency = sum(valid_latencies) / len(valid_latencies)
-            status = f"成功（{len(valid_latencies)}/{test_count}次有效）"
+            status = f"Success ({len(valid_latencies)}/{test_count} valid)"
         else:
             avg_latency = 0
-            status = "失败: 所有测试均失败"
+            status = "Failed: all runs failed"
         return {"name": service_name, "latency": avg_latency, "status": status}
 
 
@@ -70,9 +70,9 @@ class DoubaoStreamASRTester(BaseASRTester):
 
     async def test(self, test_count=5):
         if not self.test_audio_files:
-            return {"name": "豆包流式ASR", "latency": 0, "status": "失败: 未找到测试音频"}
+            return {"name": "Doubao streaming ASR", "latency": 0, "status": "Failed: test audio not found"}
         if not self.asr_config:
-            return {"name": "豆包流式ASR", "latency": 0, "status": "失败: 未配置"}
+            return {"name": "Doubao streaming ASR", "latency": 0, "status": "Failed: not configured"}
 
         latencies = []
         for i in range(test_count):
@@ -101,13 +101,13 @@ class DoubaoStreamASRTester(BaseASRTester):
                     init_res = await ws.recv()
                     result = self.provider.parse_response(init_res)
                     if "code" in result and result["code"] != 1000:
-                        raise Exception(f"初始化失败: {result.get('payload_msg', {}).get('error', '未知错误')}")
+                        raise Exception(f"Initialization failed: {result.get('payload_msg', {}).get('error', 'Unknown error')}")
 
                     audio_data = self.test_audio_files[0]['data']
                     if audio_data.startswith(b'RIFF'):
                         audio_data = audio_data[44:]
 
-                    # 发送音频数据（使用最后一帧标记，告诉服务端音频已结束）
+                    # Send audio data (with the last-frame flag to tell the server the audio has ended)
                     payload = gzip.compress(audio_data)
                     audio_request = bytearray(self.provider.generate_last_audio_default_header())
                     audio_request.extend(len(payload).to_bytes(4, "big"))
@@ -117,14 +117,14 @@ class DoubaoStreamASRTester(BaseASRTester):
                     first_chunk = await ws.recv()
                     latency = time.time() - start_time
                     latencies.append(latency)
-                    print(f"[豆包ASR] 第{i+1}次 首词延迟: {latency:.3f}s")
+                    print(f"[Doubao ASR] run {i+1} first-word latency: {latency:.3f}s")
                     await ws.close()
 
             except Exception as e:
-                print(f"[豆包ASR] 第{i+1}次测试失败: {str(e)}")
+                print(f"[Doubao ASR] run {i+1} failed: {str(e)}")
                 latencies.append(None)
 
-        return self._calculate_result("豆包流式ASR", latencies, test_count)
+        return self._calculate_result("Doubao streaming ASR", latencies, test_count)
 
 
 class QwenASRFlashTester(BaseASRTester):
@@ -137,7 +137,7 @@ class QwenASRFlashTester(BaseASRTester):
         try:
             audio_data = audio_file_info['data']
 
-            # 优化：将临时文件准备工作移到计时前，减少磁盘IO对性能测试的影响
+            # Optimization: prepare the temp file before timing to reduce the impact of disk IO on the test
             with tempfile.NamedTemporaryFile(suffix='.wav', delete=False) as f:
                 temp_file_path = f.name
 
@@ -158,14 +158,14 @@ class QwenASRFlashTester(BaseASRTester):
 
             api_key = self.asr_config.get("api_key") or os.getenv("DASHSCOPE_API_KEY")
             if not api_key:
-                raise ValueError("未配置 api_key")
+                raise ValueError("api_key not configured")
 
             if dashscope is None:
-                raise RuntimeError("未安装 dashscope 库")
+                raise RuntimeError("dashscope library is not installed")
 
             dashscope.api_key = api_key
 
-            # 统一计时起点：在API调用前开始计时（但文件准备已完成）
+            # Common timing start: begin timing before the API call (file preparation already done)
             start_time = time.time()
 
             response = dashscope.MultiModalConversation.call(
@@ -180,10 +180,10 @@ class QwenASRFlashTester(BaseASRTester):
                 latency = time.time() - start_time
                 return latency
 
-            raise Exception("流式结束，未收到任何响应")
+            raise Exception("Stream ended without receiving any response")
 
         except Exception as e:
-            raise Exception(f"通义ASR流式失败: {str(e)}")
+            raise Exception(f"Qwen ASR streaming failed: {str(e)}")
 
         finally:
             if temp_file_path and os.path.exists(temp_file_path):
@@ -194,22 +194,22 @@ class QwenASRFlashTester(BaseASRTester):
 
     async def test(self, test_count=5):
         if not self.test_audio_files:
-            return {"name": "通义千问ASR", "latency": 0, "status": "失败: 未找到测试音频"}
+            return {"name": "Qwen ASR", "latency": 0, "status": "Failed: test audio not found"}
         if not self.asr_config and not os.getenv("DASHSCOPE_API_KEY"):
-            return {"name": "通义千问ASR", "latency": 0, "status": "失败: 未配置 api_key"}
+            return {"name": "Qwen ASR", "latency": 0, "status": "Failed: api_key not configured"}
 
         latencies = []
         for i in range(test_count):
             try:
-                # print(f"\n[通义ASR] 开始第 {i+1} 次测试...")
+                # print(f"\n[Qwen ASR] starting run {i+1}...")
                 latency = await self._test_single(self.test_audio_files[0])
                 latencies.append(latency)
-                print(f"[通义ASR] 第{i+1}次 首词延迟: {latency:.3f}s")
+                print(f"[Qwen ASR] run {i+1} first-word latency: {latency:.3f}s")
             except Exception as e:
-                # print(f"[通义ASR] 第{i+1}次测试失败: {str(e)}")
+                # print(f"[Qwen ASR] run {i+1} failed: {str(e)}")
                 latencies.append(None)
 
-        return self._calculate_result("通义千问ASR", latencies, test_count)
+        return self._calculate_result("Qwen ASR", latencies, test_count)
 
 
 class XunfeiStreamASRTester(BaseASRTester):
@@ -237,14 +237,14 @@ class XunfeiStreamASRTester(BaseASRTester):
 
     async def test(self, test_count: int = 5):
         if not self.test_audio_files:
-            return {"name": "讯飞流式ASR", "latency": 0, "status": "失败: 未找到测试音频"}
+            return {"name": "iFlytek streaming ASR", "latency": 0, "status": "Failed: test audio not found"}
         if not self.asr_config:
-            return {"name": "讯飞流式ASR", "latency": 0, "status": "失败: 未配置"}
+            return {"name": "iFlytek streaming ASR", "latency": 0, "status": "Failed: not configured"}
 
         required = ["app_id", "api_key", "api_secret"]
         for k in required:
             if k not in self.asr_config:
-                return {"name": "讯飞流式ASR", "latency": 0, "status": f"失败: 缺少配置 {k}"}
+                return {"name": "iFlytek streaming ASR", "latency": 0, "status": f"Failed: missing config {k}"}
 
         latencies = []
         frame_size = 1280
@@ -266,7 +266,7 @@ class XunfeiStreamASRTester(BaseASRTester):
                     close_timeout=30,
                 ) as ws:
 
-                    # 第一帧：移除 punc 字段，避免未知参数错误
+                    # First frame: punc field removed to avoid unknown-parameter errors
                     await ws.send(json.dumps({
                         "common": {"app_id": self.asr_config["app_id"]},
                         "business": {
@@ -275,7 +275,7 @@ class XunfeiStreamASRTester(BaseASRTester):
                             "accent": "mandarin",
                             "dwa": "wpgs",
                             "vad_eos": 5000
-                            # 已移除 "punc": True
+                            # Removed "punc": True
                         },
                         "data": {
                             "status": 0,
@@ -285,7 +285,7 @@ class XunfeiStreamASRTester(BaseASRTester):
                         }
                     }, ensure_ascii=False))
 
-                    # 后续所有帧
+                    # All subsequent frames
                     pos = frame_size
                     while pos < len(audio_raw):
                         chunk = audio_raw[pos:pos + frame_size]
@@ -302,12 +302,12 @@ class XunfeiStreamASRTester(BaseASRTester):
                             break
                         pos += frame_size
 
-                    # 接收首词
+                    # Receive the first word
                     first_token = True
                     async for message in ws:
                         data = json.loads(message)
                         if data.get("code") != 0:
-                            raise Exception(f"讯飞错误: {data.get('message')}")
+                            raise Exception(f"iFlytek error: {data.get('message')}")
 
                         ws_result = data.get("data", {}).get("result", {}).get("ws")
                         if ws_result:
@@ -315,15 +315,15 @@ class XunfeiStreamASRTester(BaseASRTester):
                             if text.strip() and first_token:
                                 latency = time.time() - start_time
                                 latencies.append(latency)
-                                print(f"[讯飞ASR] 第{i+1}次 首词延迟: {latency:.3f}s")
+                                print(f"[iFlytek ASR] run {i+1} first-word latency: {latency:.3f}s")
                                 first_token = False
                                 break
 
             except Exception as e:
-                print(f"[讯飞ASR] 第{i+1}次测试失败: {str(e)}")
+                print(f"[iFlytek ASR] run {i+1} failed: {str(e)}")
                 latencies.append(None)
 
-        return self._calculate_result("讯飞流式ASR", latencies, test_count)
+        return self._calculate_result("iFlytek streaming ASR", latencies, test_count)
 class ASRPerformanceSuite:
     def __init__(self, config):
         self.config = config
@@ -334,51 +334,51 @@ class ASRPerformanceSuite:
         try:
             tester = tester_class(self.config)
             self.testers.append(tester)
-            print(f"已注册测试器: {tester.config_key}")
+            print(f"Registered tester: {tester.config_key}")
         except Exception as e:
             name_map = {
-                "DoubaoStreamASRTester": "豆包流式ASR",
-                "QwenASRFlashTester": "通义千问ASR",
-                "XunfeiStreamASRTester": "讯飞流式ASR"
+                "DoubaoStreamASRTester": "Doubao streaming ASR",
+                "QwenASRFlashTester": "Qwen ASR",
+                "XunfeiStreamASRTester": "iFlytek streaming ASR"
             }
             name = name_map.get(tester_class.__name__, tester_class.__name__)
-            print(f"跳过 {name}: {str(e)}")
+            print(f"Skipping {name}: {str(e)}")
 
     def _print_results(self, test_count):
         if not self.results:
-            print("没有有效的ASR测试结果")
+            print("No valid ASR test results")
             return
 
         print(f"\n{'='*60}")
-        print("流式ASR首词响应时间测试结果")
+        print("Streaming ASR first-word response time test results")
         print(f"{'='*60}")
-        print(f"测试次数: 每个ASR服务测试 {test_count} 次")
+        print(f"Runs: {test_count} per ASR service")
 
         success_results = sorted(
-            [r for r in self.results if "成功" in r["status"]],
+            [r for r in self.results if "Success" in r["status"]],
             key=lambda x: x["latency"]
         )
-        failed_results = [r for r in self.results if "成功" not in r["status"]]
+        failed_results = [r for r in self.results if "Success" not in r["status"]]
 
         table_data = [
             [r["name"], f"{r['latency']:.3f}s" if r['latency'] > 0 else "N/A", r["status"]]
             for r in success_results + failed_results
         ]
 
-        print(tabulate(table_data, headers=["ASR服务", "首词延迟", "状态"], tablefmt="grid"))
-        print("\n测试说明：")
-        print("- 计时起点: 建立连接前（包含握手、发送音频、接收首个识别结果全流程）")
-        print("- 通义千问优化: 临时文件准备在计时前完成，减少磁盘IO对测试的影响")
-        print("- 错误处理: 失败的测试不计入平均值，只统计成功测试的延迟")
-        print("- 排序规则: 成功的按延迟升序，失败的排在后面")
+        print(tabulate(table_data, headers=["ASR service", "First-word latency", "Status"], tablefmt="grid"))
+        print("\nTest notes:")
+        print("- Timing start: before the connection is established (covers handshake, sending audio and receiving the first recognition result)")
+        print("- Qwen optimization: temp file preparation is done before timing to reduce the impact of disk IO")
+        print("- Error handling: failed runs are excluded from the average; only successful latencies are counted")
+        print("- Sorting: successful ones by latency ascending, failed ones last")
 
     async def run(self, test_count=5):
-        print(f"开始流式ASR首词响应时间测试...")
-        print(f"每个ASR服务测试次数: {test_count}次\n")
+        print(f"Starting streaming ASR first-word response time test...")
+        print(f"Runs per ASR service: {test_count}\n")
 
         self.results = []
         for tester in self.testers:
-            print(f"\n--- 测试 {tester.config_key} ---")
+            print(f"\n--- Testing {tester.config_key} ---")
             result = await tester.test(test_count)
             self.results.append(result)
 
@@ -387,8 +387,8 @@ class ASRPerformanceSuite:
 
 async def main():
     import argparse
-    parser = argparse.ArgumentParser(description="流式ASR首词响应时间测试工具")
-    parser.add_argument("--count", type=int, default=5, help="测试次数")
+    parser = argparse.ArgumentParser(description="Streaming ASR first-word response time test tool")
+    parser.add_argument("--count", type=int, default=5, help="Number of runs")
     args = parser.parse_args()
 
     config = await load_config()

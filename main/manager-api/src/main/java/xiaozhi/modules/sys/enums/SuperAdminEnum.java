@@ -1,7 +1,7 @@
 package xiaozhi.modules.sys.enums;
 
 /**
- * 超级管理员枚举
+ * Super administrator enum
  */
 public enum SuperAdminEnum {
     YES(1),

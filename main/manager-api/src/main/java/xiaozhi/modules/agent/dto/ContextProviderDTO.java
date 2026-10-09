@@ -7,13 +7,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-@Schema(description = "上下文源配置DTO")
+@Schema(description = "Context provider configuration DTO")
 public class ContextProviderDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @Schema(description = "URL地址")
+    @Schema(description = "URL")
     private String url;
 
-    @Schema(description = "请求头")
+    @Schema(description = "Request headers")
     private Map<String, Object> headers;
 }

@@ -11,74 +11,74 @@ import xiaozhi.modules.timbre.entity.TimbreEntity;
 import xiaozhi.modules.timbre.vo.TimbreDetailsVO;
 
 /**
- * 音色的业务层的定义
+ * Voice business layer definition
  * 
  * @author zjy
  * @since 2025-3-21
  */
 public interface TimbreService extends BaseService<TimbreEntity> {
     /**
-     * 分页获取音色指定tts的下的音色
+     * Get a page of voices under the specified TTS model
      * 
-     * @param dto 分页查找参数
-     * @return 音色列表分页数据
+     * @param dto paging query parameters
+     * @return paged voice list data
      */
     PageData<TimbreDetailsVO> page(TimbrePageDTO dto);
 
     /**
-     * 获取音色指定id的详情信息
+     * Get the details of the voice with the specified ID
      * 
-     * @param timbreId 音色表id
-     * @return 音色信息
+     * @param timbreId voice table ID
+     * @return voice information
      */
     TimbreDetailsVO get(String timbreId);
 
     /**
-     * 保存音色信息
+     * Save voice information
      * 
-     * @param dto 需要保存数据
+     * @param dto data to save
      */
     void save(TimbreDataDTO dto);
 
     /**
-     * 保存音色信息
+     * Save voice information
      * 
-     * @param timbreId 需要修改的id
-     * @param dto      需要修改的数据
+     * @param timbreId ID to update
+     * @param dto      data to update
      */
     void update(String timbreId, TimbreDataDTO dto);
 
     /**
-     * 批量删除音色
+     * Batch delete voices
      * 
-     * @param ids 需要被删除的音色id列表
+     * @param ids list of voice IDs to delete
      */
     void delete(String[] ids);
 
     List<VoiceDTO> getVoiceNames(String ttsModelId, String voiceName);
 
     /**
-     * 获取普通音色或克隆音色配置的首个有效语言。
+     * Get the first valid language configured for a regular or cloned voice.
      *
-     * @param id 音色ID
-     * @return 默认语言；音色不存在或未配置有效语言时返回null
+     * @param id voice ID
+     * @return the default language; null if the voice does not exist or has no valid language configured
      */
     String getDefaultLanguageById(String id);
 
     /**
-     * 根据ID获取音色名称
+     * Get the voice name by ID
      * 
-     * @param id 音色ID
-     * @return 音色名称
+     * @param id voice ID
+     * @return voice name
      */
     String getTimbreNameById(String id);
 
     /**
-     * 根据音色编码获取音色信息
+     * Get voice information by voice code
      * 
-     * @param ttsModelId 音色模型ID
-     * @param voiceCode  音色编码
-     * @return 音色信息
+     * @param ttsModelId voice model ID
+     * @param voiceCode  voice code
+     * @return voice information
      */
     VoiceDTO getByVoiceCode(String ttsModelId, String voiceCode);
 }

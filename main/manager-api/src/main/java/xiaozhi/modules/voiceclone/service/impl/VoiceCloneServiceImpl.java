@@ -84,7 +84,7 @@ public class VoiceCloneServiceImpl extends BaseServiceImpl<VoiceCloneDao, VoiceC
             throw new RenException(ErrorCode.VOICE_CLONE_MODEL_TYPE_NOT_FOUND);
         }
 
-        // 检查Voice ID是否已经被使用
+        // Check whether the Voice ID is already in use
         for (String voiceId : dto.getVoiceIds()) {
             if (StringUtils.isBlank(voiceId)) {
                 continue;
@@ -104,9 +104,9 @@ public class VoiceCloneServiceImpl extends BaseServiceImpl<VoiceCloneDao, VoiceC
             }
         }
 
-        // 批量保存
+        // Batch save
         List<VoiceCloneEntity> batchInsertList = new ArrayList<>();
-        // 遍历选择的音色ID，为每个音色ID创建一条记录
+        // Iterate over the selected voice IDs and create one record for each
         int index = 0;
         String namePrefix = DateUtils.format(new Date(), "MMddHHmm");
         for (String voiceId : dto.getVoiceIds()) {
@@ -117,7 +117,7 @@ public class VoiceCloneServiceImpl extends BaseServiceImpl<VoiceCloneDao, VoiceC
             entity.setName(namePrefix + "_" + index);
             entity.setUserId(dto.getUserId());
             entity.setLanguages(dto.getLanguages());
-            entity.setTrainStatus(0); // 默认训练中
+            entity.setTrainStatus(0); // Default: training
             batchInsertList.add(entity);
         }
         if (CollUtil.isNotEmpty(batchInsertList)) {
@@ -140,12 +140,12 @@ public class VoiceCloneServiceImpl extends BaseServiceImpl<VoiceCloneDao, VoiceC
 
     @Override
     public PageData<VoiceCloneResponseDTO> pageWithNames(Map<String, Object> params) {
-        // 先查询分页数据
+        // Query the paged data first
         IPage<VoiceCloneEntity> page = baseDao.selectPage(
                 getPage(params, "create_date", true),
                 getWrapper(params));
 
-        // 将实体列表转换为DTO列表
+        // Convert the entity list to a DTO list
         List<VoiceCloneResponseDTO> dtoList = convertToResponseDTOList(page.getRecords());
 
         return new PageData<>(dtoList, page.getTotal());
@@ -160,17 +160,17 @@ public class VoiceCloneServiceImpl extends BaseServiceImpl<VoiceCloneDao, VoiceC
 
         VoiceCloneResponseDTO dto = ConvertUtils.sourceToTarget(entity, VoiceCloneResponseDTO.class);
 
-        // 设置模型名称
+        // Set the model name
         if (StringUtils.isNotBlank(entity.getModelId())) {
             dto.setModelName(modelConfigService.getModelNameById(entity.getModelId()));
         }
 
-        // 设置用户名称
+        // Set the user name
         if (entity.getUserId() != null) {
             dto.setUserName(sysUserService.getByUserId(entity.getUserId()).getUsername());
         }
         
-        // 确保trainStatus字段被正确设置，前端需要这个字段来判断是否为克隆音频
+        // Make sure trainStatus is set correctly; the frontend uses it to determine whether this is cloned audio
         dto.setTrainStatus(entity.getTrainStatus());
 
         return dto;
@@ -183,7 +183,7 @@ public class VoiceCloneServiceImpl extends BaseServiceImpl<VoiceCloneDao, VoiceC
     }
 
     /**
-     * 将VoiceCloneEntity列表转换为VoiceCloneResponseDTO列表
+     * Convert a list of VoiceCloneEntity to a list of VoiceCloneResponseDTO
      */
     private List<VoiceCloneResponseDTO> convertToResponseDTOList(List<VoiceCloneEntity> entityList) {
         if (entityList == null || entityList.isEmpty()) {
@@ -192,29 +192,29 @@ public class VoiceCloneServiceImpl extends BaseServiceImpl<VoiceCloneDao, VoiceC
 
         List<VoiceCloneResponseDTO> dtoList = new ArrayList<>(entityList.size());
 
-        // 获取用户名称ID集合
+        // Collect the set of user IDs
         Set<Long> userIdList = entityList.stream().map(VoiceCloneEntity::getUserId).collect(Collectors.toSet());
         List<SysUserEntity> userList = sysUserDao.selectList(new QueryWrapper<SysUserEntity>().in("id", userIdList));
         Map<Long, String> userMap = userList.stream().collect(Collectors.toMap(SysUserEntity::getId, SysUserEntity::getUsername));
 
-        // 转换每个实体为DTO
+        // Convert each entity to a DTO
         for (VoiceCloneEntity entity : entityList) {
             VoiceCloneResponseDTO dto = ConvertUtils.sourceToTarget(entity, VoiceCloneResponseDTO.class);
 
-            // 设置模型名称
+            // Set the model name
             if (StringUtils.isNotBlank(entity.getModelId())) {
                 dto.setModelName(modelConfigService.getModelNameById(entity.getModelId()));
             }
 
-            // 设置用户名称
+            // Set the user name
             if (entity.getUserId() != null) {
                 dto.setUserName(userMap.get(entity.getUserId()));
             }
             
-            // 确保trainStatus字段被正确设置，前端需要这个字段来判断是否为克隆音频
+            // Make sure trainStatus is set correctly; the frontend uses it to determine whether this is cloned audio
             dto.setTrainStatus(entity.getTrainStatus());
 
-            // 设置是否有音频数据
+            // Set whether audio data exists
             dto.setHasVoice(entity.getVoice() != null);
 
             dtoList.add(dto);
@@ -226,34 +226,34 @@ public class VoiceCloneServiceImpl extends BaseServiceImpl<VoiceCloneDao, VoiceC
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void uploadVoice(String id, MultipartFile voiceFile) throws Exception {
-        // 查询声音克隆记录
+        // Query the voice clone record
         VoiceCloneEntity entity = baseDao.selectById(id);
         if (entity == null) {
             throw new RenException(ErrorCode.VOICE_CLONE_RECORD_NOT_EXIST);
         }
 
-        // 读取音频文件并转为字节数组
+        // Read the audio file and convert it to a byte array
         byte[] voiceData = voiceFile.getBytes();
 
-        // 更新voice字段
+        // Update the voice field
         entity.setVoice(voiceData);
-        // 更新训练状态为待训练
+        // Set the training status to pending
         entity.setTrainStatus(0);
 
-        // 保存到数据库
+        // Save to the database
         baseDao.updateById(entity);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateName(String id, String name) {
-        // 查询声音克隆记录
+        // Query the voice clone record
         VoiceCloneEntity entity = baseDao.selectById(id);
         if (entity == null) {
             throw new RenException(ErrorCode.VOICE_CLONE_RECORD_NOT_EXIST);
         }
 
-        // 更新名称
+        // Update the name
         entity.setName(name);
         baseDao.updateById(entity);
     }
@@ -307,10 +307,10 @@ public class VoiceCloneServiceImpl extends BaseServiceImpl<VoiceCloneDao, VoiceC
     }
 
     /**
-     * 调用火山引擎进行语音复刻训练
+     * Call Volcano Engine to perform voice clone training
      * 
-     * @param config 模型配置
-     * @param entity 语音克隆记录实体
+     * @param config model configuration
+     * @param entity voice clone record entity
      * @throws Exception
      */
     private void huoshanClone(Map<String, Object> config, VoiceCloneEntity entity) throws Exception {
@@ -354,7 +354,7 @@ public class VoiceCloneServiceImpl extends BaseServiceImpl<VoiceCloneDao, VoiceC
                 new TypeReference<Map<String, Object>>() {
                 });
 
-        // 获取BaseResp对象
+        // Get the BaseResp object
         Map<String, Object> baseResp = objectMapper.convertValue(rsp.get("BaseResp"),
                 new TypeReference<Map<String, Object>>() {
                 });
@@ -363,18 +363,18 @@ public class VoiceCloneServiceImpl extends BaseServiceImpl<VoiceCloneDao, VoiceC
             String statusMessage = objectMapper.convertValue(baseResp.getOrDefault("StatusMessage", ""),
                     String.class);
 
-            // 获取speaker_id
+            // Get speaker_id
             String speakerId = objectMapper.convertValue(rsp.get("speaker_id"), String.class);
 
-            // StatusCode == 0 表示成功
+            // StatusCode == 0 means success
             if (statusCode != null && statusCode == 0 && StringUtils.isNotBlank(speakerId)) {
                 entity.setTrainStatus(2);
                 entity.setVoiceId(speakerId);
                 entity.setTrainError("");
                 baseDao.updateById(entity);
             } else {
-                // 失败时使用StatusMessage作为错误信息
-                String errorMsg = StringUtils.isNotBlank(statusMessage) ? statusMessage : "训练失败";
+                // On failure, use StatusMessage as the error message
+                String errorMsg = StringUtils.isNotBlank(statusMessage) ? statusMessage : "Training failed";
                 throw new RenException(errorMsg);
             }
         } else {

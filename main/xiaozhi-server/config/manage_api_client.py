@@ -16,18 +16,18 @@ class DeviceNotFoundException(Exception):
 class DeviceBindException(Exception):
     def __init__(self, bind_code):
         self.bind_code = bind_code
-        super().__init__(f"设备绑定异常，绑定码: {bind_code}")
+        super().__init__(f"Device binding exception, bind code: {bind_code}")
 
 
 class ManageApiClient:
     _instance = None
-    _instance_lock = threading.Lock()  # 保护 _instance 与 _closed 的读写
-    _async_clients = {}  # 为每个事件循环存储独立的客户端
+    _instance_lock = threading.Lock()  # Guards reads/writes of _instance and _closed
+    _async_clients = {}  # Stores a separate client per event loop
     _secret = None
-    _closed = False  # safe_close() 后置为 True，关闭后不再创建新连接
+    _closed = False  # Set to True after safe_close(); no new connections are created once closed
 
     def __new__(cls, config):
-        """单例模式确保全局唯一实例，并支持传入配置参数"""
+        """Singleton ensuring a single global instance, accepting config parameters"""
         with cls._instance_lock:
             if cls._instance is None:
                 cls._instance = super().__new__(cls)
@@ -36,44 +36,44 @@ class ManageApiClient:
 
     @classmethod
     def _init_client(cls, config):
-        """初始化配置（延迟创建客户端）"""
+        """Initialize config (client creation is deferred)"""
         cls.config = config.get("manager-api")
 
         if not cls.config:
-            raise Exception("manager-api配置错误")
+            raise Exception("manager-api configuration error")
 
         if not cls.config.get("url") or not cls.config.get("secret"):
-            raise Exception("manager-api的url或secret配置错误")
+            raise Exception("manager-api url or secret is misconfigured")
 
         if "你" in cls.config.get("secret"):
-            raise Exception("请先配置manager-api的secret")
+            raise Exception("Please configure the manager-api secret first")
 
         cls._secret = cls.config.get("secret")
-        cls.max_retries = cls.config.get("max_retries", 6)  # 最大重试次数
-        cls.retry_delay = cls.config.get("retry_delay", 10)  # 初始重试延迟(秒)
-        # 不在这里创建 AsyncClient，延迟到实际使用时创建
+        cls.max_retries = cls.config.get("max_retries", 6)  # Max retry count
+        cls.retry_delay = cls.config.get("retry_delay", 10)  # Initial retry delay (seconds)
+        # Do not create AsyncClient here; defer until it is actually used
         cls._async_clients = {}
         cls._closed = False
 
     @classmethod
     async def _ensure_async_client(cls):
-        """确保异步客户端已创建（为每个事件循环创建独立的客户端）"""
+        """Ensure the async client exists (a separate client per event loop)"""
         import asyncio
 
         try:
             loop = asyncio.get_running_loop()
             loop_id = id(loop)
 
-            # 检查关闭状态与创建连接池必须是同一个临界区，避免 safe_close()
-            # 清空连接池后又有请求将新客户端写回。
+            # Checking the closed state and creating the pool must be one critical section, so that
+            # no request writes a new client back after safe_close() has cleared the pools.
             with cls._instance_lock:
                 if cls._closed:
-                    raise Exception("ManageApiClient已关闭，不再创建新的HTTP客户端")
+                    raise Exception("ManageApiClient is closed; no new HTTP clients will be created")
 
                 if loop_id not in cls._async_clients:
-                    # 服务端可能主动关闭连接，httpx 连接池无法正确检测和清理
+                    # The server may close connections proactively, which the httpx pool cannot reliably detect and clean up
                     limits = httpx.Limits(
-                        max_keepalive_connections=0,  # 禁用 keep-alive，每次都新建连接
+                        max_keepalive_connections=0,  # Disable keep-alive; open a new connection every time
                     )
                     cls._async_clients[loop_id] = httpx.AsyncClient(
                         base_url=cls.config.get("url"),
@@ -83,18 +83,18 @@ class ManageApiClient:
                             "Authorization": "Bearer " + cls._secret,
                         },
                         timeout=cls.config.get("timeout", 30),
-                        limits=limits,  # 使用限制
+                        limits=limits,  # Apply limits
                         trust_env=False,
                     )
                 return cls._async_clients[loop_id]
         except RuntimeError:
-            # 如果没有运行中的事件循环，创建一个临时的
-            raise Exception("必须在异步上下文中调用")
+            # No running event loop
+            raise Exception("Must be called within an async context")
 
     @classmethod
     async def _async_request(cls, method: str, endpoint: str, **kwargs) -> Dict:
-        """发送单次异步HTTP请求并处理响应"""
-        # 确保客户端已创建
+        """Send a single async HTTP request and handle the response"""
+        # Ensure the client has been created
         client = await cls._ensure_async_client()
         endpoint = endpoint.lstrip("/")
         response = None
@@ -104,31 +104,31 @@ class ManageApiClient:
 
             result = response.json()
 
-            # 处理API返回的业务错误
+            # Handle business errors returned by the API
             if result.get("code") == 10041:
                 raise DeviceNotFoundException(result.get("msg"))
             elif result.get("code") == 10042:
                 raise DeviceBindException(result.get("msg"))
             elif result.get("code") != 0:
-                raise Exception(f"API返回错误: {result.get('msg', '未知错误')}")
+                raise Exception(f"API returned error: {result.get('msg', 'Unknown error')}")
 
-            # 返回成功数据
+            # Return data on success
             return result.get("data") if result.get("code") == 0 else None
         finally:
-            # 确保响应被关闭（即使异常也会执行）
+            # Make sure the response is closed (runs even on exception)
             if response is not None:
                 await response.aclose()
 
     @classmethod
     def _should_retry(cls, exception: Exception) -> bool:
-        """判断异常是否应该重试"""
-        # 网络连接相关错误
+        """Decide whether an exception should be retried"""
+        # Network connection errors
         if isinstance(
             exception, (httpx.ConnectError, httpx.TimeoutException, httpx.NetworkError)
         ):
             return True
 
-        # HTTP状态码错误
+        # HTTP status code errors
         if isinstance(exception, httpx.HTTPStatusError):
             status_code = exception.response.status_code
             return status_code in [408, 429, 500, 502, 503, 504]
@@ -137,43 +137,43 @@ class ManageApiClient:
 
     @classmethod
     async def _execute_async_request(cls, method: str, endpoint: str, **kwargs) -> Dict:
-        """带重试机制的异步请求执行器"""
+        """Async request executor with retry"""
         import asyncio
 
         retry_count = 0
 
         while retry_count <= cls.max_retries:
             try:
-                # 执行异步请求
+                # Execute the async request
                 return await cls._async_request(method, endpoint, **kwargs)
             except Exception as e:
-                # 判断是否应该重试
+                # Decide whether to retry
                 if retry_count < cls.max_retries and cls._should_retry(e):
                     retry_count += 1
                     print(
-                        f"{method} {endpoint} 异步请求失败，将在 {cls.retry_delay:.1f} 秒后进行第 {retry_count} 次重试"
+                        f"{method} {endpoint} async request failed, retry #{retry_count} in {cls.retry_delay:.1f} seconds"
                     )
                     await asyncio.sleep(cls.retry_delay)
                     continue
                 else:
-                    # 不重试，直接抛出异常
+                    # Not retrying; re-raise
                     raise
 
     @classmethod
     def _get_instance(cls):
-        """线程安全地获取单例实例引用
+        """Get a reference to the singleton instance in a thread-safe way
 
-        调用方应使用返回的局部引用，而不是判空后再次读取
-        ManageApiClient._instance：即使随后 safe_close() 将 _instance
-        置为 None，已获取的引用仍指向原对象，从而消除"判空之后、
-        使用之前实例被置空"的 TOCTOU 竞态窗口。
+        Callers should use the returned local reference instead of re-reading
+        ManageApiClient._instance after a None check: even if safe_close() later sets
+        _instance to None, the obtained reference still points to the original object,
+        eliminating the TOCTOU race window of "instance cleared between the check and the use".
         """
         with cls._instance_lock:
             return cls._instance
 
     @classmethod
     def safe_close(cls):
-        """安全关闭所有异步连接池"""
+        """Safely close all async connection pools"""
         import asyncio
 
         with cls._instance_lock:
@@ -190,14 +190,14 @@ class ManageApiClient:
 
 
 def api_guard(error_msg: str = None, raise_when_closed: bool = False):
-    """装饰器：统一获取单例实例、判空与异常兜底
+    """Decorator: uniformly obtains the singleton instance, checks for None and guards exceptions
 
-    - 通过 _get_instance() 一次性获取实例局部引用，注入为被装饰函数的
-      第一个参数，消除与 safe_close() 之间的 TOCTOU 竞态窗口；
-    - 实例未初始化或已关闭时：raise_when_closed=True 抛出明确异常
-      （用于启动路径函数），否则静默返回 None（用于守护线程路径）；
-    - error_msg 不为 None 时捕获请求异常、打印日志并返回 None；
-      为 None 时异常原样抛出，由调用方处理。
+    - Gets a local instance reference once via _get_instance() and injects it as the
+      first argument of the decorated function, eliminating the TOCTOU race with safe_close();
+    - When the instance is uninitialized or closed: raise_when_closed=True raises an explicit
+      exception (for startup-path functions), otherwise returns None silently (for daemon-thread paths);
+    - When error_msg is not None, request exceptions are caught, logged and None is returned;
+      when it is None, exceptions propagate unchanged to the caller.
     """
 
     def decorator(func):
@@ -206,7 +206,7 @@ def api_guard(error_msg: str = None, raise_when_closed: bool = False):
             instance = ManageApiClient._get_instance()
             if instance is None:
                 if raise_when_closed:
-                    raise Exception("ManageApiClient未初始化或已关闭")
+                    raise Exception("ManageApiClient is not initialized or already closed")
                 return None
             if error_msg is None:
                 return await func(instance, *args, **kwargs)
@@ -223,7 +223,7 @@ def api_guard(error_msg: str = None, raise_when_closed: bool = False):
 
 @api_guard(raise_when_closed=True)
 async def get_server_config(instance) -> Optional[Dict]:
-    """获取服务器基础配置"""
+    """Fetch the server base config"""
     return await instance._execute_async_request("POST", "/config/server-base")
 
 
@@ -231,7 +231,7 @@ async def get_server_config(instance) -> Optional[Dict]:
 async def get_agent_models(
     instance, mac_address: str, client_id: str, selected_module: Dict
 ) -> Optional[Dict]:
-    """获取代理模型配置"""
+    """Fetch the agent model config"""
     return await instance._execute_async_request(
         "POST",
         "/config/agent-models",
@@ -243,38 +243,38 @@ async def get_agent_models(
     )
 
 
-@api_guard("获取替换词失败")
+@api_guard("Failed to fetch replacement words")
 async def get_correct_words(instance, mac_address: str) -> Optional[Dict]:
-    """获取智能体替换词"""
+    """Fetch the agent replacement words"""
     return await instance._execute_async_request(
         "POST", "/config/correct-words",
         json={"macAddress": mac_address}
     )
 
 
-@api_guard("生成并保存聊天记录总结失败")
+@api_guard("Failed to generate and save chat history summary")
 async def generate_and_save_chat_summary(instance, session_id: str) -> Optional[Dict]:
-    """生成并保存聊天记录总结（守护线程中调用，服务已关闭时静默返回 None）"""
+    """Generate and save the chat history summary (called from a daemon thread; returns None silently if the service is closed)"""
     return await instance._execute_async_request(
         "POST",
         f"/agent/chat-summary/{session_id}/save",
     )
 
 
-@api_guard("生成并保存聊天标题失败")
+@api_guard("Failed to generate and save chat title")
 async def generate_and_save_chat_title(instance, session_id: str) -> Optional[Dict]:
-    """生成并保存聊天标题（守护线程中调用，服务已关闭时静默返回 None）"""
+    """Generate and save the chat title (called from a daemon thread; returns None silently if the service is closed)"""
     return await instance._execute_async_request(
         "POST",
         f"/agent/chat-title/{session_id}/generate",
     )
 
 
-@api_guard("TTS上报失败")
+@api_guard("TTS report failed")
 async def report(
     instance, mac_address: str, session_id: str, chat_type: int, content: str, audio, report_time
 ) -> Optional[Dict]:
-    """异步聊天记录上报"""
+    """Report chat history asynchronously"""
     if not content:
         return None
     return await instance._execute_async_request(
@@ -293,9 +293,9 @@ async def report(
     )
 
 
-@api_guard("通讯录查找失败")
+@api_guard("Address book lookup failed")
 async def lookup_address_book(instance, caller_mac: str, nickname: str) -> Optional[Dict]:
-    """根据昵称查找目标设备"""
+    """Look up the target device by nickname"""
     return await instance._execute_async_request(
         "GET",
         f"/device/address-book/lookup?callerMac={caller_mac}&nickname={nickname}",

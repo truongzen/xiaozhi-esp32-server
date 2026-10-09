@@ -17,13 +17,13 @@
         <result property="updatedAt" column="updated_at" jdbcType="TIMESTAMP"/>
     </resultMap>
 
-    <!-- 根据知识库ID删除相关的插件映射记录 -->
+    <!-- Delete plugin mapping records related to the knowledge base ID -->
     <delete id="deletePluginMappingByKnowledgeBaseId">
         DELETE FROM ai_agent_plugin_mapping 
         WHERE plugin_id = #{knowledgeBaseId}
     </delete>
 
-    <!-- 通用维度原子更新知识库统计信息 -->
+    <!-- Atomically update knowledge base statistics for a generic dimension -->
     <update id="updateStatsAfterChange">
         UPDATE ai_rag_dataset
         SET document_count = document_count + #{docDelta},

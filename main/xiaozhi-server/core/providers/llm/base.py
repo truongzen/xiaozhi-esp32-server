@@ -11,7 +11,7 @@ class LLMProviderBase(ABC):
         pass
 
     def response_no_stream(self, system_prompt, user_prompt, **kwargs):
-        # 构造对话格式
+        # Build the dialogue format
         dialogue = [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}

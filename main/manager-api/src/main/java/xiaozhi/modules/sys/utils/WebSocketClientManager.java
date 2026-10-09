@@ -35,13 +35,13 @@ import lombok.extern.slf4j.Slf4j;
 import xiaozhi.common.utils.DateUtils;
 
 /**
- * WebSocketClientResource：支持 try-with-resources 模式
+ * WebSocketClientResource: supports the try-with-resources pattern
  */
 @Slf4j
 public class WebSocketClientManager implements Closeable {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    // 全局回调线程池
+    // Global callback thread pool
     private static final ExecutorService CALLBACK_EXECUTOR = Executors
             .newFixedThreadPool(Runtime.getRuntime().availableProcessors(), new ThreadFactory() {
                 private final AtomicInteger cnt = new AtomicInteger();
@@ -66,7 +66,7 @@ public class WebSocketClientManager implements Closeable {
 
     private final int queueCapacity;
 
-    // 私有构造，仅由 Builder 调用
+    // Private constructor, only called by the Builder
     private WebSocketClientManager(Builder b) {
         this.maxSessionDuration = b.maxSessionDuration;
         this.maxSessionDurationUnit = b.maxSessionDurationUnit;
@@ -84,9 +84,9 @@ public class WebSocketClientManager implements Closeable {
                 URI.create(b.uri));
         WebSocketSession sess = future.get(b.connectTimeout, b.connectUnit);
         if (sess == null || !sess.isOpen()) {
-            throw new IOException("握手失败或会话未打开");
+            throw new IOException("Handshake failed or session not open");
         }
-        // 设置缓冲区
+        // Set buffer sizes
         sess.setTextMessageSizeLimit(b.bufferSize);
         sess.setBinaryMessageSizeLimit(b.bufferSize);
         ws.session = sess;
@@ -95,7 +95,7 @@ public class WebSocketClientManager implements Closeable {
 
 
     /**
-     * 发送 Text
+     * Send text
      */
     public void sendText(String text) throws IOException {
         session.sendMessage(new TextMessage(text));
@@ -124,12 +124,12 @@ public class WebSocketClientManager implements Closeable {
 
             long remaining = deadline - System.currentTimeMillis();
             if (remaining <= 0) {
-                throw new TimeoutException("等待批量消息超时");
+                throw new TimeoutException("Timed out waiting for batch messages");
             }
 
             T msg = queue.poll(remaining, TimeUnit.MILLISECONDS);
             if (msg == null) {
-                throw new TimeoutException("等待批量消息超时");
+                throw new TimeoutException("Timed out waiting for batch messages");
             }
 
             collected.add(msg);
@@ -155,12 +155,12 @@ public class WebSocketClientManager implements Closeable {
 
             long remaining = deadline - System.currentTimeMillis();
             if (remaining <= 0) {
-                throw new TimeoutException("等待批量消息超时");
+                throw new TimeoutException("Timed out waiting for batch messages");
             }
 
             T msg = queue.poll(remaining, TimeUnit.MILLISECONDS);
             if (msg == null) {
-                throw new TimeoutException("等待批量消息超时");
+                throw new TimeoutException("Timed out waiting for batch messages");
             }
 
             collected.add(msg);
@@ -168,14 +168,14 @@ public class WebSocketClientManager implements Closeable {
                 break;
             }
         }
-        // 不调用 close()，保持连接开放
+        // Do not call close(), keep the connection open
         return collected;
     }
 
     /**
-     * 同步接收多条消息，直到 predicate 为 true 或超时抛异常；
+     * Synchronously receive multiple messages until the predicate is true, or throw on timeout;
      * 
-     * @return 返回监听期间的所有消息列表
+     * @return list of all messages received while listening
      */
     public List<String> listener(Predicate<String> predicate)
             throws InterruptedException, TimeoutException, ExecutionException {
@@ -183,10 +183,10 @@ public class WebSocketClientManager implements Closeable {
     }
 
     /**
-     * 同步接收多条消息，直到 predicate 为 true 或超时抛异常；
-     * 不自动关闭连接，适用于需要在同一连接上发送多个消息的场景
+     * Synchronously receive multiple messages until the predicate is true, or throw on timeout;
+     * Does not close the connection automatically; suitable for sending multiple messages on the same connection
      * 
-     * @return 返回监听期间的所有消息列表
+     * @return list of all messages received while listening
      */
     public List<String> listenerWithoutClose(Predicate<String> predicate)
             throws InterruptedException, TimeoutException, ExecutionException {
@@ -199,7 +199,7 @@ public class WebSocketClientManager implements Closeable {
     }
 
     /**
-     * 注册文本回调
+     * Register the text callback
      */
     public WebSocketClientManager onText(Consumer<String> c) {
         this.onText = c;
@@ -207,7 +207,7 @@ public class WebSocketClientManager implements Closeable {
     }
 
     /**
-     * 注册二进制回调
+     * Register the binary callback
      */
     public WebSocketClientManager onBinary(Consumer<byte[]> c) {
         this.onBinary = c;
@@ -215,7 +215,7 @@ public class WebSocketClientManager implements Closeable {
     }
 
     /**
-     * 注册错误回调
+     * Register the error callback
      */
     public WebSocketClientManager onError(Consumer<Throwable> c) {
         this.onError = c;
@@ -223,7 +223,7 @@ public class WebSocketClientManager implements Closeable {
     }
 
     /**
-     * 关闭会话，try-with-resources / finally 自动调用
+     * Close the session; called automatically by try-with-resources / finally
      */
     @Override
     public void close() {
@@ -235,7 +235,7 @@ public class WebSocketClientManager implements Closeable {
         }
         textMessageQueue.clear();
         binaryMessageQueue.clear();
-        errorFuture.completeExceptionally(new IOException("WebSocket 已关闭"));
+        errorFuture.completeExceptionally(new IOException("WebSocket closed"));
     }
 
     private class InternalHandler extends AbstractWebSocketHandler {
@@ -248,54 +248,54 @@ public class WebSocketClientManager implements Closeable {
         }
 
         /**
-         * 连接建立时回调
+         * Callback when the connection is established
          */
         @Override
         public void afterConnectionEstablished(WebSocketSession session) {
-            // 保存会话
+            // Save the session
             WebSocketClientManager.this.session = session;
             this.stopWatch.start();
-            log.info("ws连接成功, 目标URI: {}, 连接时间: {}", targetUri,
+            log.info("WS connected, target URI: {}, connect time: {}", targetUri,
                     DateUtils.getDateTimeNow(DateUtils.DATE_TIME_MILLIS_PATTERN));
         }
 
         /**
-         * 处理文本消息
+         * Handle a text message
          */
         @Override
         protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
             String payload = message.getPayload();
-            // 入队
+            // Enqueue
             textMessageQueue.offer(payload);
-            // 回调用户注册的 onText
+            // Invoke the user-registered onText callback
             if (onText != null) {
                 CALLBACK_EXECUTOR.submit(() -> onText.accept(payload));
             }
         }
 
         /**
-         * 处理二进制消息
+         * Handle a binary message
          */
         @Override
         protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) throws Exception {
             ByteBuffer buf = message.getPayload();
             byte[] data = new byte[buf.remaining()];
             buf.get(data);
-            // 入队
+            // Enqueue
             binaryMessageQueue.offer(data);
-            // 回调用户注册的 onBinary
+            // Invoke the user-registered onBinary callback
             if (onBinary != null) {
                 CALLBACK_EXECUTOR.submit(() -> onBinary.accept(data));
             }
         }
 
         /**
-         * 传输错误时回调
+         * Callback on transport error
          */
         @Override
         public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
             super.handleTransportError(session, exception);
-            // 保持原有逻辑：完成 errorFuture、回调 onError、关闭会话、异步通知连接失败
+            // Keep the original logic: complete errorFuture, invoke onError, close the session, notify connection failure asynchronously
             errorFuture.completeExceptionally(exception);
             if (onError != null) {
                 CALLBACK_EXECUTOR.submit(() -> onError.accept(exception));
@@ -304,7 +304,7 @@ public class WebSocketClientManager implements Closeable {
         }
 
         /**
-         * 连接关闭时回调
+         * Callback when the connection is closed
          */
         @Override
         public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
@@ -312,7 +312,7 @@ public class WebSocketClientManager implements Closeable {
             if (stopWatch.isRunning()) {
                 stopWatch.stop();
             }
-            log.info("ws连接关闭, 目标URI: {}, 关闭时间: {}, 连接总时长: {}s,断开原因：{}",
+            log.info("WS connection closed, target URI: {}, close time: {}, total duration: {}s, close reason: {}",
                     targetUri, DateUtils.getDateTimeNow(DateUtils.DATE_TIME_MILLIS_PATTERN),
                     DateUtils.millsToSecond(stopWatch.getTotalTimeMillis()),status);
         }
@@ -320,17 +320,17 @@ public class WebSocketClientManager implements Closeable {
     }
 
     public static class Builder {
-        private String uri; // 目标 WS URI
-        private long connectTimeout = 3; // 请求连接等待时间
-        private TimeUnit connectUnit = TimeUnit.SECONDS; // 请求连接等待时间单位
-        private long maxSessionDuration = 5; // 最大连线时间，默认5秒
-        private TimeUnit maxSessionDurationUnit = TimeUnit.SECONDS; // 最大连线时间单位
-        private int queueCapacity = 100; // 消息队列容量
-        private int bufferSize = 8 * 1024; //默认 8kb
-        private WebSocketHttpHeaders headers; // 请求头
+        private String uri; // Target WS URI
+        private long connectTimeout = 3; // Connection wait time
+        private TimeUnit connectUnit = TimeUnit.SECONDS; // Connection wait time unit
+        private long maxSessionDuration = 5; // Maximum session duration, default 5 seconds
+        private TimeUnit maxSessionDurationUnit = TimeUnit.SECONDS; // Maximum session duration unit
+        private int queueCapacity = 100; // Message queue capacity
+        private int bufferSize = 8 * 1024; // Default 8 KB
+        private WebSocketHttpHeaders headers; // Request headers
 
         /**
-         * 目标 WS URI
+         * Target WS URI
          */
         public Builder uri(String uri) {
             this.uri = Objects.requireNonNull(uri);

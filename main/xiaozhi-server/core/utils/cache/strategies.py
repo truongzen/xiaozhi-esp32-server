@@ -1,5 +1,5 @@
 """
-缓存策略和数据结构定义
+Cache strategies and data structure definitions
 """
 
 import time
@@ -9,21 +9,21 @@ from dataclasses import dataclass
 
 
 class CacheStrategy(Enum):
-    """缓存策略枚举"""
+    """Cache strategy enum"""
 
-    TTL = "ttl"  # 基于时间过期
-    LRU = "lru"  # 最近最少使用
-    FIXED_SIZE = "fixed_size"  # 固定大小
-    TTL_LRU = "ttl_lru"  # TTL + LRU混合策略
+    TTL = "ttl"  # time-based expiration
+    LRU = "lru"  # least recently used
+    FIXED_SIZE = "fixed_size"  # fixed size
+    TTL_LRU = "ttl_lru"  # hybrid TTL + LRU strategy
 
 
 @dataclass
 class CacheEntry:
-    """缓存条目数据结构"""
+    """Cache entry data structure"""
 
     value: Any
     timestamp: float
-    ttl: Optional[float] = None  # 生存时间（秒）
+    ttl: Optional[float] = None  # time to live (seconds)
     access_count: int = 0
     last_access: float = None
 
@@ -32,12 +32,12 @@ class CacheEntry:
             self.last_access = self.timestamp
 
     def is_expired(self) -> bool:
-        """检查是否过期"""
+        """Check whether expired"""
         if self.ttl is None:
             return False
         return time.time() - self.timestamp > self.ttl
 
     def touch(self):
-        """更新访问时间和计数"""
+        """Update access time and count"""
         self.last_access = time.time()
         self.access_count += 1

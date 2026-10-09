@@ -9,8 +9,8 @@ import xiaozhi.common.dao.BaseDao;
 import xiaozhi.modules.security.entity.SysUserTokenEntity;
 
 /**
- * 系统用户Token
- * Copyright (c) 人人开源 All rights reserved.
+ * System user token
+ * Copyright (c) Renren Open Source All rights reserved.
  * Website: https://www.renren.io
  */
 @Mapper

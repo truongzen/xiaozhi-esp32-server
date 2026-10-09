@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * 服务端动作枚举
+ * Server action enum
  */
 public enum ServerActionEnum {
     RESTART("restart"),

@@ -3,8 +3,8 @@ package xiaozhi.common.exception;
 import xiaozhi.common.utils.MessageUtils;
 
 /**
- * 自定义异常
- * Copyright (c) 人人开源 All rights reserved.
+ * Custom exception
+ * Copyright (c) Renren Open Source All rights reserved.
  * Website: https://www.renren.io
  */
 public class RenException extends RuntimeException {

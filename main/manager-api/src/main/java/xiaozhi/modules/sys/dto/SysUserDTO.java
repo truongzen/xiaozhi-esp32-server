@@ -21,67 +21,67 @@ import xiaozhi.common.validator.group.DefaultGroup;
 import xiaozhi.common.validator.group.UpdateGroup;
 
 /**
- * 用户管理
+ * User management
  */
 @Data
-@Schema(description = "用户管理")
+@Schema(description = "User management")
 public class SysUserDTO implements Serializable {
     @Schema(description = "id")
     @Null(message = "{id.null}", groups = AddGroup.class)
     @NotNull(message = "{id.require}", groups = UpdateGroup.class)
     private Long id;
 
-    @Schema(description = "用户名", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Username", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "{sysuser.username.require}", groups = DefaultGroup.class)
     private String username;
 
-    @Schema(description = "密码")
+    @Schema(description = "Password")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotBlank(message = "{sysuser.password.require}", groups = AddGroup.class)
     private String password;
 
-    @Schema(description = "姓名", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Full name", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "{sysuser.realname.require}", groups = DefaultGroup.class)
     private String realName;
 
-    @Schema(description = "头像")
+    @Schema(description = "Avatar")
     private String headUrl;
 
-    @Schema(description = "性别   0：男   1：女    2：保密", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Gender   0: male   1: female    2: undisclosed", requiredMode = Schema.RequiredMode.REQUIRED)
     @Range(min = 0, max = 2, message = "{sysuser.gender.range}", groups = DefaultGroup.class)
     private Integer gender;
 
-    @Schema(description = "邮箱")
+    @Schema(description = "Email")
     @Email(message = "{sysuser.email.error}", groups = DefaultGroup.class)
     private String email;
 
-    @Schema(description = "手机号")
+    @Schema(description = "Mobile number")
     private String mobile;
 
-    @Schema(description = "部门ID", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Department ID", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "{sysuser.deptId.require}", groups = DefaultGroup.class)
     private Long deptId;
 
-    @Schema(description = "状态  0：停用    1：正常", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Status  0: disabled    1: normal", requiredMode = Schema.RequiredMode.REQUIRED)
     @Range(min = 0, max = 1, message = "{sysuser.status.range}", groups = DefaultGroup.class)
     private Integer status;
 
-    @Schema(description = "创建时间")
+    @Schema(description = "Create time")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonFormat(pattern = DateUtils.DATE_TIME_PATTERN)
     private Date createDate;
 
-    @Schema(description = "超级管理员   0：否   1：是")
+    @Schema(description = "Super administrator   0: no   1: yes")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer superAdmin;
 
-    @Schema(description = "角色ID列表")
+    @Schema(description = "Role ID list")
     private List<Long> roleIdList;
 
-    @Schema(description = "岗位ID列表")
+    @Schema(description = "Position ID list")
     private List<Long> postIdList;
 
-    @Schema(description = "部门名称")
+    @Schema(description = "Department name")
     private String deptName;
 
 }

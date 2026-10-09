@@ -12,121 +12,121 @@ import xiaozhi.modules.knowledge.dto.document.RetrievalDTO;
 import xiaozhi.modules.knowledge.dto.document.DocumentDTO;
 
 /**
- * 知识库文档服务接口
+ * Knowledge base document service interface
  */
 public interface KnowledgeFilesService {
 
         /**
-         * 分页查询文档列表
+         * Paged query of the document list
          * 
-         * @param knowledgeFilesDTO 查询条件
-         * @param page              页码
-         * @param limit             每页数量
-         * @return 分页数据
+         * @param knowledgeFilesDTO query conditions
+         * @param page              page number
+         * @param limit             page size
+         * @return paged data
          */
         PageData<KnowledgeFilesDTO> getPageList(KnowledgeFilesDTO knowledgeFilesDTO, Integer page, Integer limit);
 
         /**
-         * 根据文档ID和知识库ID获取文档详情
+         * Get document details by document ID and knowledge base ID
          * 
-         * @param documentId 文档ID
-         * @param datasetId  知识库ID
-         * @return 文档详情 (强类型 InfoVO)
+         * @param documentId document ID
+         * @param datasetId  knowledge base ID
+         * @return document details (strongly typed InfoVO)
          */
         DocumentDTO.InfoVO getByDocumentId(String documentId, String datasetId);
 
         /**
-         * 上传文档到知识库
+         * Upload a document to the knowledge base
          * 
-         * @param datasetId    知识库ID
-         * @param file         上传的文件
-         * @param name         文档名称
-         * @param metaFields   元数据字段
-         * @param chunkMethod  分块方法
-         * @param parserConfig 解析器配置
-         * @return 上传的文档信息
+         * @param datasetId    knowledge base ID
+         * @param file         uploaded file
+         * @param name         document name
+         * @param metaFields   metadata fields
+         * @param chunkMethod  chunking method
+         * @param parserConfig parser configuration
+         * @return uploaded document information
          */
         KnowledgeFilesDTO uploadDocument(String datasetId, MultipartFile file, String name,
                         Map<String, Object> metaFields, String chunkMethod,
                         Map<String, Object> parserConfig);
 
         /**
-         * 批量删除文档
+         * Batch delete documents
          * 
-         * @param datasetId 知识库ID
-         * @param req       删除请求参数 (含文档ID列表)
+         * @param datasetId knowledge base ID
+         * @param req       delete request parameters (including the document ID list)
          */
         void deleteDocuments(String datasetId, DocumentDTO.BatchIdReq req);
 
         /**
-         * 获取RAG配置信息
+         * Get RAG configuration information
          * 
-         * @param ragModelId RAG模型配置ID
-         * @return RAG配置信息
+         * @param ragModelId RAG model configuration ID
+         * @return RAG configuration information
          */
         Map<String, Object> getRAGConfig(String ragModelId);
 
         /**
-         * 解析文档（切块）
+         * Parse documents (chunking)
          * 
-         * @param datasetId   知识库ID
-         * @param documentIds 文档ID列表
-         * @return 解析结果
+         * @param datasetId   knowledge base ID
+         * @param documentIds document ID list
+         * @return parse result
          */
         boolean parseDocuments(String datasetId, List<String> documentIds);
 
         /**
-         * 列出指定文档的切片
+         * List the chunks of the specified document
          * 
-         * @param datasetId  知识库ID
-         * @param documentId 文档ID
-         * @param req        切片列表请求参数
-         * @return 切片列表信息
+         * @param datasetId  knowledge base ID
+         * @param documentId document ID
+         * @param req        chunk list request parameters
+         * @return chunk list information
          */
         ChunkDTO.ListVO listChunks(String datasetId, String documentId, ChunkDTO.ListReq req);
 
         /**
-         * 召回测试
+         * Retrieval test
          * 
-         * @param req 检索测试请求参数
-         * @return 召回测试结果
+         * @param req retrieval test request parameters
+         * @return retrieval test result
          */
         RetrievalDTO.ResultVO retrievalTest(RetrievalDTO.TestReq req);
 
         /**
-         * 保存文档影子记录
+         * Save a document shadow record
          */
         boolean saveDocumentShadow(String datasetId, KnowledgeFilesDTO result, String originalName, String chunkMethod,
                         Map<String, Object> parserConfig);
 
         /**
-         * 批量删除文档影子记录并同步统计数据
+         * Batch delete document shadow records and sync statistics
          * 
-         * @param documentIds 文档ID列表
-         * @param datasetId   数据集ID
-         * @param chunkDelta  待扣减的总分块数
-         * @param tokenDelta  待扣减的总Token数
+         * @param documentIds document ID list
+         * @param datasetId   dataset ID
+         * @param chunkDelta  total number of chunks to deduct
+         * @param tokenDelta  total number of tokens to deduct
          */
         void deleteDocumentShadows(List<String> documentIds, String datasetId, Long chunkDelta, Long tokenDelta);
 
         /**
-         * 根据数据集ID清理所有关联文档 (级联删除专用)
+         * Clean up all documents associated with a dataset ID (for cascade delete only)
          * 
-         * @param datasetId 数据集ID
+         * @param datasetId dataset ID
          */
         void deleteDocumentsByDatasetId(String datasetId);
 
         /**
-         * 同步所有处于 RUNNING 状态的文档 (供定时任务调用)
+         * Sync all documents in the RUNNING state (called by the scheduled task)
          */
         void syncRunningDocuments();
 
         /**
-         * 从RAGFlow全量同步文档到本地影子表
-         * 拉取远端所有文档，与本地影子表对比，插入缺失的记录
+         * Fully sync documents from RAGFlow to the local shadow table
+         * Fetch all remote documents, compare them with the local shadow table, and insert missing records
          *
-         * @param datasetId 数据集ID
-         * @return 新同步的文档数量
+         * @param datasetId dataset ID
+         * @return number of newly synced documents
          */
         int syncDocumentsFromRAG(String datasetId);
 }

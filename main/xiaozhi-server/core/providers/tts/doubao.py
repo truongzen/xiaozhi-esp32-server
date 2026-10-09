@@ -34,7 +34,7 @@ class TTSProvider(TTSProviderBase):
         else:
             self.voice = config.get("voice")
 
-        # 处理空字符串的情况
+        # Handle empty string
         speed_ratio = config.get("speed_ratio", "1.0")
         volume_ratio = config.get("volume_ratio", "1.0")
         pitch_ratio = config.get("pitch_ratio", "1.0")
@@ -43,7 +43,7 @@ class TTSProvider(TTSProviderBase):
         self.volume_ratio = float(volume_ratio) if volume_ratio else 1.0
         self.pitch_ratio = float(pitch_ratio) if pitch_ratio else 1.0
 
-        # 应用百分比调整（如果存在），否则使用公有化配置
+        # Apply percentage adjustments (if present), otherwise use the public configuration
         self._apply_percentage_params(config)
 
         self.api_url = config.get("api_url")

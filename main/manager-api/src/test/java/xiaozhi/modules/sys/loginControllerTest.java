@@ -35,8 +35,8 @@ class loginControllerTest {
         when(sysUserService.getAllowUserRegister()).thenReturn(false);
 
         LoginDTO loginDTO = new LoginDTO();
-        loginDTO.setUsername("手机号码");
-        loginDTO.setPassword("密码");
+        loginDTO.setUsername("phone-number");
+        loginDTO.setPassword("password");
 
         RenException exception = assertThrows(RenException.class, () -> loginController.register(loginDTO));
         assertEquals(ErrorCode.USER_REGISTER_DISABLED, exception.getCode());
@@ -46,7 +46,7 @@ class loginControllerTest {
     public void testSmsVerification() {
         try {
             SmsVerificationDTO smsVerificationDTO = new SmsVerificationDTO();
-            smsVerificationDTO.setPhone("手机号码");
+            smsVerificationDTO.setPhone("phone-number");
             smsVerificationDTO.setCaptchaId("123456");
             smsVerificationDTO.setCaptcha("123456");
             loginController.smsVerification(smsVerificationDTO);
@@ -60,8 +60,8 @@ class loginControllerTest {
         try {
             RetrievePasswordDTO retrievePasswordDTO = new RetrievePasswordDTO();
             retrievePasswordDTO.setCode("123456");
-            retrievePasswordDTO.setPhone("手机号码");
-            retrievePasswordDTO.setPassword("密码");
+            retrievePasswordDTO.setPhone("phone-number");
+            retrievePasswordDTO.setPassword("password");
             loginController.retrievePassword(retrievePasswordDTO);
         } catch (Exception e) {
             System.out.println(e.getMessage());

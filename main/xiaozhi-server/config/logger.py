@@ -11,8 +11,8 @@ _logger_initialized = False
 
 
 def get_module_abbreviation(module_name, module_dict):
-    """获取模块名称的缩写，如果为空则返回00
-    如果名称中包含下划线，则返回下划线后面的前两个字符
+    """Get the abbreviation of a module name, returning 00 if empty.
+    If the name contains an underscore, return the first two characters after the last underscore.
     """
     module_value = module_dict.get(module_name, "")
     if not module_value:
@@ -24,7 +24,7 @@ def get_module_abbreviation(module_name, module_dict):
 
 
 def build_module_string(selected_module):
-    """构建模块字符串"""
+    """Build the module string"""
     return (
         get_module_abbreviation("VAD", selected_module)
         + get_module_abbreviation("ASR", selected_module)
@@ -37,30 +37,30 @@ def build_module_string(selected_module):
 
 
 def formatter(record):
-    """为没有 tag 的日志添加默认值，并处理动态模块字符串"""
+    """Add defaults for log records without a tag and handle the dynamic module string"""
     record["extra"].setdefault("tag", record["name"])
-    # 如果没有设置 selected_module，使用默认值
+    # Use a default if selected_module is not set
     record["extra"].setdefault("selected_module", "00000000000000")
-    # 将 selected_module 从 extra 提取到顶级，以支持 {selected_module} 格式
+    # Lift selected_module from extra to the top level to support the {selected_module} format
     record["selected_module"] = record["extra"]["selected_module"]
     return record["message"]
 
 
 def setup_logging(config=None):
-    """从配置文件中读取日志配置，并设置日志输出格式和级别"""
+    """Read logging config from the config file and set the log output format and level"""
     if config is None:
         check_config_file()
-        # 先查缓存，避免在 async 上下文中重复 await load_config
+        # Check the cache first to avoid awaiting load_config again inside an async context
         config = cache_manager.get(CacheType.CONFIG, "main_config")
         if config is None:
-            # 缓存也没有（理论上不该发生），才走 asyncio.run
+            # Only fall back to asyncio.run if the cache is also empty (should not happen in theory)
             config = asyncio.run(load_config())
     log_config = config["log"]
     global _logger_initialized
 
-    # 第一次初始化时配置日志
+    # Configure logging on first initialization
     if not _logger_initialized:
-        # 使用默认的模块字符串进行初始化
+        # Initialize with the default module string
         logger.configure(
             extra={
                 "selected_module": log_config.get("selected_module", "00000000000000"),
@@ -86,35 +86,35 @@ def setup_logging(config=None):
         os.makedirs(log_dir, exist_ok=True)
         os.makedirs(data_dir, exist_ok=True)
 
-        # 配置日志输出
+        # Configure log output
         logger.remove()
 
-        # 输出到控制台
+        # Output to console
         logger.add(sys.stdout, format=log_format, level=log_level, filter=formatter)
 
-        # 输出到文件 - 统一目录，按大小轮转
-        # 日志文件完整路径
+        # Output to file - single directory, rotated by size
+        # Full path of the log file
         log_file_path = os.path.join(log_dir, log_file)
 
-        # 添加日志处理器
+        # Add log handler
         logger.add(
             log_file_path,
             format=log_format_file,
             level=log_level,
             filter=formatter,
-            rotation="10 MB",  # 每个文件最大10MB
-            retention="30 days",  # 保留30天
+            rotation="10 MB",  # Max 10MB per file
+            retention="30 days",  # Keep for 30 days
             compression=None,
             encoding="utf-8",
-            enqueue=True,  # 异步安全
+            enqueue=True,  # Async-safe
             backtrace=True,
             diagnose=True,
         )
-        _logger_initialized = True  # 标记为已初始化
+        _logger_initialized = True  # Mark as initialized
 
     return logger
 
 
 def create_connection_logger(selected_module_str):
-    """为连接创建独立的日志器，绑定特定的模块字符串"""
+    """Create a dedicated logger for a connection, bound to a specific module string"""
     return logger.bind(selected_module=selected_module_str)

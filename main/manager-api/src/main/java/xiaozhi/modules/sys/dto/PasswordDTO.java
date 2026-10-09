@@ -7,17 +7,17 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 /**
- * 修改密码
+ * Change password
  */
 @Data
-@Schema(description = "修改密码")
+@Schema(description = "Change password")
 public class PasswordDTO implements Serializable {
 
-    @Schema(description = "原密码")
+    @Schema(description = "Original password")
     @NotBlank(message = "{sysuser.password.require}")
     private String password;
 
-    @Schema(description = "新密码")
+    @Schema(description = "New password")
     @NotBlank(message = "{sysuser.password.require}")
     private String newPassword;
 

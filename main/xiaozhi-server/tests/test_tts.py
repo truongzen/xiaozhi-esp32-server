@@ -1,17 +1,17 @@
-"""TTS（语音合成）链路测试。
+"""TTS (text-to-speech) pipeline tests.
 
-Mock 模式（默认）：从 data/.config.yaml 拿配置构造真实 TTS provider；
-所有外部 HTTP/SDK 调用走 conftest 注入的 shim，不发真请求。
-Live 模式（``RUN_LIVE_API_TESTS=1``）：调真实 TTS provider。
+Mock mode (default): builds the real TTS provider from data/.config.yaml config;
+all external HTTP/SDK calls go through the shims injected by conftest, no real requests are sent.
+Live mode (``RUN_LIVE_API_TESTS=1``): calls the real TTS provider.
 
-接口约定（core/providers/tts/base.py）：
-    text_to_speak(text, output_file) -> 异步，把合成结果写到 output_file
+Interface contract (core/providers/tts/base.py):
+    text_to_speak(text, output_file) -> async, writes the synthesized result to output_file
 
-注意：
-- 3 个构造测试不依赖云服务；第 4 个 test_tts_text_to_speak_writes_nonempty_file
-  才是真链路测试，会真发 HTTP。
-- Mock 模式下：第 4 个测试断言宽松 —— 文件存在即可（shim 创建空文件），
-  不强求 size > 0。Live 模式下严格校验 size > 0。
+Notes:
+- The 3 construction tests do not depend on cloud services; only the 4th, test_tts_text_to_speak_writes_nonempty_file,
+  is a real pipeline test that sends real HTTP.
+- In mock mode the 4th test is lenient - the file existing is enough (the shim creates an empty file),
+  size > 0 is not required. Live mode strictly checks size > 0.
 """
 from __future__ import annotations
 
@@ -37,64 +37,64 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 def _build_provider():
     name = get_selected_provider_name("TTS")
     if not name:
-        pytest.skip("selected_module.TTS 未设置")
+        pytest.skip("selected_module.TTS is not set")
     cfg = get_provider_config("TTS", name)
     if not cfg:
-        pytest.skip(f"TTS provider '{name}' 配置缺失")
+        pytest.skip(f"TTS provider '{name}' config is missing")
     ptype = get_provider_type("TTS", name)
     if not ptype:
-        pytest.skip(f"TTS '{name}' 的 type 字段缺失")
+        pytest.skip(f"TTS '{name}' is missing the type field")
     from core.utils.tts import create_instance
 
     return create_instance(ptype, cfg, True)
 
 
 def test_tts_provider_constructs_from_config() -> None:
-    """从 config 应该能实例化出 TTSProviderBase 子类。"""
+    """Config should be able to instantiate a TTSProviderBase subclass."""
     provider = _build_provider()
     from core.providers.tts.base import TTSProviderBase
 
     assert isinstance(provider, TTSProviderBase), (
-        f"TTS provider 类型错：{type(provider).__name__}"
+        f"Wrong TTS provider type: {type(provider).__name__}"
     )
 
 
 def test_tts_provider_exposes_to_tts() -> None:
-    """provider 必须实现 to_tts / to_tts_stream 之一。"""
+    """The provider must implement to_tts or to_tts_stream."""
     provider = _build_provider()
     has_sync = hasattr(provider, "to_tts") and callable(provider.to_tts)
     has_stream = hasattr(provider, "to_tts_stream") and callable(
         provider.to_tts_stream
     )
     assert has_sync or has_stream, (
-        f"{type(provider).__name__} 缺少 to_tts / to_tts_stream 方法"
+        f"{type(provider).__name__} is missing the to_tts / to_tts_stream method"
     )
 
 
 def test_tts_provider_has_output_dir() -> None:
-    """provider 应有 output_file 属性（合成结果写到哪）。"""
+    """The provider should have an output_file attribute (where synthesis results are written)."""
     provider = _build_provider()
     assert hasattr(provider, "output_file"), (
-        f"{type(provider).__name__} 缺少 output_file 属性"
+        f"{type(provider).__name__} is missing the output_file attribute"
     )
     assert isinstance(provider.output_file, str)
-    assert provider.output_file, "output_file 不应为空"
+    assert provider.output_file, "output_file should not be empty"
 
 
 def test_tts_text_to_speak_writes_file() -> None:
-    """Mock 模式：断言 file 存在即可。Live 模式：断言 size > 0。
+    """Mock mode: only assert the file exists. Live mode: assert size > 0.
 
-    参考 performance_tester_tts.py 的实现：
-    - mock conn（sample_rate/audio_format/stop_event/client_abort/headers）
-      和 opus_encoder（SimpleNamespace 占位即可）
-    - generate_filename() 拿输出路径
-    - text_to_speak() 异步调云服务，写文件
-    - 10s 超时
-    - 用完删掉测试文件，避免 tmp/ 目录堆积
+    Based on the performance_tester_tts.py implementation:
+    - mock conn (sample_rate/audio_format/stop_event/client_abort/headers)
+      and opus_encoder (a SimpleNamespace placeholder is enough)
+    - generate_filename() gives the output path
+    - text_to_speak() calls the cloud service asynchronously and writes the file
+    - 10s timeout
+    - delete the test file afterwards so tmp/ does not pile up
     """
     provider = _build_provider()
 
-    # 参考 performance_tester_tts.py：部分 provider 内部访问 self.conn.sample_rate 等
+    # As in performance_tester_tts.py: some providers access self.conn.sample_rate etc. internally
     if not hasattr(provider, "conn") or provider.conn is None:
         provider.conn = SimpleNamespace(
             sample_rate=16000,
@@ -116,9 +116,9 @@ def test_tts_text_to_speak_writes_file() -> None:
 
         asyncio.run(run())
 
-        assert os.path.exists(out_file), f"输出文件不存在：{out_file}"
+        assert os.path.exists(out_file), f"Output file does not exist: {out_file}"
         if LIVE_API_TESTS:
-            assert os.path.getsize(out_file) > 0, f"输出文件为空：{out_file}"
+            assert os.path.getsize(out_file) > 0, f"Output file is empty: {out_file}"
     finally:
         if os.path.exists(out_file):
             try:

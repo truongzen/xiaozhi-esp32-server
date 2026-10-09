@@ -5,7 +5,7 @@ import xiaozhi.common.dao.BaseDao;
 import xiaozhi.modules.knowledge.entity.DocumentEntity;
 
 /**
- * 文档 DAO
+ * Document DAO
  */
 @Mapper
 public interface DocumentDao extends BaseDao<DocumentEntity> {

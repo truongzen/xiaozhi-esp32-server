@@ -20,13 +20,13 @@ public class WebSocketTestHandler implements WebSocketHandler {
         try {
             session.close();
         } catch (Exception e) {
-            // 忽略关闭异常
+            // Ignore close exceptions
         }
     }
 
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) {
-        // 不需要处理消息
+        // No message handling needed
     }
 
     @Override
@@ -36,7 +36,7 @@ public class WebSocketTestHandler implements WebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) {
-        // 连接关闭时不做任何处理
+        // Do nothing when the connection closes
     }
 
     @Override

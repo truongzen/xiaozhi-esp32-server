@@ -7,7 +7,7 @@ import xiaozhi.common.redis.RedisKeys;
 import xiaozhi.common.redis.RedisUtils;
 
 /**
- * 参数管理
+ * Parameter management
  */
 @AllArgsConstructor
 @Component

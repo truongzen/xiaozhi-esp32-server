@@ -11,7 +11,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
- * 系统用户Token
+ * System user token
  */
 @Data
 @TableName("sys_user_token")
@@ -23,23 +23,23 @@ public class SysUserTokenEntity implements Serializable {
     @TableId
     private Long id;
     /**
-     * 用户ID
+     * User ID
      */
     private Long userId;
     /**
-     * 用户token
+     * User token
      */
     private String token;
     /**
-     * 过期时间
+     * Expiration time
      */
     private Date expireDate;
     /**
-     * 更新时间
+     * Update time
      */
     private Date updateDate;
     /**
-     * 创建时间
+     * Create time
      */
     @TableField(fill = FieldFill.INSERT)
     private Date createDate;

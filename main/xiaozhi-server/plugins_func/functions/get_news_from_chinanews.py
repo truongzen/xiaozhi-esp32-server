@@ -45,15 +45,15 @@ GET_NEWS_FROM_CHINANEWS_FUNCTION_DESC = {
 
 
 async def fetch_news_from_rss(rss_url):
-    """从RSS源获取新闻列表"""
+    """Fetch the news list from an RSS feed"""
     try:
         async with httpx.AsyncClient(timeout=httpx.Timeout(5.0, connect=3.0)) as client:
             response = await client.get(rss_url)
 
-        # 解析XML
+        # Parse the XML
         root = ET.fromstring(response.content)
 
-        # 查找所有item元素（新闻条目）
+        # Find all item elements (news entries)
         news_items = []
         for item in root.findall(".//item"):
             title = (
@@ -82,19 +82,19 @@ async def fetch_news_from_rss(rss_url):
 
         return news_items
     except Exception as e:
-        logger.bind(tag=TAG).error(f"获取RSS新闻失败: {e}")
+        logger.bind(tag=TAG).error(f"Failed to fetch RSS news: {e}")
         return []
 
 
 async def fetch_news_detail(url):
-    """获取新闻详情页内容并总结"""
+    """Fetch the news detail page content for summarization"""
     try:
         async with httpx.AsyncClient(timeout=httpx.Timeout(10.0, connect=3.0)) as client:
             response = await client.get(url)
 
         soup = BeautifulSoup(response.content, "html.parser")
 
-        # 尝试提取正文内容 (这里的选择器需要根据实际网站结构调整)
+        # Try to extract the article body (selectors may need adjusting to the actual site structure)
         content_div = soup.select_one(
             ".content_desc, .content, article, .article-content"
         )
@@ -105,41 +105,41 @@ async def fetch_news_detail(url):
             )
             return content
         else:
-            # 如果找不到特定的内容区域，尝试获取所有段落
+            # If no specific content area is found, take all paragraphs
             paragraphs = soup.find_all("p")
             content = "\n".join(
                 [p.get_text().strip() for p in paragraphs if p.get_text().strip()]
             )
-            return content[:2000]  # 限制长度
+            return content[:2000]  # Limit length
     except Exception as e:
-        logger.bind(tag=TAG).error(f"获取新闻详情失败: {e}")
+        logger.bind(tag=TAG).error(f"Failed to fetch news detail: {e}")
         return "无法获取详细内容"
 
 
 def map_category(category_text):
-    """将用户输入的中文类别映射到配置文件中的类别键"""
+    """Map the Chinese category given by the user to a category key in the config"""
     if not category_text:
         return None
 
-    # 类别映射字典，目前支持社会、国际、财经新闻，如需更多类型，参见配置文件
+    # Category mapping; currently supports society, world and finance news. See the config file for more types
     category_map = {
-        # 社会新闻
+        # Society news
         "社会": "society_rss_url",
         "社会新闻": "society_rss_url",
-        # 国际新闻
+        # World news
         "国际": "world_rss_url",
         "国际新闻": "world_rss_url",
-        # 财经新闻
+        # Finance news
         "财经": "finance_rss_url",
         "财经新闻": "finance_rss_url",
         "金融": "finance_rss_url",
         "经济": "finance_rss_url",
     }
 
-    # 转换为小写并去除空格
+    # Lowercase and strip whitespace
     normalized_category = category_text.lower().strip()
 
-    # 返回映射结果，如果没有匹配项则返回原始输入
+    # Return the mapped key, or the original input if there is no match
     return category_map.get(normalized_category, category_text)
 
 
@@ -154,9 +154,9 @@ async def get_news_from_chinanews(
     detail: bool = False,
     lang: str = "zh_CN",
 ):
-    """获取新闻并随机选择一条进行播报，或获取上一条新闻的详细内容"""
+    """Fetch news and pick one at random to read out, or fetch the details of the previous news item"""
     try:
-        # 如果detail为True，获取上一条新闻的详细内容
+        # If detail is True, fetch the details of the previous news item
         if detail:
             if (
                 not hasattr(conn, "last_news_link")
@@ -177,9 +177,9 @@ async def get_news_from_chinanews(
                     Action.REQLLM, "抱歉，该新闻没有可用的链接获取详细内容。", None
                 )
 
-            logger.bind(tag=TAG).debug(f"获取新闻详情: {title}, URL={link}")
+            logger.bind(tag=TAG).debug(f"Fetching news detail: {title}, URL={link}")
 
-            # 获取新闻详情
+            # Fetch the news detail
             detail_content = await fetch_news_detail(link)
 
             if not detail_content or detail_content == "无法获取详细内容":
@@ -189,7 +189,7 @@ async def get_news_from_chinanews(
                     None,
                 )
 
-            # 构建详情报告
+            # Build the detail report
             detail_report = (
                 f"根据下列数据，用{lang}回应用户的新闻详情查询请求：\n\n"
                 f"新闻标题: {title}\n"
@@ -200,26 +200,26 @@ async def get_news_from_chinanews(
 
             return ActionResponse(Action.REQLLM, detail_report, None)
 
-        # 否则，获取新闻列表并随机选择一条
-        # 从配置中获取RSS URL
+        # Otherwise, fetch the news list and pick one at random
+        # Get the RSS URL from config
         rss_config = conn.config.get("plugins", {}).get("get_news_from_chinanews", {})
         default_rss_url = rss_config.get(
             "default_rss_url", "https://www.chinanews.com.cn/rss/society.xml"
         )
 
-        # 将用户输入的类别映射到配置中的类别键
+        # Map the user's category to a config category key
         mapped_category = map_category(category)
 
-        # 如果提供了类别，尝试从配置中获取对应的URL
+        # If a category is given, try to get its URL from config
         rss_url = default_rss_url
         if mapped_category and mapped_category in rss_config:
             rss_url = rss_config[mapped_category]
 
         logger.bind(tag=TAG).info(
-            f"获取新闻: 原始类别={category}, 映射类别={mapped_category}, URL={rss_url}"
+            f"Fetching news: original category={category}, mapped category={mapped_category}, URL={rss_url}"
         )
 
-        # 获取新闻列表
+        # Fetch the news list
         news_items = await fetch_news_from_rss(rss_url)
 
         if not news_items:
@@ -227,10 +227,10 @@ async def get_news_from_chinanews(
                 Action.REQLLM, "抱歉，未能获取到新闻信息，请稍后再试。", None
             )
 
-        # 随机选择一条新闻
+        # Pick a random news item
         selected_news = random.choice(news_items)
 
-        # 保存当前新闻链接到连接对象，以便后续查询详情
+        # Save the current news link on the connection for later detail queries
         if not hasattr(conn, "last_news_link"):
             conn.last_news_link = {}
         conn.last_news_link = {
@@ -238,7 +238,7 @@ async def get_news_from_chinanews(
             "title": selected_news.get("title", "未知标题"),
         }
 
-        # 构建新闻报告
+        # Build the news report
         news_report = (
             f"根据下列数据，用{lang}回应用户的新闻查询请求：\n\n"
             f"新闻标题: {selected_news['title']}\n"
@@ -252,7 +252,7 @@ async def get_news_from_chinanews(
         return ActionResponse(Action.REQLLM, news_report, None)
 
     except Exception as e:
-        logger.bind(tag=TAG).error(f"获取新闻出错: {e}")
+        logger.bind(tag=TAG).error(f"Error while fetching news: {e}")
         return ActionResponse(
             Action.REQLLM, "抱歉，获取新闻时发生错误，请稍后再试。", None
         )

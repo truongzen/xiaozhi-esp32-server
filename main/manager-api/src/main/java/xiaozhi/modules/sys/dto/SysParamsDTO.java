@@ -18,10 +18,10 @@ import xiaozhi.common.validator.group.DefaultGroup;
 import xiaozhi.common.validator.group.UpdateGroup;
 
 /**
- * 参数管理
+ * Parameter management
  */
 @Data
-@Schema(description = "参数管理")
+@Schema(description = "Parameter management")
 public class SysParamsDTO implements Serializable {
 
     @Schema(description = "id")
@@ -29,28 +29,28 @@ public class SysParamsDTO implements Serializable {
     @NotNull(message = "{id.require}", groups = UpdateGroup.class)
     private Long id;
 
-    @Schema(description = "参数编码")
+    @Schema(description = "Parameter code")
     @NotBlank(message = "{sysparams.paramcode.require}", groups = DefaultGroup.class)
     private String paramCode;
 
-    @Schema(description = "参数值")
+    @Schema(description = "Parameter value")
     @NotBlank(message = "{sysparams.paramvalue.require}", groups = DefaultGroup.class)
     private String paramValue;
 
-    @Schema(description = "值类型")
+    @Schema(description = "Value type")
     @NotBlank(message = "{sysparams.valuetype.require}", groups = DefaultGroup.class)
     @Pattern(regexp = "^(string|number|boolean|array|json)$", message = "{sysparams.valuetype.pattern}", groups = DefaultGroup.class)
     private String valueType;
 
-    @Schema(description = "备注")
+    @Schema(description = "Remark")
     private String remark;
 
-    @Schema(description = "创建时间")
+    @Schema(description = "Create time")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonFormat(pattern = DateUtils.DATE_TIME_PATTERN)
     private Date createDate;
 
-    @Schema(description = "更新时间")
+    @Schema(description = "Update time")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonFormat(pattern = DateUtils.DATE_TIME_PATTERN)
     private Date updateDate;

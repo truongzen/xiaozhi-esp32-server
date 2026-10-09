@@ -103,7 +103,7 @@ class TTSProvider(TTSProviderBase):
             "yes",
         )
 
-        # 处理空字符串的情况
+        # Handle empty string
         channels = config.get("channels", "1")
         rate = config.get("rate", "44100")
         max_new_tokens = config.get("max_new_tokens", "1024")
@@ -114,7 +114,7 @@ class TTSProvider(TTSProviderBase):
         self.max_new_tokens = int(max_new_tokens) if max_new_tokens else 1024
         self.chunk_length = int(chunk_length) if chunk_length else 200
 
-        # 处理空字符串的情况
+        # Handle empty string
         top_p = config.get("top_p", "0.7")
         temperature = config.get("temperature", "0.7")
         repetition_penalty = config.get("repetition_penalty", "1.2")

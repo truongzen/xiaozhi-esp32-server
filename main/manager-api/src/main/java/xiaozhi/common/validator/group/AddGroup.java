@@ -1,7 +1,7 @@
 package xiaozhi.common.validator.group;
 
 /**
- * 新增 Group
+ * Add group
  */
 public interface AddGroup {
 

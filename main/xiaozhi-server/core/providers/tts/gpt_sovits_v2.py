@@ -16,7 +16,7 @@ class TTSProvider(TTSProviderBase):
         self.prompt_text = config.get('ref_text') if config.get('ref_text') else config.get("prompt_text")
         self.prompt_lang = config.get("prompt_lang", "zh")
 
-        # 处理空字符串的情况
+        # Handle empty string
         top_k = config.get("top_k", "5")
         top_p = config.get("top_p", "1")
         temperature = config.get("temperature", "1")
@@ -100,6 +100,6 @@ class TTSProvider(TTSProviderBase):
             else:
                 return resp.content
         else:
-            error_msg = f"GPT_SoVITS_V2 TTS请求失败: {resp.status_code} - {resp.text}"
+            error_msg = f"GPT_SoVITS_V2 TTS request failed: {resp.status_code} - {resp.text}"
             logger.bind(tag=TAG).error(error_msg)
             raise Exception(error_msg)

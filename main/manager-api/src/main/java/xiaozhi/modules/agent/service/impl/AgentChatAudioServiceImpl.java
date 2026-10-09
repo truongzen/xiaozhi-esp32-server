@@ -9,7 +9,7 @@ import xiaozhi.modules.agent.entity.AgentChatAudioEntity;
 import xiaozhi.modules.agent.service.AgentChatAudioService;
 
 /**
- * 智能体聊天音频数据表处理service {@link AgentChatAudioService} impl
+ * Service implementation for the agent chat audio data table {@link AgentChatAudioService} impl
  *
  * @author Goody
  * @version 1.0, 2025/5/8

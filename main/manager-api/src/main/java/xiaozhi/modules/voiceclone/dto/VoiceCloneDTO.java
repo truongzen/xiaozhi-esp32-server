@@ -6,18 +6,18 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-@Schema(description = "声音克隆DTO")
+@Schema(description = "Voice clone DTO")
 public class VoiceCloneDTO {
 
-    @Schema(description = "模型ID")
+    @Schema(description = "Model ID")
     private String modelId;
 
-    @Schema(description = "音色ID列表")
+    @Schema(description = "Voice ID list")
     private List<String> voiceIds;
 
-    @Schema(description = "用户ID")
+    @Schema(description = "User ID")
     private Long userId;
 
-    @Schema(description = "语言")
+    @Schema(description = "Language")
     private String languages;
 }

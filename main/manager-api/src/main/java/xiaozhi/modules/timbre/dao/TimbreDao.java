@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import xiaozhi.modules.timbre.entity.TimbreEntity;
 
 /**
- * 音色持久层定义
+ * Voice persistence layer definition
  * 
  * @author zjy
  * @since 2025-3-21

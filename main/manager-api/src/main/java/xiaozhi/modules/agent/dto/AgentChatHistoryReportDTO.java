@@ -6,28 +6,28 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
- * 小智设备聊天上报请求
+ * Xiaozhi device chat report request
  *
  * @author Haotian
  * @version 1.0, 2025/5/8
  */
 @Data
-@Schema(description = "小智设备聊天上报请求")
+@Schema(description = "Xiaozhi device chat report request")
 public class AgentChatHistoryReportDTO {
-    @Schema(description = "MAC地址", example = "00:11:22:33:44:55")
+    @Schema(description = "MAC address", example = "00:11:22:33:44:55")
     @NotBlank
     private String macAddress;
-    @Schema(description = "会话ID", example = "79578c31-f1fb-426a-900e-1e934215f05a")
+    @Schema(description = "Session ID", example = "79578c31-f1fb-426a-900e-1e934215f05a")
     @NotBlank
     private String sessionId;
-    @Schema(description = "消息类型: 1-用户, 2-智能体", example = "1")
+    @Schema(description = "Message type: 1-user, 2-agent", example = "1")
     @NotNull
     private Byte chatType;
-    @Schema(description = "聊天内容", example = "你好呀")
+    @Schema(description = "Chat content", example = "Hello there")
     @NotBlank
     private String content;
-    @Schema(description = "base64编码的opus音频数据", example = "")
+    @Schema(description = "Base64-encoded Opus audio data", example = "")
     private String audioBase64;
-    @Schema(description = "上报时间，十位时间戳，空时默认使用当前时间", example = "1745657732")
+    @Schema(description = "Report time as a 10-digit timestamp; defaults to the current time when empty", example = "1745657732")
     private Long reportTime;
 }

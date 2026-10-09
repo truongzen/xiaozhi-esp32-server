@@ -18,51 +18,51 @@ class ASRProvider(ASRProviderBase):
         self.output_dir = config.get("output_dir", "tmp/")
         self.delete_audio_file = delete_audio_file
         
-        # 初始化VOSK模型
+        # Initialize the VOSK model
         self.model = None
         self.recognizer = None
         self._load_model()
         
-        # 确保输出目录存在
+        # Ensure the output directory exists
         os.makedirs(self.output_dir, exist_ok=True)
 
     def _load_model(self):
-        """加载VOSK模型"""
+        """Load the VOSK model"""
         try:
             if not os.path.exists(self.model_path):
-                raise FileNotFoundError(f"VOSK模型路径不存在: {self.model_path}")
+                raise FileNotFoundError(f"VOSK model path does not exist: {self.model_path}")
                 
-            logger.bind(tag=TAG).info(f"正在加载VOSK模型: {self.model_path}")
+            logger.bind(tag=TAG).info(f"Loading VOSK model: {self.model_path}")
             self.model = vosk.Model(self.model_path)
 
-            # 初始化VOSK识别器（采样率必须为16kHz）
+            # Initialize the VOSK recognizer (sample rate must be 16kHz)
             self.recognizer = vosk.KaldiRecognizer(self.model, 16000)
 
-            logger.bind(tag=TAG).info("VOSK模型加载成功")
+            logger.bind(tag=TAG).info("VOSK model loaded successfully")
         except Exception as e:
-            logger.bind(tag=TAG).error(f"加载VOSK模型失败: {e}")
+            logger.bind(tag=TAG).error(f"Failed to load VOSK model: {e}")
             raise
 
     async def speech_to_text(
         self, opus_data: List[bytes], session_id: str, artifacts=None
     ) -> Tuple[Optional[str], Optional[str]]:
-        """将语音数据转换为文本"""
+        """Convert speech data to text"""
         try:
-            # 检查模型是否加载成功
+            # Check whether the model loaded successfully
             if not self.model:
-                logger.bind(tag=TAG).error("VOSK模型未加载，无法进行识别")
+                logger.bind(tag=TAG).error("VOSK model not loaded, cannot perform recognition")
                 return "", None
             
             if artifacts is None:
                 return "", None
             if not artifacts.pcm_bytes:
-                logger.bind(tag=TAG).warning("合并后的PCM数据为空")
+                logger.bind(tag=TAG).warning("Merged PCM data is empty")
                 return "", None
 
             start_time = time.time()
             
             
-            # 进行识别（VOSK推荐每次送入2000字节的数据）
+            # Run recognition (VOSK recommends feeding 2000 bytes at a time)
             chunk_size = 2000
             text_result = ""
             
@@ -74,18 +74,18 @@ class ASRProvider(ASRProviderBase):
                     if text:
                         text_result += text + " "
             
-            # 获取最终结果
+            # Get the final result
             final_result = json.loads(self.recognizer.FinalResult())
             final_text = final_result.get('text', '')
             if final_text:
                 text_result += final_text
             
             logger.bind(tag=TAG).debug(
-                f"VOSK语音识别耗时: {time.time() - start_time:.3f}s | 结果: {text_result.strip()}"
+                f"VOSK speech recognition time: {time.time() - start_time:.3f}s | result: {text_result.strip()}"
             )
             
             return text_result.strip(), artifacts.file_path
             
         except Exception as e:
-            logger.bind(tag=TAG).error(f"VOSK语音识别失败: {e}")
+            logger.bind(tag=TAG).error(f"VOSK speech recognition failed: {e}")
             return "", None

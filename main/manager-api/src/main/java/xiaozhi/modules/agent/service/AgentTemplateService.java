@@ -6,37 +6,37 @@ import xiaozhi.modules.agent.entity.AgentTemplateEntity;
 
 /**
  * @author chenerlei
- * @description 针对表【ai_agent_template(智能体配置模板表)】的数据库操作Service
+ * @description Database Service for table [ai_agent_template (agent configuration template table)]
  * @createDate 2025-03-22 11:48:18
  */
 public interface AgentTemplateService extends IRepository<AgentTemplateEntity> {
 
     /**
-     * 获取默认模板
+     * Get the default template
      * 
-     * @return 默认模板实体
+     * @return default template entity
      */
     AgentTemplateEntity getDefaultTemplate();
 
     /**
-     * 更新默认模板中的模型ID
+     * Update the model ID in the default template
      * 
-     * @param modelType 模型类型
-     * @param modelId   模型ID
+     * @param modelType model type
+     * @param modelId   model ID
      */
     void updateDefaultTemplateModelId(String modelType, String modelId);
 
     /**
-     * 删除模板后重新排序剩余模板
+     * Re-sort the remaining templates after a template is deleted
      * 
-     * @param deletedSort 被删除模板的排序值
+     * @param deletedSort sort value of the deleted template
      */
     void reorderTemplatesAfterDelete(Integer deletedSort);
 
     /**
-     * 获取下一个可用的排序序号（寻找最小的未使用序号）
+     * Get the next available sort number (the smallest unused number)
      * 
-     * @return 下一个可用的排序序号
+     * @return next available sort number
      */
     Integer getNextAvailableSort();
 }

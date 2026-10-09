@@ -23,23 +23,23 @@ class IntentProvider(IntentProviderBase):
         super().__init__(config)
         self.llm = None
         self.promot = ""
-        # 导入全局缓存管理器
+        # Import the global cache manager
         from core.utils.cache.manager import cache_manager, CacheType
 
         self.cache_manager = cache_manager
         self.CacheType = CacheType
-        self.history_count = 4  # 默认使用最近4条对话记录
+        self.history_count = 4  # Use the last 4 dialogue records by default
 
     def get_intent_system_prompt(self, functions_list: str) -> str:
         """
-        根据配置的意图选项和可用函数动态生成系统提示词
+        Dynamically build the system prompt from the configured intent options and available functions
         Args:
-            functions: 可用的函数列表，JSON格式字符串
+            functions: List of available functions as a JSON string
         Returns:
-            格式化后的系统提示词
+            Formatted system prompt
         """
 
-        # 构建函数说明部分
+        # Build the function description section
         functions_desc = "可用的函数列表：\n"
         for func in functions_list:
             func_info = func.get("function", {})
@@ -122,13 +122,13 @@ class IntentProvider(IntentProviderBase):
         return prompt
 
     async def replyResult(self, text: str, original_text: str):
-        """使用 asyncio.to_thread 避免阻塞事件循环"""
+        """Use asyncio.to_thread to avoid blocking the event loop"""
         try:
             user_prompt = (
                 "请根据以上内容，像人类一样说话的口吻回复用户，要求简洁，请直接返回结果。用户现在说："
                 + original_text
             )
-            # 使用 to_thread 将同步阻塞调用放到线程池中执行，不阻塞事件循环
+            # Run the synchronous blocking call in a thread pool via to_thread so the event loop is not blocked
             llm_result = await asyncio.to_thread(
                 self.llm.response_no_stream,
                 system_prompt=text,
@@ -147,22 +147,22 @@ class IntentProvider(IntentProviderBase):
         if conn.func_handler is None:
             return '{"function_call": {"name": "continue_chat"}}'
 
-        # 记录整体开始时间
+        # Record the overall start time
         total_start_time = time.time()
 
-        # 打印使用的模型信息
+        # Log the model in use
         model_info = getattr(self.llm, "model_name", str(self.llm.__class__.__name__))
-        logger.bind(tag=TAG).debug(f"使用意图识别模型: {model_info}")
+        logger.bind(tag=TAG).debug(f"Using intent recognition model: {model_info}")
 
-        # 计算缓存键
+        # Compute the cache key
         cache_key = hashlib.md5((conn.device_id + text).encode()).hexdigest()
 
-        # 检查缓存
+        # Check the cache
         cached_intent = self.cache_manager.get(self.CacheType.INTENT, cache_key)
         if cached_intent is not None:
             cache_time = time.time() - total_start_time
             logger.bind(tag=TAG).debug(
-                f"使用缓存的意图: {cache_key} -> {cached_intent}, 耗时: {cache_time:.4f}秒"
+                f"Using cached intent: {cache_key} -> {cached_intent}, took: {cache_time:.4f}s"
             )
             return cached_intent
 
@@ -194,10 +194,10 @@ class IntentProvider(IntentProviderBase):
 
         logger.bind(tag=TAG).debug(f"User prompt: {prompt_music}")
 
-        # 构建用户对话历史的提示
+        # Build the prompt from the user's dialogue history
         msgStr = ""
 
-        # 获取最近的对话历史
+        # Get recent dialogue history
         start_idx = max(0, len(dialogue_history) - self.history_count)
         for i in range(start_idx, len(dialogue_history)):
             msgStr += f"{dialogue_history[i].role}: {dialogue_history[i].content}\n"
@@ -205,16 +205,16 @@ class IntentProvider(IntentProviderBase):
         msgStr += f"User: {text}\n"
         user_prompt = f"current dialogue:\n{msgStr}"
 
-        # 记录预处理完成时间
+        # Record preprocessing completion time
         preprocess_time = time.time() - total_start_time
-        logger.bind(tag=TAG).debug(f"意图识别预处理耗时: {preprocess_time:.4f}秒")
+        logger.bind(tag=TAG).debug(f"Intent recognition preprocessing took: {preprocess_time:.4f}s")
 
-        # 使用LLM进行意图识别
+        # Use the LLM for intent recognition
         llm_start_time = time.time()
-        logger.bind(tag=TAG).debug(f"开始LLM意图识别调用, 模型: {model_info}")
+        logger.bind(tag=TAG).debug(f"Starting LLM intent recognition call, model: {model_info}")
 
         try:
-            # 使用 to_thread 将同步阻塞调用放到线程池中，避免阻塞事件循环
+            # Run the synchronous blocking call in a thread pool via to_thread to avoid blocking the event loop
             intent = await asyncio.to_thread(
                 self.llm.response_no_stream,
                 system_prompt=prompt_music,
@@ -224,52 +224,52 @@ class IntentProvider(IntentProviderBase):
             logger.bind(tag=TAG).error(f"Error in intent detection LLM call: {e}")
             return '{"function_call": {"name": "continue_chat"}}'
 
-        # 记录LLM调用完成时间
+        # Record LLM call completion time
         llm_time = time.time() - llm_start_time
         logger.bind(tag=TAG).debug(
-            f"外挂的大模型意图识别完成, 模型: {model_info}, 调用耗时: {llm_time:.4f}秒"
+            f"External LLM intent recognition complete, model: {model_info}, call took: {llm_time:.4f}s"
         )
 
-        # 记录后处理开始时间
+        # Record postprocessing start time
         postprocess_start_time = time.time()
 
-        # 清理和解析响应
+        # Clean up and parse the response
         intent = intent.strip()
-        # 尝试提取JSON部分
+        # Try to extract the JSON part
         match = re.search(r"\{.*\}", intent, re.DOTALL)
         if match:
             intent = match.group(0)
 
-        # 记录总处理时间
+        # Record total processing time
         total_time = time.time() - total_start_time
         logger.bind(tag=TAG).debug(
-            f"【意图识别性能】模型: {model_info}, 总耗时: {total_time:.4f}秒, LLM调用: {llm_time:.4f}秒, 查询: '{text[:20]}...'"
+            f"[Intent recognition performance] model: {model_info}, total: {total_time:.4f}s, LLM call: {llm_time:.4f}s, query: '{text[:20]}...'"
         )
 
-        # 尝试解析为JSON
+        # Try to parse as JSON
         try:
             intent_data = json.loads(intent)
-            # 如果包含function_call，则格式化为适合处理的格式
+            # If it contains function_call, reformat it for processing
             if "function_call" in intent_data:
                 function_data = intent_data["function_call"]
                 function_name = function_data.get("name")
                 function_args = function_data.get("arguments", {})
 
-                # 记录识别到的function call
+                # Log the recognized function call
                 logger.bind(tag=TAG).info(
-                    f"llm 识别到意图: {function_name}, 参数: {function_args}"
+                    f"LLM recognized intent: {function_name}, arguments: {function_args}"
                 )
 
-                # 处理不同类型的意图
+                # Handle different intent types
                 if function_name == "result_for_context":
-                    # 处理基础信息查询，直接从context构建结果
+                    # Handle basic info queries by building the result from context
                     logger.bind(tag=TAG).info(
-                        "检测到result_for_context意图，将使用上下文信息直接回答"
+                        "Detected result_for_context intent, answering directly from context"
                     )
 
                 elif function_name == "continue_chat":
-                    # 处理普通对话
-                    # 保留非工具相关的消息
+                    # Handle normal chat
+                    # Keep non-tool messages
                     clean_history = [
                         msg
                         for msg in conn.dialogue.dialogue
@@ -278,19 +278,19 @@ class IntentProvider(IntentProviderBase):
                     conn.dialogue.dialogue = clean_history
 
                 else:
-                    # 处理函数调用
-                    logger.bind(tag=TAG).info(f"检测到函数调用意图: {function_name}")
+                    # Handle function call
+                    logger.bind(tag=TAG).info(f"Detected function call intent: {function_name}")
 
-            # 统一缓存处理和返回
+            # Unified caching and return
             self.cache_manager.set(self.CacheType.INTENT, cache_key, intent)
             postprocess_time = time.time() - postprocess_start_time
-            logger.bind(tag=TAG).debug(f"意图后处理耗时: {postprocess_time:.4f}秒")
+            logger.bind(tag=TAG).debug(f"Intent postprocessing took: {postprocess_time:.4f}s")
             return intent
         except json.JSONDecodeError:
-            # 后处理时间
+            # Postprocessing time
             postprocess_time = time.time() - postprocess_start_time
             logger.bind(tag=TAG).error(
-                f"无法解析意图JSON: {intent}, 后处理耗时: {postprocess_time:.4f}秒"
+                f"Unable to parse intent JSON: {intent}, postprocessing took: {postprocess_time:.4f}s"
             )
-            # 如果解析失败，默认返回继续聊天意图
+            # If parsing fails, default to the continue-chat intent
             return '{"function_call": {"name": "continue_chat"}}'

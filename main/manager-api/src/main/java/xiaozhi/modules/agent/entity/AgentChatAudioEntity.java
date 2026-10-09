@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
- * 智能体聊天音频数据表
+ * Agent chat audio data table
  *
  * @author Goody
  * @version 1.0, 2025/5/8
@@ -17,13 +17,13 @@ import lombok.Data;
 @TableName("ai_agent_chat_audio")
 public class AgentChatAudioEntity {
     /**
-     * 主键ID
+     * Primary key ID
      */
     @TableId(type = IdType.ASSIGN_UUID)
     private String id;
 
     /**
-     * 音频opus数据
+     * Audio Opus data
      */
     private byte[] audio;
 }

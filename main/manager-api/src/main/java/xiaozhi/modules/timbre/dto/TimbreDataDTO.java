@@ -6,44 +6,44 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 /**
- * 音色表数据DTO
+ * Voice table data DTO
  * 
  * @author zjy
  * @since 2025-3-21
  */
 @Data
-@Schema(description = "音色表信息")
+@Schema(description = "Voice table information")
 public class TimbreDataDTO {
 
-    @Schema(description = "语言")
+    @Schema(description = "Language")
     @NotBlank(message = "{timbre.languages.require}")
     private String languages;
 
-    @Schema(description = "音色名称")
+    @Schema(description = "Voice name")
     @NotBlank(message = "{timbre.name.require}")
     private String name;
 
-    @Schema(description = "备注")
+    @Schema(description = "Remark")
     private String remark;
 
-    @Schema(description = "参考音频路径")
+    @Schema(description = "Reference audio path")
     private String referenceAudio;
 
-    @Schema(description = "參考文本")
+    @Schema(description = "Reference text")
     private String referenceText;
 
-    @Schema(description = "排序")
+    @Schema(description = "Sort order")
     @Min(value = 0, message = "{sort.number}")
     private Long sort;
 
-    @Schema(description = "对应 TTS 模型主键")
+    @Schema(description = "Primary key of the corresponding TTS model")
     @NotBlank(message = "{timbre.ttsModelId.require}")
     private String ttsModelId;
 
-    @Schema(description = "音色编码")
+    @Schema(description = "Voice code")
     @NotBlank(message = "{timbre.ttsVoice.require}")
     private String ttsVoice;
 
-    @Schema(description = "音频播放地址")
+    @Schema(description = "Audio playback URL")
     private String voiceDemo;
 }

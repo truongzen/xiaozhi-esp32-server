@@ -11,43 +11,43 @@ import lombok.Data;
 
 @Data
 @TableName("ai_agent_snapshot")
-@Schema(description = "智能体配置快照")
+@Schema(description = "Agent configuration snapshot")
 public class AgentSnapshotEntity {
 
     @TableId(type = IdType.ASSIGN_UUID)
-    @Schema(description = "快照ID")
+    @Schema(description = "Snapshot ID")
     private String id;
 
-    @Schema(description = "智能体ID")
+    @Schema(description = "Agent ID")
     private String agentId;
 
-    @Schema(description = "所属用户ID")
+    @Schema(description = "Owner user ID")
     private Long userId;
 
-    @Schema(description = "版本号")
+    @Schema(description = "Version number")
     private Integer versionNo;
 
-    @Schema(description = "快照数据JSON")
+    @Schema(description = "Snapshot data JSON")
     private String snapshotData;
 
-    @Schema(description = "变更字段JSON")
+    @Schema(description = "Changed fields JSON")
     private String changedFields;
 
-    @Schema(description = "快照来源")
+    @Schema(description = "Snapshot source")
     private String source;
 
-    @Schema(description = "恢复来源快照ID")
+    @Schema(description = "Source snapshot ID of the restore")
     private String restoreFromSnapshotId;
 
-    @Schema(description = "恢复来源版本号")
+    @Schema(description = "Source version number of the restore")
     private Integer restoreFromVersionNo;
 
-    @Schema(description = "创建者")
+    @Schema(description = "Creator")
     private Long creator;
 
-    @Schema(description = "创建时间")
+    @Schema(description = "Creation time")
     private Date createdAt;
 
-    @Schema(description = "快照数据脱敏规则版本")
+    @Schema(description = "Snapshot data masking rule version")
     private Integer redactionVersion;
 }

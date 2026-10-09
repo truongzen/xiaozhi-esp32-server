@@ -12,89 +12,89 @@ import lombok.Data;
 
 @Data
 @TableName("ai_agent")
-@Schema(description = "智能体信息")
+@Schema(description = "Agent info")
 public class AgentEntity {
 
     @TableId(type = IdType.ASSIGN_UUID)
-    @Schema(description = "智能体唯一标识")
+    @Schema(description = "Agent unique identifier")
     private String id;
 
-    @Schema(description = "所属用户ID")
+    @Schema(description = "Owner user ID")
     private Long userId;
 
-    @Schema(description = "智能体编码")
+    @Schema(description = "Agent code")
     private String agentCode;
 
-    @Schema(description = "智能体名称")
+    @Schema(description = "Agent name")
     private String agentName;
 
-    @Schema(description = "语音识别模型标识")
+    @Schema(description = "Speech recognition (ASR) model identifier")
     private String asrModelId;
 
-    @Schema(description = "语音活动检测标识")
+    @Schema(description = "Voice activity detection (VAD) identifier")
     private String vadModelId;
 
-    @Schema(description = "大语言模型标识")
+    @Schema(description = "LLM identifier")
     private String llmModelId;
 
-    @Schema(description = "小模型标识")
+    @Schema(description = "Small language model (SLM) identifier")
     private String slmModelId;
 
-    @Schema(description = "VLLM模型标识")
+    @Schema(description = "VLLM identifier")
     private String vllmModelId;
 
-    @Schema(description = "语音合成模型标识")
+    @Schema(description = "TTS model identifier")
     private String ttsModelId;
 
-    @Schema(description = "音色标识")
+    @Schema(description = "Voice identifier")
     private String ttsVoiceId;
 
-    @Schema(description = "音色语言")
+    @Schema(description = "Voice language")
     private String ttsLanguage;
 
-    @Schema(description = "TTS音量")
+    @Schema(description = "TTS volume")
     private Integer ttsVolume;
 
-    @Schema(description = "TTS语速")
+    @Schema(description = "TTS speech rate")
     private Integer ttsRate;
 
-    @Schema(description = "TTS音调")
+    @Schema(description = "TTS pitch")
     private Integer ttsPitch;
 
-    @Schema(description = "记忆模型标识")
+    @Schema(description = "Memory model identifier")
     private String memModelId;
 
-    @Schema(description = "意图模型标识")
+    @Schema(description = "Intent model identifier")
     private String intentModelId;
 
-    @Schema(description = "聊天记录配置（0不记录 1仅记录文本 2记录文本和语音）")
+    @Schema(description = "Chat history setting (0 = do not record, 1 = record text only, 2 = record text and audio)")
     private Integer chatHistoryConf;
 
-    @Schema(description = "角色设定参数")
+    @Schema(description = "Role settings")
     private String systemPrompt;
 
-    @Schema(description = "总结记忆", example = "构建可生长的动态记忆网络，在有限空间内保留关键信息的同时，智能维护信息演变轨迹\n" +
-            "根据对话记录，总结user的重要信息，以便在未来的对话中提供更个性化的服务", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    @Schema(description = "Memory summary", example = "Build a growable dynamic memory network that keeps key information within limited space while intelligently tracking how the information evolves\n" +
+            "Based on the conversation history, summarize the user's important information to provide more personalized service in future conversations", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String summaryMemory;
 
-    @Schema(description = "语言编码")
+    @Schema(description = "Language code")
     private String langCode;
 
-    @Schema(description = "交互语种")
+    @Schema(description = "Interaction language")
     private String language;
 
-    @Schema(description = "排序")
+    @Schema(description = "Sort")
     private Integer sort;
 
-    @Schema(description = "创建者")
+    @Schema(description = "Creator")
     private Long creator;
 
-    @Schema(description = "创建时间")
+    @Schema(description = "Creation time")
     private Date createdAt;
 
-    @Schema(description = "更新者")
+    @Schema(description = "Updater")
     private Long updater;
 
-    @Schema(description = "更新时间")
+    @Schema(description = "Update time")
     private Date updatedAt;
 }

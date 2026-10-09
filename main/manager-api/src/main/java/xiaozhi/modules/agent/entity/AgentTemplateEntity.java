@@ -12,7 +12,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
- * 智能体配置模板表
+ * Agent configuration template table
  * 
  * @TableName ai_agent_template
  */
@@ -20,127 +20,127 @@ import lombok.Data;
 @Data
 public class AgentTemplateEntity implements Serializable {
     /**
-     * 智能体唯一标识
+     * Agent unique identifier
      */
     @TableId(type = IdType.ASSIGN_UUID)
     private String id;
 
     /**
-     * 智能体编码
+     * Agent code
      */
     private String agentCode;
 
     /**
-     * 智能体名称
+     * Agent name
      */
     private String agentName;
 
     /**
-     * 语音识别模型标识
+     * Speech recognition (ASR) model identifier
      */
     private String asrModelId;
 
     /**
-     * 语音活动检测标识
+     * Voice activity detection (VAD) identifier
      */
     private String vadModelId;
 
     /**
-     * 大语言模型标识
+     * LLM identifier
      */
     private String llmModelId;
 
     /**
-     * VLLM模型标识
+     * VLLM identifier
      */
     private String vllmModelId;
 
     /**
-     * 语音合成模型标识
+     * TTS model identifier
      */
     private String ttsModelId;
 
     /**
-     * 音色标识
+     * Voice identifier
      */
     private String ttsVoiceId;
 
     /**
-     * 音色语言
+     * Voice language
      */
     private String ttsLanguage;
 
     /**
-     * TTS音量
+     * TTS volume
      */
     private Integer ttsVolume;
 
     /**
-     * TTS语速
+     * TTS speech rate
      */
     private Integer ttsRate;
 
     /**
-     * TTS音调
+     * TTS pitch
      */
     private Integer ttsPitch;
 
     /**
-     * 记忆模型标识
+     * Memory model identifier
      */
     private String memModelId;
 
     /**
-     * 意图模型标识
+     * Intent model identifier
      */
     private String intentModelId;
 
     /**
-     * 聊天记录配置（0不记录 1仅记录文本 2记录文本和语音）
+     * Chat history setting (0 = do not record, 1 = record text only, 2 = record text and audio)
      */
     private Integer chatHistoryConf;
 
     /**
-     * 角色设定参数
+     * Role settings
      */
     private String systemPrompt;
 
     /**
-     * 总结记忆
+     * Memory summary
      */
     private String summaryMemory;
     /**
-     * 语言编码
+     * Language code
      */
     private String langCode;
 
     /**
-     * 交互语种
+     * Interaction language
      */
     private String language;
 
     /**
-     * 排序权重
+     * Sort weight
      */
     private Integer sort;
 
     /**
-     * 创建者 ID
+     * Creator ID
      */
     private Long creator;
 
     /**
-     * 创建时间
+     * Creation time
      */
     private Date createdAt;
 
     /**
-     * 更新者 ID
+     * Updater ID
      */
     private Long updater;
 
     /**
-     * 更新时间
+     * Update time
      */
     private Date updatedAt;
 

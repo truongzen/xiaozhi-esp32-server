@@ -1,11 +1,11 @@
-"""RAG（检索增强生成）链路测试。
+"""RAG (retrieval-augmented generation) pipeline tests.
 
-xiaozhi-esp32-server 项目里没有独立的 RAG provider —— RAG 由
-MemoryProvider（mem0ai / powermem）的 ``query_memory`` 配合 LLM 工具
-调用实现。本测试聚焦「save → query → 拿到检索结果」这一核心链路。
+The xiaozhi-esp32-server project has no standalone RAG provider - RAG is implemented by
+``query_memory`` of a MemoryProvider (mem0ai / powermem) together with LLM tool
+calls. This test focuses on the core "save -> query -> get retrieval results" path.
 
-Mock 模式（默认）：mem0/powermem 等云调用走 shim，不发请求。
-Live 模式（``RUN_LIVE_API_TESTS=1``）：真发请求到所选 memory provider。
+Mock mode (default): cloud calls such as mem0/powermem go through shims, no requests are sent.
+Live mode (``RUN_LIVE_API_TESTS=1``): sends real requests to the selected memory provider.
 """
 from __future__ import annotations
 
@@ -27,20 +27,20 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 def _build_memory_provider():
     name = get_selected_provider_name("Memory")
     if not name:
-        pytest.skip("selected_module.Memory 未设置")
+        pytest.skip("selected_module.Memory is not set")
     cfg = get_provider_config("Memory", name)
     if not cfg:
-        pytest.skip(f"Memory provider '{name}' 配置缺失")
+        pytest.skip(f"Memory provider '{name}' config is missing")
     ptype = get_provider_type("Memory", name)
     if not ptype:
-        pytest.skip(f"Memory '{name}' 的 type 字段缺失")
+        pytest.skip(f"Memory '{name}' is missing the type field")
     from core.utils.memory import create_instance
 
     return create_instance(ptype, cfg, None)
 
 
 def test_rag_query_after_save_returns_string() -> None:
-    """保存后 query_memory 应返回字符串（nomem 返回空串也合法）。"""
+    """After saving, query_memory should return a string (an empty string from nomem is also valid)."""
     provider = _build_memory_provider()
     msgs = [
         {"role": "user", "content": "我喜欢喝咖啡"},
@@ -52,11 +52,11 @@ def test_rag_query_after_save_returns_string() -> None:
         return await provider.query_memory("咖啡")
 
     result = asyncio.run(run())
-    assert isinstance(result, str), f"query_memory 应返回 str，得到 {type(result).__name__}"
+    assert isinstance(result, str), f"query_memory should return str, got {type(result).__name__}"
 
 
 def test_rag_query_no_match_returns_empty() -> None:
-    """query 不存在内容时返回空字符串，不抛异常。"""
+    """Querying non-existent content returns an empty string without raising."""
     provider = _build_memory_provider()
 
     async def run():
@@ -67,7 +67,7 @@ def test_rag_query_no_match_returns_empty() -> None:
 
 
 def test_rag_empty_query_handled() -> None:
-    """空 query 不应抛异常。"""
+    """An empty query should not raise."""
     provider = _build_memory_provider()
 
     async def run():

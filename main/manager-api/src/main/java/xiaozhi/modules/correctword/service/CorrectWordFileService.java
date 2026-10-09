@@ -11,86 +11,86 @@ import xiaozhi.modules.correctword.vo.CorrectWordSimpleVO;
 public interface CorrectWordFileService {
 
     /**
-     * 创建替换词文件
+     * Create a replacement word file
      *
-     * @param dto 创建参数
-     * @return 文件VO
+     * @param dto creation parameters
+     * @return file VO
      */
     CorrectWordFileVO createFile(CorrectWordFileCreateDTO dto);
 
     /**
-     * 修改替换词文件（全量替换词条）
+     * Update a replacement word file (replaces all entries)
      *
-     * @param fileId 文件ID
-     * @param dto    修改参数
+     * @param fileId file ID
+     * @param dto    update parameters
      */
     void updateFile(String fileId, CorrectWordFileCreateDTO dto);
 
     /**
-     * 获取当前用户的替换词文件列表
+     * Get the current user's replacement word file list
      *
-     * @param params 分页参数
-     * @return 分页数据
+     * @param params pagination parameters
+     * @return paginated data
      */
     PageData<CorrectWordFileVO> listFiles(Map<String, Object> params);
 
     /**
-     * 获取当前用户的替换词文件列表（不分页，用于下拉选择）
+     * Get the current user's replacement word file list (unpaginated, for dropdown selection)
      *
-     * @return 文件列表
+     * @return file list
      */
     List<CorrectWordFileVO> listAllFiles();
 
     /**
-     * 获取文件原始内容（用于下载）
+     * Get the original file content (for download)
      *
-     * @param fileId 文件ID
-     * @return 文件实体
+     * @param fileId file ID
+     * @return file entity
      */
     CorrectWordFileVO getFileContent(String fileId);
 
     /**
-     * 删除替换词文件及其所有词条和关联记录
+     * Delete a replacement word file with all its entries and association records
      *
-     * @param fileId 文件ID
+     * @param fileId file ID
      */
     void deleteFile(String fileId);
 
     /**
-     * 删除智能体关联的替换词文件关联记录（不删文件本身）
+     * Delete the agent's replacement word file associations (does not delete the files themselves)
      *
-     * @param agentId 智能体ID
+     * @param agentId agent ID
      */
     void deleteMappingsByAgentId(String agentId);
 
     /**
-     * 获取智能体的所有替换词条（精简版，供设备端使用）
+     * Get all replacement word entries of an agent (compact version, for devices)
      *
-     * @param agentId 智能体ID
-     * @return 替换词列表
+     * @param agentId agent ID
+     * @return replacement word list
      */
     List<CorrectWordSimpleVO> getAllItemsByAgentId(String agentId);
 
     /**
-     * 获取智能体关联的替换词文件ID列表
+     * Get the replacement word file ID list associated with an agent
      *
-     * @param agentId 智能体ID
-     * @return 文件ID列表
+     * @param agentId agent ID
+     * @return file ID list
      */
     List<String> getAgentCorrectWordFileIds(String agentId);
 
     /**
-     * 保存智能体关联的替换词文件（全量替换）
+     * Save the replacement word files associated with an agent (full replacement)
      *
-     * @param agentId 智能体ID
-     * @param fileIds 文件ID列表
+     * @param agentId agent ID
+     * @param fileIds file ID list
      */
     void saveAgentCorrectWords(String agentId, List<String> fileIds);
 
     /**
-     * 批量删除替换词文件
+     * Batch delete replacement word files
      *
-     * @param fileIds 文件ID列表
+     * @param fileIds file ID list
      */
     void batchDeleteFiles(List<String> fileIds);
 }
