@@ -4,7 +4,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 .vscode
-.claude
+.claude/settings.local.json
+.claude/worktrees/
 AGENTS.md
 
 # C extensions
@@ -197,3 +198,6 @@ uploadfile
 main/digital-human/wakeword_runtime/models
 main/digital-human/wakeword_runtime/sherpa-onnx-kws-zipformer-wenetspeech-3.3M-2024-01-01
 sherpa-onnx-kws-zipformer-wenetspeech-3.3M-2024-01-01.tar.bz2
+
+# Shared Claude Code project settings
+!/.claude/settings.json

@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git branch:*)",
+      "Bash(git fetch:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git switch:*)",
+      "Bash(git checkout -b:*)",
+      "Bash(git stash:*)",
+      "Bash(make test:*)",
+      "Bash(make test-python:*)",
+      "Bash(make test-web:*)",
+      "Bash(make test-java:*)",
+      "Bash(.venv/Scripts/python.exe -m pytest:*)",
+      "Bash(main/xiaozhi-server/.venv/Scripts/python.exe -m pytest:*)",
+      "Bash(npm test:*)",
+      "Bash(npm run test:*)",
+      "Bash(npm run check:i18n:*)",
+      "Bash(npm run lint:*)",
+      "Bash(mvn -B -q test:*)",
+      "Bash(mvn test:*)"
+    ],
+    "ask": [
+      "Bash(git push:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git rebase:*)"
+    ],
+    "deny": [
+      "Read(./**/.env)",
+      "Read(./**/.env.*)",
+      "Read(./main/xiaozhi-server/data/.config.yaml)",
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)"
+    ]
+  }
+}
